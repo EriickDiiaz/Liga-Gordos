@@ -1,0 +1,34 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+    <h1 class="mb-4">Crear Nuevo Equipo</h1>
+    <form action="{{ route('equipos.store') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="form-group">
+            <label for="nombre">Nombre del Equipo</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" required>
+        </div>
+        <div class="form-group">
+            <label for="color_primario">Color Primario</label>
+            <input type="color" class="form-control" id="color_primario" name="color_primario" required>
+        </div>
+        <div class="form-group">
+            <label for="color_secundario">Color Secundario (opcional)</label>
+            <input type="color" class="form-control" id="color_secundario" name="color_secundario">
+        </div>
+        <div class="form-group">
+            <label for="logo">Logo del Equipo</label>
+            <input type="file" class="form-control-file" id="logo" name="logo">
+        </div>
+        <div class="form-group">
+            <label for="estado">Estado</label>
+            <select class="form-control" id="estado" name="estado">
+                <option value="1">Activo</option>
+                <option value="0">Inactivo</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Crear Equipo</button>
+    </form>
+</div>
+@endsection
