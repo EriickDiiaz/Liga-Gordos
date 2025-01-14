@@ -30,8 +30,8 @@
         </div>
     </div>
     <div class="mt-3">
-        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-warning">Editar</a>
-        <a href="{{ route('equipos.index') }}" class="btn btn-secondary">Volver a la lista</a>
+        <a href="{{ route('equipos.index') }}" class="btn btn-outline-secondary">Volver a la lista</a>    
+        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary">Editar</a>
     </div>
 </div>
 @endsection

@@ -19,20 +19,31 @@
                     <img src="{{ asset($equipo->logo) }}" class="card-img-top mt-3" alt="{{ $equipo->nombre }}" style="height: 200px; object-fit: contain;">
                     <div class="card-body">
                         <h5 class="card-title">{{ $equipo->nombre }}</h5>
-                        <p class="card-text">
+                        <p class="card-text mb-1">
                             Color Primario: <span style="color: {{ $equipo->color_primario }};">■</span>
                             @if($equipo->color_secundario)
                                 Color Secundario: <span style="color: {{ $equipo->color_secundario }};">■</span>
                             @endif
                         </p>
-                        <p class="card-text">
+                        <p class="card-text mb-1">
                             Estado: <span class="badge {{ $equipo->estado ? 'bg-success' : 'bg-danger' }}">
                                 {{ $equipo->estado ? 'Activo' : 'Inactivo' }}
                             </span>
                         </p>
-                        <a href="{{ route('equipos.show', $equipo) }}" class="btn btn-info btn-sm">Ver</a>
-                        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-warning btn-sm">Editar</a>
-                        <button class="btn btn-danger btn-sm delete-equipo" data-id="{{ $equipo->id }}">Eliminar</button>
+                        <p class="mb-1">Jugadores Habilidosos:</p>
+                        <p class="mb-1">Jugadores con Brazalete:</p>
+                        <p class="mb-1">Total de Jugadores:</p>
+                        <div class="text-center mt-3">
+                            <a href="{{ route('equipos.show', $equipo) }}" class="btn btn-outline-light m-1">
+                                <i class="fas fa-eye"></i> Ver
+                            </a>
+                            <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary m-1">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <button class="btn btn-outline-danger m-1 delete-equipo" data-id="{{ $equipo->id }}">
+                                <i class="fas fa-trash-alt"></i> Eliminar
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
