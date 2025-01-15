@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="container">
-    <h1 class="mb-4">Equipos</h1>
     
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -10,26 +9,28 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
-
-    <a href="{{ route('equipos.create') }}" class="btn btn-primary mb-3">Crear Nuevo Equipo</a>
+    
+    <h1 class="mb-3">Equipos</h1>
+    
+    <a href="{{ route('equipos.create') }}" class="btn btn-outline-success mb-3">Crear Nuevo Equipo</a>
     <div class="row row-cols-1 row-cols-md-3 g-4">
         @foreach($equipos as $equipo)
             <div class="col">
                 <div class="card h-100">
                     <img src="{{ asset($equipo->logo) }}" class="card-img-top mt-3" alt="{{ $equipo->nombre }}" style="height: 200px; object-fit: contain;">
                     <div class="card-body">
-                        <h5 class="card-title">{{ $equipo->nombre }}</h5>
+                        <h5 class="card-title">{{ $equipo->nombre }}
+                            <span class="badge {{ $equipo->estado ? 'bg-success' : 'bg-danger' }}">
+                                {{ $equipo->estado ? 'Activo' : 'Inactivo' }}
+                            </span>
+                        </h5>
                         <p class="card-text mb-1">
                             Color Primario: <span style="color: {{ $equipo->color_primario }};">■</span>
                             @if($equipo->color_secundario)
                                 Color Secundario: <span style="color: {{ $equipo->color_secundario }};">■</span>
                             @endif
                         </p>
-                        <p class="card-text mb-1">
-                            Estado: <span class="badge {{ $equipo->estado ? 'bg-success' : 'bg-danger' }}">
-                                {{ $equipo->estado ? 'Activo' : 'Inactivo' }}
-                            </span>
-                        </p>
+                        
                         <p class="mb-1">Jugadores Habilidosos:</p>
                         <p class="mb-1">Jugadores con Brazalete:</p>
                         <p class="mb-1">Total de Jugadores:</p>
