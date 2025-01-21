@@ -41,9 +41,14 @@
                             <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary m-1">
                                 <i class="fas fa-edit"></i> Editar
                             </a>
-                            <button class="btn btn-outline-danger m-1 delete-equipo" data-id="{{ $equipo->id }}">
-                                <i class="fas fa-trash-alt"></i> Eliminar
-                            </button>
+                            <form action="{{ route('equipos.destroy', $equipo) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-outline-danger delete-equipo" data-id="{{ $equipo->id }}">
+                                    <i class="fas fa-trash-alt"></i> Eliminar
+                                </button>
+                            </form>
+                            
                         </div>
                     </div>
                 </div>
@@ -59,7 +64,8 @@
     document.addEventListener('DOMContentLoaded', function() {
         const deleteButtons = document.querySelectorAll('.delete-equipo');
         deleteButtons.forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
                 const equipoId = this.getAttribute('data-id');
                 Swal.fire({
                     title: '¿Estás seguro?',
@@ -72,15 +78,7 @@
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        const form = document.createElement('form');
-                        form.method = 'POST';
-                        form.action = `/equipos/${equipoId}`;
-                        form.innerHTML = `
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            <input type="hidden" name="_method" value="DELETE">
-                        `;
-                        document.body.appendChild(form);
-                        form.submit();
+                        this.closest('form').submit();
                     }
                 });
             });
