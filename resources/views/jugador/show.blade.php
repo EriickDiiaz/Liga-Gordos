@@ -26,10 +26,10 @@
                 </div>
             </div>
             <div class="text-center mt-3">
-                <a href="{{ route('jugadores.index') }}" class="btn btn-outline-secondary m-1">
+                <a href="{{ route('jugador.index') }}" class="btn btn-outline-secondary m-1">
                     <i class="fas fa-arrow-left"></i> Volver a la lista
                 </a>    
-                <a href="{{ route('jugadores.edit', $jugador) }}" class="btn btn-outline-primary m-1">
+                <a href="{{ route('jugador.edit', $jugador) }}" class="btn btn-outline-primary m-1">
                     <i class="fas fa-edit"></i> Editar
                 </a>
             </div>

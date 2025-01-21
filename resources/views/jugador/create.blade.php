@@ -6,7 +6,7 @@
 
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <form action="{{ route('jugadores.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('jugador.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group mb-3">
                     <label for="nombre">Nombre del Jugador</label>
@@ -45,7 +45,7 @@
                     <input type="file" class="form-control" id="foto" name="foto">
                 </div>
                 <div class="text-center mt-3">
-                    <a href="{{ route('jugadores.index') }}" class="btn btn-outline-secondary m-1">
+                    <a href="{{ route('jugador.index') }}" class="btn btn-outline-secondary m-1">
                         <i class="fas fa-arrow-left"></i> Volver a la lista
                     </a>    
                     <button type="submit" class="btn btn-outline-success m-1">Crear Jugador</button>

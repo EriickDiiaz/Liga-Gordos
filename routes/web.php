@@ -13,4 +13,4 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::resource('equipos', EquipoController::class);
-Route::resource('jugadores', JugadorController::class);
+Route::resource('jugador', JugadorController::class);

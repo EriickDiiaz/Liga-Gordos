@@ -12,13 +12,13 @@ class JugadorController extends Controller
     public function index()
     {
         $jugadores = Jugador::with('equipo')->get();
-        return view('jugadores.index', compact('jugadores'));
+        return view('jugador.index', compact('jugadores'));
     }
 
     public function create()
     {
         $equipos = Equipo::all();
-        return view('jugadores.create', compact('equipos'));
+        return view('jugador.create', compact('equipos'));
     }
 
     public function store(Request $request)
@@ -31,20 +31,20 @@ class JugadorController extends Controller
         }
 
         Jugador::create($validatedData);
-        return redirect()->route('jugadores.index')->with('success', 'Jugador creado exitosamente.');
+        return redirect()->route('jugador.index')->with('success', 'Jugador creado exitosamente.');
     }
 
     public function show(Jugador $jugador)
     {
         $jugador->load('equipo');
-        return view('jugadores.show', compact('jugador'));
+        return view('jugador.show', compact('jugador'));
     }
 
 
     public function edit(Jugador $jugador)
     {
         $equipos = Equipo::all();
-        return view('jugadores.edit', compact('jugador', 'equipos'));
+        return view('jugador.edit', compact('jugador', 'equipos'));
     }
 
     public function update(Request $request, Jugador $jugador)
@@ -60,7 +60,7 @@ class JugadorController extends Controller
         }
 
         $jugador->update($validatedData);
-        return redirect()->route('jugadores.index')->with('success', 'Jugador actualizado exitosamente.');
+        return redirect()->route('jugador.index')->with('success', 'Jugador actualizado exitosamente.');
     }
 
     public function destroy(Jugador $jugador)
@@ -69,7 +69,7 @@ class JugadorController extends Controller
             Storage::disk('public')->delete($jugador->foto);
         }
         $jugador->delete();
-        return redirect()->route('jugadores.index')->with('success', 'Jugador eliminado exitosamente.');
+        return redirect()->route('jugador.index')->with('success', 'Jugador eliminado exitosamente.');
     }
 
     private function validateJugador(Request $request, $id = null)

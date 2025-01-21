@@ -8,9 +8,9 @@ use Carbon\Carbon;
 
 class Jugador extends Model
 {
-    public $table = "jugadores";
     use HasFactory;
-
+    public $table = 'jugadores';
+    
     protected $fillable = ['nombre', 'cedula', 'fecha_nacimiento', 'dorsal', 'tipo', 'foto', 'equipo_id'];
 
     protected $casts = [

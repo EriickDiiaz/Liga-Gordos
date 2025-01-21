@@ -9,21 +9,19 @@
         </div>
     @endif
     
-    <h1 class="mb-4">Jugadores</h1>
+    <h1 class="mb-4">Jugadores</h1>    
     
-    
-    
-    <a href="{{ route('jugadores.create') }}" class="btn btn-outline-success mb-3">Crear Nuevo Jugador</a>
+    <a href="{{ route('jugador.create') }}" class="btn btn-outline-success mb-3">Crear Nuevo Jugador</a>
     
     <div class="table-responsive">
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>Foto</th>
                     <th>Nombre</th>
                     <th>Cédula</th>
                     <th>Edad</th>
-                    <th>Dorsal</th>
                     <th>Tipo</th>
                     <th>Equipo</th>
                     <th>Acciones</th>
@@ -32,6 +30,7 @@
             <tbody>
                 @foreach($jugadores as $jugador)
                     <tr>
+                        <td>{{ $jugador->dorsal }}</td>
                         <td>
                             @if($jugador->foto)
                                 <img class="img-thumbnail" src="{{ asset('storage/' . $jugador->foto) }}" alt="{{ $jugador->nombre }}" style="width: 50px; height: 50px; object-fit: cover;">
@@ -41,18 +40,17 @@
                         </td>
                         <td>{{ $jugador->nombre }}</td>
                         <td>{{ $jugador->cedula }}</td>
-                        <td>{{ $jugador->edad }}</td>
-                        <td>{{ $jugador->dorsal }}</td>
+                        <td>{{ $jugador->edad }}</td>                        
                         <td>{{ ucfirst($jugador->tipo) }}</td>
                         <td>{{ $jugador->equipo->nombre }}</td>
                         <td>
-                            <a href="{{ route('jugadores.show', $jugador) }}" class="btn btn-outline-light btn-sm">
+                            <a href="{{ route('jugador.show', $jugador) }}" class="btn btn-outline-light btn-sm">
                                 <i class="fas fa-eye"></i> Ver
                             </a>
-                            <a href="{{ route('jugadores.edit', $jugador) }}" class="btn btn-outline-primary btn-sm">
+                            <a href="{{ route('jugador.edit', $jugador) }}" class="btn btn-outline-primary btn-sm">
                                 <i class="fas fa-edit"></i> Editar
                             </a>
-                            <form action="{{ route('jugadores.destroy', $jugador) }}" method="POST" class="d-inline">
+                            <form action="{{ route('jugador.destroy', $jugador) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-outline-danger btn-sm delete-jugador" data-id="{{ $jugador->id }}">
