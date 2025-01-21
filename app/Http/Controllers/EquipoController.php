@@ -15,6 +15,9 @@ class EquipoController extends Controller
 
     public function create()
     {
+        if (request()->ajax()) {
+            return view('equipos._form')->render();
+        }
         return view('equipos.create');
     }
 
@@ -33,16 +36,24 @@ class EquipoController extends Controller
 
         $equipo->save();
 
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Equipo creado exitosamente.']);
+        }
+
         return redirect()->route('equipos.index')->with('success', 'Equipo creado exitosamente.');
     }
 
     public function show(Equipo $equipo)
     {
+        $equipo->load('jugadores');
         return view('equipos.show', compact('equipo'));
     }
 
     public function edit(Equipo $equipo)
     {
+        if (request()->ajax()) {
+            return view('equipos._form', compact('equipo'))->render();
+        }
         return view('equipos.edit', compact('equipo'));
     }
 
@@ -60,6 +71,10 @@ class EquipoController extends Controller
         }
 
         $equipo->save();
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Equipo actualizado exitosamente.']);
+        }
 
         return redirect()->route('equipos.index')->with('success', 'Equipo actualizado exitosamente.');
     }

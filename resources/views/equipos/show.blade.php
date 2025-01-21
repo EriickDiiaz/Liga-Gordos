@@ -24,14 +24,19 @@
                             Color Secundario: <span style="color: {{ $equipo->color_secundario }};">■</span>
                         @endif
                     </p>                    
-                    <p class="text-center mb-1">Jugadores Habilidosos:</p>
-                    <p class="text-center mb-1">Jugadores con Brazalete:</p>
-                    <p class="text-center mb-1">Total de Jugadores:</p>
+                    <p class="text-center mb-1">Jugadores Habilidosos: {{ $equipo->jugadores->where('tipo', 'habilidoso')->count() }}</p>
+                    <p class="text-center mb-1">Jugadores con Brazalete: {{ $equipo->jugadores->where('tipo', 'brazalete')->count() }}</p>
+                    <p class="text-center mb-1">Total de Jugadores: {{ $equipo->jugadores->count() }}</p>
                 </div>
                 
                 <!-- Right side: Players table -->
                 <div class="col-md-8">
-                    <h5>Jugadores</h5>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5>Jugadores</h5>
+                        <a href="{{ route('jugador.create', ['equipo_id' => $equipo->id]) }}" class="btn btn-outline-success">
+                            <i class="fas fa-plus"></i> Agregar Jugador
+                        </a>
+                    </div>
                     <table id="playersTable" class="table table-dark table-hover">
                         <thead>
                             <tr>
@@ -45,33 +50,31 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($equipo->jugadores as $jugador)
                             <tr>
-                                <td>1</td>
-                                <td>Jugador 1</td>
-                                <td>001</td>
-                                <td>01/01/0001</td>
-                                <th>11</th>
-                                <td>Habilidoso</td>
-                                <td>Acciones</td>
+                                <td>{{ $jugador->dorsal }}</td>
+                                <td>{{ $jugador->nombre }}</td>
+                                <td>{{ $jugador->cedula }}</td>
+                                <td>{{ $jugador->fecha_nacimiento->format('d/m/Y') }}</td>
+                                <td>{{ $jugador->edad }}</td>
+                                <td>{{ ucfirst($jugador->tipo) }}</td>
+                                <td>
+                                    <a href="{{ route('jugador.show', $jugador) }}" class="btn btn-outline-light btn-sm">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ route('jugador.edit', $jugador) }}" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('jugador.destroy', $jugador) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline-danger btn-sm delete-jugador" data-id="{{ $jugador->id }}">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Jugador 2</td>
-                                <td>002</td>
-                                <td>02/02/0002</td>
-                                <th>22</th>
-                                <td>Habilidoso</td>
-                                <td>Acciones</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Jugador 3</td>
-                                <td>003</td>
-                                <td>03/03/0003</td>
-                                <th>33</th>
-                                <td>Habilidoso</td>
-                                <td>Acciones</td>
-                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -107,6 +110,26 @@
             "searching": true,
             "lengthChange": false,
             "pageLength": -1
+        });
+
+        $('.delete-jugador').click(function(e) {
+            e.preventDefault();
+            var form = $(this).closest('form');
+            
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "No podrás revertir esta acción!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
         });
     });
 </script>
