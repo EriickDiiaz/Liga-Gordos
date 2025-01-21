@@ -14,7 +14,7 @@
     <a href="{{ route('jugador.create') }}" class="btn btn-outline-success mb-3">Crear Nuevo Jugador</a>
     
     <div class="table-responsive">
-        <table class="table table-striped table-hover">
+        <table id="jugadoresTable" class="table table-striped table-hover">
             <thead>
                 <tr>
                     <th>#</th>
@@ -69,26 +69,36 @@
 
 @push('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const deleteButtons = document.querySelectorAll('.delete-jugador');
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const jugadorId = this.getAttribute('data-id');
-                Swal.fire({
-                    title: '¿Estás seguro?',
-                    text: "No podrás revertir esta acción!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Sí, eliminar!',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        this.closest('form').submit();
-                    }
-                });
+    $(document).ready(function() {
+        $('#jugadoresTable').DataTable({
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+            },
+            "pageLength": 10,
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+            "responsive": true,
+            "order": [[2, "asc"]], // Order by the Name column (index 2) ascending
+            "columnDefs": [
+                { "orderable": false, "targets": [1, 7] } // Disable sorting for photo and actions columns
+            ]
+        });
+
+        $('.delete-jugador').click(function(e) {
+            e.preventDefault();
+            const jugadorId = $(this).data('id');
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "No podrás revertir esta acción!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $(this).closest('form').submit();
+                }
             });
         });
     });
