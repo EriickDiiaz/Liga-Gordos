@@ -11,7 +11,7 @@ class CreateEstadisticasJugadorTable extends Migration
         Schema::create('estadisticas_jugador', function (Blueprint $table) {
             $table->id();
             $table->foreignId('partido_id')->constrained()->onDelete('cascade');
-            $table->foreignId('jugador_id')->constrained()->onDelete('cascade');
+            $table->foreignId('jugador_id')->constrained('jugadores')->onDelete('cascade');
             $table->integer('goles')->default(0);
             $table->integer('tarjetas_amarillas')->default(0);
             $table->boolean('tarjeta_roja')->default(false);

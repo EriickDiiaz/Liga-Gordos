@@ -98,6 +98,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('jugador.index') }}">Jugadores</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('torneo.index') }}">Torneos</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
