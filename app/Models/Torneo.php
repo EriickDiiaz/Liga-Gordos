@@ -9,7 +9,11 @@ class Torneo extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre', 'tipo', 'fecha_inicio', 'estado'];
+    protected $fillable = ['nombre', 'tipo', 'fecha_inicio', 'fecha_fin', 'estado'];
+
+    protected $casts = [
+        'fecha_inicio' => 'date',
+    ];
 
     public function grupos()
     {

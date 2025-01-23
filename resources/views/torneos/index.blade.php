@@ -11,7 +11,7 @@
         </div>
     @endif
     
-    <a href="{{ route('torneo.create') }}" class="btn btn-outline-success mb-3">Crear Nuevo Torneo</a>
+    <a href="{{ route('torneos.create') }}" class="btn btn-outline-success mb-3">Crear Nuevo Torneo</a>
     
     <div class="table-responsive">
         <table id="torneosTable" class="table table-striped table-hover">
@@ -20,7 +20,6 @@
                     <th>Nombre</th>
                     <th>Tipo</th>
                     <th>Fecha Inicio</th>
-                    <th>Fecha Fin</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
@@ -30,16 +29,16 @@
                     <tr>
                         <td>{{ $torneo->nombre }}</td>
                         <td>{{ ucfirst($torneo->tipo) }}</td>
-                        <td>{{ $torneo->fecha_inicio->format('d/m/Y') }}</td>
+                        <td>{{ $torneo->fecha_inicio instanceof \Carbon\Carbon ? $torneo->fecha_inicio->format('d/m/Y') : $torneo->fecha_inicio }}</td>
                         <td>{{ ucfirst($torneo->estado) }}</td>
                         <td>
-                            <a href="{{ route('torneo.show', $torneo) }}" class="btn btn-outline-info btn-sm">
+                            <a href="{{ route('torneos.show', $torneo) }}" class="btn btn-outline-info btn-sm">
                                 <i class="fas fa-eye"></i> Ver
                             </a>
-                            <a href="{{ route('torneo.edit', $torneo) }}" class="btn btn-outline-primary btn-sm">
+                            <a href="{{ route('torneos.edit', $torneo) }}" class="btn btn-outline-primary btn-sm">
                                 <i class="fas fa-edit"></i> Editar
                             </a>
-                            <form action="{{ route('torneo.destroy', $torneo) }}" method="POST" class="d-inline">
+                            <form action="{{ route('torneos.destroy', $torneo) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-outline-danger btn-sm delete-torneo" data-id="{{ $torneo->id }}">

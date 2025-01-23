@@ -10,12 +10,12 @@ class TorneoController extends Controller
     public function index()
     {
         $torneos = Torneo::all();
-        return view('torneo.index', compact('torneos'));
+        return view('torneos.index', compact('torneos'));
     }
 
     public function create()
     {
-        return view('torneo.create');
+        return view('torneos.create');
     }
 
     public function store(Request $request)
@@ -29,17 +29,17 @@ class TorneoController extends Controller
 
         Torneo::create($validatedData);
 
-        return redirect()->route('torneo.index')->with('success', 'Torneo creado exitosamente.');
+        return redirect()->route('torneos.index')->with('success', 'Torneo creado exitosamente.');
     }
 
     public function show(Torneo $torneo)
     {
-        return view('torneo.show', compact('torneo'));
+        return view('torneos.show', compact('torneo'));
     }
 
     public function edit(Torneo $torneo)
     {
-        return view('torneo.edit', compact('torneo'));
+        return view('torneos.edit', compact('torneo'));
     }
 
     public function update(Request $request, Torneo $torneo)
@@ -53,13 +53,13 @@ class TorneoController extends Controller
 
         $torneo->update($validatedData);
 
-        return redirect()->route('torneo.index')->with('success', 'Torneo actualizado exitosamente.');
+        return redirect()->route('torneos.index')->with('success', 'Torneo actualizado exitosamente.');
     }
 
     public function destroy(Torneo $torneo)
     {
         $torneo->delete();
-        return redirect()->route('torneo.index')->with('success', 'Torneo eliminado exitosamente.');
+        return redirect()->route('torneos.index')->with('success', 'Torneo eliminado exitosamente.');
     }
 }
 

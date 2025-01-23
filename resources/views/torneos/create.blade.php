@@ -4,7 +4,7 @@
 <div class="container">
     <h1 class="mb-4">Crear Nuevo Torneo</h1>
     
-    <form action="{{ route('torneo.store') }}" method="POST">
+    <form action="{{ route('torneos.store') }}" method="POST">
         @csrf
         <div class="mb-3">
             <label for="nombre" class="form-label">Nombre del Torneo</label>

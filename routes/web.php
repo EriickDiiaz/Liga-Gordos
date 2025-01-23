@@ -15,4 +15,4 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::resource('equipos', EquipoController::class);
 Route::resource('jugador', JugadorController::class);
-Route::resource('torneo', TorneoController::class);
+Route::resource('torneos', TorneoController::class);
