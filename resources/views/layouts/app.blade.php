@@ -30,7 +30,7 @@
         :root {
             --soft-yellow: #FFF9C4;
             --mustard: #FFD54F;
-            --black: #141414;
+            --black: #212121;
         }
 
         .navbar-custom {
@@ -101,6 +101,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('torneos.index') }}">Torneos</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('partidos.index') }}">Partidos</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -162,4 +165,3 @@
     @stack('scripts')
 </body>
 </html>
-

@@ -22,6 +22,10 @@ class Partido extends Model
         'estado'
     ];
 
+    protected $casts = [
+        'fecha' => 'date',
+    ];
+
     public function torneo()
     {
         return $this->belongsTo(Torneo::class);
