@@ -9,6 +9,8 @@ class AccionPartido extends Model
 {
     use HasFactory;
 
+    public $table = 'acciones_partido';
+
     protected $fillable = ['partido_id', 'jugador_id', 'tipo_accion'];
 
     public function partido()
@@ -21,4 +23,3 @@ class AccionPartido extends Model
         return $this->belongsTo(Jugador::class);
     }
 }
-

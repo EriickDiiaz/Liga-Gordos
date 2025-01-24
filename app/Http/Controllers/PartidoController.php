@@ -63,9 +63,10 @@ class PartidoController extends Controller
     public function edit(Partido $partido)
     {
         $torneos = Torneo::all();
-        $grupos = $partido->torneo->grupos;
-        $equipos = $partido->grupo->equipos;
-        return view('partidos.edit', compact('partido', 'torneos', 'grupos', 'equipos'));
+        $torneo = $partido->torneo;
+        $grupos = $torneo->grupos;
+        $equipos = $partido->grupo ? $partido->grupo->equipos : collect();
+        return view('partidos.edit', compact('partido', 'torneos', 'torneo', 'grupos', 'equipos'));
     }
 
     public function update(Request $request, Partido $partido)

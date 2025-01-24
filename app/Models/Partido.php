@@ -50,4 +50,10 @@ class Partido extends Model
     {
         return $this->hasMany(EstadisticaJugador::class);
     }
+
+    public function acciones()
+    {
+        return $this->hasMany(AccionPartido::class);
+    }
 }
+
