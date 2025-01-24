@@ -8,11 +8,12 @@
         <div class="card-body">
             <h5 class="card-title">{{ $partido->equipoLocal->nombre }} vs {{ $partido->equipoVisitante->nombre }}</h5>
             <p><strong>Torneo:</strong> {{ $partido->torneo->nombre }}</p>
-            <p><strong>Grupo:</strong> {{ $partido->grupo->nombre }}</p>
+            <p><strong>Grupo:</strong> {{ $partido->grupo->nombre ?? 'N/A' }}</p>
             <p><strong>Fecha:</strong> {{ $partido->fecha->format('d/m/Y H:i') }}</p>
             <p><strong>Tipo:</strong> {{ ucfirst($partido->tipo) }}</p>
             <p><strong>Fase:</strong> {{ $partido->fase ?? 'N/A' }}</p>
             <p><strong>Estado:</strong> {{ ucfirst($partido->estado) }}</p>
+            <p><strong>Resultado:</strong> {{ $partido->goles_local ?? 0 }} - {{ $partido->goles_visitante ?? 0 }}</p>
         </div>
     </div>
 
@@ -22,6 +23,7 @@
             <tr>
                 <th>Jugador</th>
                 <th>Acción</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -29,6 +31,13 @@
                 <tr>
                     <td>{{ $accion->jugador->nombre }}</td>
                     <td>{{ ucfirst(str_replace('_', ' ', $accion->tipo_accion)) }}</td>
+                    <td>
+                        <form action="{{ route('partidos.eliminar-accion', ['partido' => $partido, 'accion' => $accion]) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que quieres eliminar esta acción?')">Eliminar</button>
+                        </form>
+                    </td>
                 </tr>
             @endforeach
         </tbody>

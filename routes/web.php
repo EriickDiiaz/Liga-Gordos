@@ -22,15 +22,9 @@ Route::post('/torneos/{torneo}/grupos', [TorneoController::class, 'addGroup'])->
 Route::post('/torneos/{torneo}/equipos', [TorneoController::class, 'addEquipoToTorneo'])->name('torneos.addEquipo');
 Route::delete('/torneos/{torneo}/equipos/{equipo}', [TorneoController::class, 'removeEquipoFromTorneo'])->name('torneos.removeEquipo');
 
-Route::get('/torneos/{torneo}/partidos/create', [PartidoController::class, 'create'])->name('partidos.create');
-Route::post('/torneos/{torneo}/partidos', [PartidoController::class, 'store'])->name('partidos.store');
-Route::get('/partidos/{partido}/edit', [PartidoController::class, 'edit'])->name('partidos.edit');
-Route::put('/partidos/{partido}', [PartidoController::class, 'update'])->name('partidos.update');
-Route::delete('/partidos/{partido}', [PartidoController::class, 'destroy'])->name('partidos.destroy');
-
 Route::get('/partidos/grupos', [PartidoController::class, 'getGrupos'])->name('partidos.getGrupos');
 Route::get('/partidos/equipos', [PartidoController::class, 'getEquipos'])->name('partidos.getEquipos');
 Route::resource('partidos', PartidoController::class);
-
 Route::post('/partidos/{partido}/registrar-accion', [PartidoController::class, 'registrarAccion'])->name('partidos.registrar-accion');
+Route::delete('/partidos/{partido}/acciones/{accion}', [PartidoController::class, 'eliminarAccion'])->name('partidos.eliminar-accion');
 

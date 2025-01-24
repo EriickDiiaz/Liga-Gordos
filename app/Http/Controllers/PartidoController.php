@@ -80,6 +80,8 @@ class PartidoController extends Controller
             'tipo' => 'required|in:grupo,eliminatoria',
             'fase' => 'nullable|string',
             'estado' => 'required|in:programado,en_curso,finalizado',
+            'goles_local' => 'nullable|integer|min:0',
+            'goles_visitante' => 'nullable|integer|min:0',
         ]);
 
         $partido->update($validatedData);
@@ -104,6 +106,12 @@ class PartidoController extends Controller
         $partido->acciones()->save($accion);
 
         return redirect()->route('partidos.show', $partido)->with('success', 'Acción registrada exitosamente.');
+    }
+
+    public function eliminarAccion(Partido $partido, AccionPartido $accion)
+    {
+        $accion->delete();
+        return redirect()->route('partidos.show', $partido)->with('success', 'Acción eliminada exitosamente.');
     }
 }
 

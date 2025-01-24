@@ -46,7 +46,7 @@
             <label for="grupo_id" class="form-label">Grupo</label>
             <select name="grupo_id" id="grupo_id" class="form-control">
                 <option value="">Sin grupo</option>
-                @foreach($torneo->grupos as $grupo)
+                @foreach($grupos as $grupo)
                     <option value="{{ $grupo->id }}" {{ $partido->grupo_id == $grupo->id ? 'selected' : '' }}>
                         {{ $grupo->nombre }}
                     </option>
