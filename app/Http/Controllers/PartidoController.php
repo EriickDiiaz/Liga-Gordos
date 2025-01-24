@@ -66,6 +66,7 @@ class PartidoController extends Controller
         $torneo = $partido->torneo;
         $grupos = $torneo->grupos;
         $equipos = $partido->grupo ? $partido->grupo->equipos : collect();
+        //$equipos = Equipo::all(); // Change this to get all equipos
         return view('partidos.edit', compact('partido', 'torneos', 'torneo', 'grupos', 'equipos'));
     }
 

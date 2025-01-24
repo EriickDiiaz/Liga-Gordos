@@ -8,6 +8,27 @@
         @csrf
         @method('PUT')
         <div class="mb-3">
+            <label for="torneo_id" class="form-label">Torneo</label>
+            <select name="torneo_id" id="torneo_id" class="form-control" required>
+                @foreach($torneos as $torneo)
+                    <option value="{{ $torneo->id }}" {{ $partido->torneo_id == $torneo->id ? 'selected' : '' }}>
+                        {{ $torneo->nombre }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="grupo_id" class="form-label">Grupo</label>
+            <select name="grupo_id" id="grupo_id" class="form-control" required>
+                <option value="">Sin grupo</option>
+                @foreach($grupos as $grupo)
+                    <option value="{{ $grupo->id }}" {{ $partido->grupo_id == $grupo->id ? 'selected' : '' }}>
+                        {{ $grupo->nombre }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div class="mb-3">
             <label for="equipo_local_id" class="form-label">Equipo Local</label>
             <select name="equipo_local_id" id="equipo_local_id" class="form-control" required>
                 @foreach($equipos as $equipo)
@@ -41,17 +62,6 @@
         <div class="mb-3">
             <label for="fase" class="form-label">Fase</label>
             <input type="text" name="fase" id="fase" class="form-control" value="{{ $partido->fase }}">
-        </div>
-        <div class="mb-3">
-            <label for="grupo_id" class="form-label">Grupo</label>
-            <select name="grupo_id" id="grupo_id" class="form-control">
-                <option value="">Sin grupo</option>
-                @foreach($grupos as $grupo)
-                    <option value="{{ $grupo->id }}" {{ $partido->grupo_id == $grupo->id ? 'selected' : '' }}>
-                        {{ $grupo->nombre }}
-                    </option>
-                @endforeach
-            </select>
         </div>
         <div class="mb-3">
             <label for="goles_local" class="form-label">Goles Local</label>
