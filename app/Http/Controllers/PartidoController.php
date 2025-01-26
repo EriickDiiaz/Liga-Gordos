@@ -7,13 +7,16 @@ use App\Models\Torneo;
 use App\Models\Equipo;
 use App\Models\Grupo;
 use App\Models\AccionPartido;
+use App\Models\Jugador;
 use Illuminate\Http\Request;
 
 class PartidoController extends Controller
 {
     public function index()
     {
-        $partidos = Partido::with(['torneo', 'equipoLocal', 'equipoVisitante'])->get();
+        $partidos = Partido::with(['torneo', 'grupo', 'equipoLocal', 'equipoVisitante'])
+            ->orderBy('fecha', 'desc')
+            ->get();
         return view('partidos.index', compact('partidos'));
     }
 
@@ -66,7 +69,6 @@ class PartidoController extends Controller
         $torneo = $partido->torneo;
         $grupos = $torneo->grupos;
         $equipos = $partido->grupo ? $partido->grupo->equipos : collect();
-        //$equipos = Equipo::all(); // Change this to get all equipos
         return view('partidos.edit', compact('partido', 'torneos', 'torneo', 'grupos', 'equipos'));
     }
 
@@ -106,11 +108,33 @@ class PartidoController extends Controller
         $accion = new AccionPartido($validatedData);
         $partido->acciones()->save($accion);
 
+        // Update goal count if the action is a goal
+        if ($validatedData['tipo_accion'] === 'gol') {
+            $jugador = Jugador::findOrFail($validatedData['jugador_id']);
+            if ($jugador->equipo_id === $partido->equipo_local_id) {
+                $partido->goles_local = ($partido->goles_local ?? 0) + 1;
+            } elseif ($jugador->equipo_id === $partido->equipo_visitante_id) {
+                $partido->goles_visitante = ($partido->goles_visitante ?? 0) + 1;
+            }
+            $partido->save();
+        }
+
         return redirect()->route('partidos.show', $partido)->with('success', 'Acción registrada exitosamente.');
     }
 
     public function eliminarAccion(Partido $partido, AccionPartido $accion)
     {
+        // Decrease goal count if the action was a goal
+        if ($accion->tipo_accion === 'gol') {
+            $jugador = $accion->jugador;
+            if ($jugador->equipo_id === $partido->equipo_local_id) {
+                $partido->goles_local = max(0, ($partido->goles_local ?? 0) - 1);
+            } elseif ($jugador->equipo_id === $partido->equipo_visitante_id) {
+                $partido->goles_visitante = max(0, ($partido->goles_visitante ?? 0) - 1);
+            }
+            $partido->save();
+        }
+
         $accion->delete();
         return redirect()->route('partidos.show', $partido)->with('success', 'Acción eliminada exitosamente.');
     }

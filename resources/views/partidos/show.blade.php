@@ -5,15 +5,27 @@
     <h1 class="mb-4">Detalles del Partido</h1>
     
     <div class="card mb-4">
-        <div class="card-body">
-            <h5 class="card-title">{{ $partido->equipoLocal->nombre }} vs {{ $partido->equipoVisitante->nombre }}</h5>
-            <p><strong>Torneo:</strong> {{ $partido->torneo->nombre }}</p>
-            <p><strong>Grupo:</strong> {{ $partido->grupo->nombre ?? 'N/A' }}</p>
-            <p><strong>Fecha:</strong> {{ $partido->fecha->format('d/m/Y H:i') }}</p>
+        <div class="card-body text-center">
+            <h3 class="card-title">{{ $partido->torneo->nombre }}</h3>
+            <h5 class="card-subtitle mb-2 text-muted">{{ $partido->fase }} - {{ $partido->grupo->nombre ?? 'Sin grupo' }}</h5>
+            <div class="d-flex justify-content-between align-items-center my-3">
+                <div class="text-center">
+                    <img src="{{ asset($partido->equipoLocal->logo) }}" alt="{{ $partido->equipoLocal->nombre }}" class="img-fluid" style="max-height: 100px;">
+                    <h4 class="mt-2">{{ $partido->equipoLocal->nombre }}</h4>
+                    <h2>{{ $partido->goles_local ?? 0 }}</h2>
+                </div>
+                <h1 class="mx-2">VS</h1>
+                <div class="text-center">
+                    <img src="{{ asset($partido->equipoVisitante->logo) }}" alt="{{ $partido->equipoVisitante->nombre }}" class="img-fluid" style="max-height: 100px;">
+                    <h4 class="mt-2">{{ $partido->equipoVisitante->nombre }}</h4>
+                    <h2>{{ $partido->goles_visitante ?? 0 }}</h2>
+                </div>
+            </div>
+            <span class="badge bg-{{ $partido->estado == 'programado' ? 'primary' : ($partido->estado == 'en_curso' ? 'success' : 'secondary') }}">
+                {{ ucfirst($partido->estado) }}
+            </span>
+            <h5 class="mt-3">{{ $partido->fecha->format('d/m/Y h:i A') }}</h5>
             <p><strong>Tipo:</strong> {{ ucfirst($partido->tipo) }}</p>
-            <p><strong>Fase:</strong> {{ $partido->fase ?? 'N/A' }}</p>
-            <p><strong>Estado:</strong> {{ ucfirst($partido->estado) }}</p>
-            <p><strong>Resultado:</strong> {{ $partido->goles_local ?? 0 }} - {{ $partido->goles_visitante ?? 0 }}</p>
         </div>
     </div>
 
@@ -22,6 +34,7 @@
         <thead>
             <tr>
                 <th>Jugador</th>
+                <th>Equipo</th>
                 <th>Acción</th>
                 <th>Acciones</th>
             </tr>
@@ -30,13 +43,20 @@
             @foreach($partido->acciones as $accion)
                 <tr>
                     <td>{{ $accion->jugador->nombre }}</td>
-                    <td>{{ ucfirst(str_replace('_', ' ', $accion->tipo_accion)) }}</td>
+                    <td>{{ $accion->jugador->equipo->nombre }}</td>
                     <td>
-                        <form action="{{ route('partidos.eliminar-accion', ['partido' => $partido, 'accion' => $accion]) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que quieres eliminar esta acción?')">Eliminar</button>
-                        </form>
+                        @if($accion->tipo_accion == 'gol')
+                            <i class="fas fa-futbol fa-2x text-light"></i>
+                        @elseif($accion->tipo_accion == 'tarjeta_amarilla')
+                            <i class="fa-solid fa-mobile-button fa-2x text-warning"></i>
+                        @elseif($accion->tipo_accion == 'tarjeta_roja')
+                            <i class="fa-solid fa-mobile-button fa-2x text-danger"></i>
+                        @endif
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm delete-accion" data-accion-id="{{ $accion->id }}">
+                            <i class="fas fa-trash-alt"></i> Eliminar
+                        </button>
                     </td>
                 </tr>
             @endforeach
@@ -75,4 +95,39 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteButtons = document.querySelectorAll('.delete-accion');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const accionId = this.getAttribute('data-accion-id');
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "No podrás revertir esta acción!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminar!',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = `{{ route('partidos.eliminar-accion', ['partido' => $partido->id, 'accion' => ':accion']) }}`.replace(':accion', accionId);
+                        form.innerHTML = `
+                            @csrf
+                            @method('DELETE')
+                        `;
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+                });
+            });
+        });
+    });
+</script>
+@endpush
 

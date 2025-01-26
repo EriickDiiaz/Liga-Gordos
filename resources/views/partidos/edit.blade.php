@@ -80,6 +80,7 @@
             </select>
         </div>
         <button type="submit" class="btn btn-primary">Actualizar Partido</button>
+        <a href="{{ route('partidos.index') }}" class="btn btn-secondary">Volver a la lista</a>
     </form>
 </div>
 @endsection

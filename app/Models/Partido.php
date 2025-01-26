@@ -23,7 +23,7 @@ class Partido extends Model
     ];
 
     protected $casts = [
-        'fecha' => 'date',
+        'fecha' => 'datetime',
     ];
 
     public function torneo()
