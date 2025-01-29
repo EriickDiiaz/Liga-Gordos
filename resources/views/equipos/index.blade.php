@@ -35,16 +35,16 @@
                         <p class="mb-1">Jugadores con Brazalete:</p>
                         <p class="mb-1">Total de Jugadores:</p>
                         <div class="text-center mt-3">
-                            <a href="{{ route('equipos.show', $equipo) }}" class="btn btn-outline-light">
+                            <a href="{{ route('equipos.show', $equipo) }}" class="btn btn-outline-light m-1">
                                 <i class="fas fa-eye"></i> Ver
                             </a>
-                            <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary">
+                            <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary m-1">
                                 <i class="fas fa-edit"></i> Editar
                             </a>
                             <form action="{{ route('equipos.destroy', $equipo) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-outline-danger delete-equipo" data-id="{{ $equipo->id }}">
+                                <button type="submit" class="btn btn-outline-danger m-1 delete-equipo" data-id="{{ $equipo->id }}">
                                     <i class="fas fa-trash-alt"></i> Eliminar
                                 </button>
                             </form>

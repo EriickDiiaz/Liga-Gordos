@@ -2,25 +2,29 @@
 
 @section('content')
 <div class="container">
-    <h1 class="mb-4">Detalles del Partido</h1>
+    <h1 class="mb-3 text-center">Detalles del Partido</h1>
     
     <div class="card mb-4">
         <div class="card-body text-center">
-            <h3 class="card-title">{{ $partido->torneo->nombre }}</h3>
-            <h5 class="card-subtitle mb-2 text-muted">{{ $partido->fase }} - {{ $partido->grupo->nombre ?? 'Sin grupo' }}</h5>
-            <div class="d-flex justify-content-between align-items-center my-3">
-                <div class="text-center">
-                    <img src="{{ asset($partido->equipoLocal->logo) }}" alt="{{ $partido->equipoLocal->nombre }}" class="img-fluid" style="max-height: 100px;">
+            <h1 class="card-title">{{ $partido->torneo->nombre }}</h1>
+            <h5 class="card-subtitle mb-2 text-muted">{{ $partido->fase }} - Grupo {{ $partido->grupo->nombre ?? 'Sin grupo' }}</h5>
+            
+
+            <div class="d-flex my-3">
+                <div class="col-4">
+                    <img src="{{ asset($partido->equipoLocal->logo) }}" alt="{{ $partido->equipoLocal->nombre }}" class="img-fluid" style="max-height: 200px;">
                     <h4 class="mt-2">{{ $partido->equipoLocal->nombre }}</h4>
                     <h2>{{ $partido->goles_local ?? 0 }}</h2>
                 </div>
-                <h1 class="mx-2">VS</h1>
-                <div class="text-center">
-                    <img src="{{ asset($partido->equipoVisitante->logo) }}" alt="{{ $partido->equipoVisitante->nombre }}" class="img-fluid" style="max-height: 100px;">
+                <div class="col-4 d-flex align-items-center justify-content-center">
+                    <h1 class="mx-2">VS</h1>
+                </div>
+                <div class="col-4">
+                    <img src="{{ asset($partido->equipoVisitante->logo) }}" alt="{{ $partido->equipoVisitante->nombre }}" class="img-fluid" style="max-height: 200px;">
                     <h4 class="mt-2">{{ $partido->equipoVisitante->nombre }}</h4>
                     <h2>{{ $partido->goles_visitante ?? 0 }}</h2>
                 </div>
-            </div>
+            </div> 
             <span class="badge bg-{{ $partido->estado == 'programado' ? 'primary' : ($partido->estado == 'en_curso' ? 'success' : 'secondary') }}">
                 {{ ucfirst($partido->estado) }}
             </span>
@@ -29,7 +33,7 @@
         </div>
     </div>
 
-    <h2>Acciones del Partido</h2>
+    <h2 class="text-center">Acciones del Partido</h2>
     <table class="table">
         <thead>
             <tr>
@@ -54,8 +58,8 @@
                         @endif
                     </td>
                     <td>
-                        <button type="button" class="btn btn-danger btn-sm delete-accion" data-accion-id="{{ $accion->id }}">
-                            <i class="fas fa-trash-alt"></i> Eliminar
+                        <button type="button" class="btn btn-outline-danger btn-sm delete-accion" data-accion-id="{{ $accion->id }}">
+                            <i class="fas fa-trash-alt"></i>
                         </button>
                     </td>
                 </tr>
@@ -63,35 +67,43 @@
         </tbody>
     </table>
 
-    <h3>Registrar Nueva Acción</h3>
-    <form action="{{ route('partidos.registrar-accion', $partido) }}" method="POST">
-        @csrf
-        <div class="mb-3">
-            <label for="jugador_id" class="form-label">Jugador</label>
-            <select name="jugador_id" id="jugador_id" class="form-control" required>
-                <option value="">Seleccione un jugador</option>
-                @foreach($partido->equipoLocal->jugadores as $jugador)
-                    <option value="{{ $jugador->id }}">{{ $jugador->nombre }} ({{ $partido->equipoLocal->nombre }})</option>
-                @endforeach
-                @foreach($partido->equipoVisitante->jugadores as $jugador)
-                    <option value="{{ $jugador->id }}">{{ $jugador->nombre }} ({{ $partido->equipoVisitante->nombre }})</option>
-                @endforeach
-            </select>
+    <h3 class="text-center">Registrar Nueva Acción</h3>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form action="{{ route('partidos.registrar-accion', $partido) }}" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <label for="jugador_id" class="form-label">Jugador</label>
+                    <select name="jugador_id" id="jugador_id" class="form-control" required>
+                        <option value="">Seleccione un jugador</option>
+                        @foreach($partido->equipoLocal->jugadores as $jugador)
+                            <option value="{{ $jugador->id }}">{{ $jugador->nombre }} ({{ $partido->equipoLocal->nombre }})</option>
+                        @endforeach
+                        @foreach($partido->equipoVisitante->jugadores as $jugador)
+                            <option value="{{ $jugador->id }}">{{ $jugador->nombre }} ({{ $partido->equipoVisitante->nombre }})</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="tipo_accion" class="form-label">Tipo de Acción</label>
+                    <select name="tipo_accion" id="tipo_accion" class="form-control" required>
+                        <option value="gol">Gol</option>
+                        <option value="tarjeta_amarilla">Tarjeta Amarilla</option>
+                        <option value="tarjeta_roja">Tarjeta Roja</option>
+                    </select>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-outline-primary">Registrar Acción</button>
+                </div>                
+            </form>
         </div>
-        <div class="mb-3">
-            <label for="tipo_accion" class="form-label">Tipo de Acción</label>
-            <select name="tipo_accion" id="tipo_accion" class="form-control" required>
-                <option value="gol">Gol</option>
-                <option value="tarjeta_amarilla">Tarjeta Amarilla</option>
-                <option value="tarjeta_roja">Tarjeta Roja</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Registrar Acción</button>
-    </form>
+    </div>
 
-    <div class="mt-4">
-        <a href="{{ route('partidos.edit', $partido) }}" class="btn btn-primary">Editar Partido</a>
-        <a href="{{ route('partidos.index') }}" class="btn btn-secondary">Volver a la lista</a>
+    <div class="text-center mt-4">
+        <a href="{{ route('partidos.index') }}" class="btn btn-outline-secondary m-1">
+            <i class="fas fa-arrow-left"></i> Volver a la lista
+        </a>
+        <a href="{{ route('partidos.edit', $partido) }}" class="btn btn-outline-primary m-1">Editar Partido</a>
     </div>
 </div>
 @endsection

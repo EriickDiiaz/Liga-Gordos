@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="container">
-    <h1 class="mb-4">{{ $torneo->nombre }}</h1>
+    <h1 class="mb-3">{{ $torneo->nombre }}</h1>
     
-    <div class="card mb-4">
+    <div class="card mb-3">
         <div class="card-body">
             <h5 class="card-title">Detalles del Torneo</h5>
             <p><strong>Tipo:</strong> {{ ucfirst($torneo->tipo) }}</p>
@@ -13,14 +13,14 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row"> 
         <div class="col-md-6">
-            <h2>Grupos</h2>
+            <h2 class="text-center">Grupos</h2>
             <form action="{{ route('torneos.addGroup', $torneo) }}" method="POST" class="mb-3">
                 @csrf
                 <div class="input-group">
                     <input type="text" name="nombre" class="form-control" placeholder="Nombre del grupo" required>
-                    <button type="submit" class="btn btn-primary">Agregar Grupo</button>
+                    <button type="submit" class="btn btn-outline-primary">Agregar Grupo</button>
                 </div>
             </form>
             @foreach($torneo->grupos as $grupo)
@@ -34,7 +34,9 @@
                                     <form action="{{ route('torneos.removeEquipo', [$torneo, $equipo]) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">Remover</button>
+                                        <button type="submit" class="btn btn-outline-danger">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
                                     </form>
                                 </li>
                             @endforeach
@@ -44,7 +46,7 @@
             @endforeach
         </div>
         <div class="col-md-6">
-            <h2>Equipos</h2>
+            <h2 class="text-center">Equipos</h2>
             <form action="{{ route('torneos.addEquipo', $torneo) }}" method="POST" class="mb-3">
                 @csrf
                 <div class="input-group">
@@ -59,7 +61,7 @@
                             <option value="{{ $grupo->id }}">{{ $grupo->nombre }}</option>
                         @endforeach
                     </select>
-                    <button type="submit" class="btn btn-primary">Agregar Equipo</button>
+                    <button type="submit" class="btn btn-outline-primary">Agregar Equipo</button>
                 </div>
             </form>
             <ul class="list-group">
@@ -75,8 +77,8 @@
         </div>
     </div>
 
-    <h2 class="mt-4">Partidos</h2>
-    <a href="{{ route('partidos.create', $torneo) }}" class="btn btn-success mb-3">Crear Nuevo Partido</a>
+    <h2 class="mt-3 text-center">Partidos</h2>
+    <a href="{{ route('partidos.create', $torneo) }}" class="btn btn-outline-success mb-3">Crear Nuevo Partido</a>
     <table class="table">
         <thead>
             <tr>
@@ -103,11 +105,15 @@
                     </td>
                     <td>{{ ucfirst($partido->estado) }}</td>
                     <td>
-                        <a href="{{ route('partidos.edit', $partido) }}" class="btn btn-primary btn-sm">Editar</a>
+                        <a href="{{ route('partidos.edit', $partido) }}" class="btn btn-outline-primary">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
                         <form action="{{ route('partidos.destroy', $partido) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                            <button type="submit" class="btn btn-outline-danger">
+                                <i class="fas fa-trash-alt"></i> Eliminar
+                            </button>
                         </form>
                     </td>
                 </tr>

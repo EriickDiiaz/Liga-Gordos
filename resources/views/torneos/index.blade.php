@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h1 class="mb-4">Torneos</h1>
+    <h1 class="mb-3">Torneos</h1>
     
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -21,6 +21,7 @@
                     <th>Tipo</th>
                     <th>Fecha Inicio</th>
                     <th>Estado</th>
+                    <th>Equipos</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -31,17 +32,18 @@
                         <td>{{ ucfirst($torneo->tipo) }}</td>
                         <td>{{ $torneo->fecha_inicio instanceof \Carbon\Carbon ? $torneo->fecha_inicio->format('d/m/Y') : $torneo->fecha_inicio }}</td>
                         <td>{{ ucfirst($torneo->estado) }}</td>
+                        <td>Num de equipos</td>
                         <td>
-                            <a href="{{ route('torneos.show', $torneo) }}" class="btn btn-outline-info btn-sm">
+                            <a href="{{ route('torneos.show', $torneo) }}" class="btn btn-outline-light m-1">
                                 <i class="fas fa-eye"></i> Ver
                             </a>
-                            <a href="{{ route('torneos.edit', $torneo) }}" class="btn btn-outline-primary btn-sm">
+                            <a href="{{ route('torneos.edit', $torneo) }}" class="btn btn-outline-primary m-1">
                                 <i class="fas fa-edit"></i> Editar
                             </a>
                             <form action="{{ route('torneos.destroy', $torneo) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-outline-danger btn-sm delete-torneo" data-id="{{ $torneo->id }}">
+                                <button type="submit" class="btn btn-outline-danger delete-torneo m-1" data-id="{{ $torneo->id }}">
                                     <i class="fas fa-trash-alt"></i> Eliminar
                                 </button>
                             </form>
