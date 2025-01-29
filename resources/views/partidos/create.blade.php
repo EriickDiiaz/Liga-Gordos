@@ -2,54 +2,64 @@
 
 @section('content')
 <div class="container">
-    <h1 class="mb-4">Crear Nuevo Partido</h1>
+    <h1 class="mb-3 text-center">Crear Nuevo Partido</h1>
     
-    <form action="{{ route('partidos.store') }}" method="POST">
-        @csrf
-        <div class="mb-3">
-            <label for="torneo_id" class="form-label">Torneo</label>
-            <select name="torneo_id" id="torneo_id" class="form-control" required>
-                <option value="">Seleccione un torneo</option>
-                @foreach($torneos as $torneo)
-                    <option value="{{ $torneo->id }}">{{ $torneo->nombre }}</option>
-                @endforeach
-            </select>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form action="{{ route('partidos.store') }}" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <label for="torneo_id" class="form-label">Torneo</label>
+                    <select name="torneo_id" id="torneo_id" class="form-control" required>
+                        <option value="">Seleccione un torneo</option>
+                        @foreach($torneos as $torneo)
+                            <option value="{{ $torneo->id }}">{{ $torneo->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="grupo_id" class="form-label">Grupo</label>
+                    <select name="grupo_id" id="grupo_id" class="form-control" required disabled>
+                        <option value="">Seleccione un grupo</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="equipo_local_id" class="form-label">Equipo Local</label>
+                    <select name="equipo_local_id" id="equipo_local_id" class="form-control" required disabled>
+                        <option value="">Seleccione el equipo local</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="equipo_visitante_id" class="form-label">Equipo Visitante</label>
+                    <select name="equipo_visitante_id" id="equipo_visitante_id" class="form-control" required disabled>
+                        <option value="">Seleccione el equipo visitante</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="fecha" class="form-label">Fecha y Hora</label>
+                    <input type="datetime-local" name="fecha" id="fecha" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="tipo" class="form-label">Tipo</label>
+                    <select name="tipo" id="tipo" class="form-control" required>
+                        <option value="grupo">Grupo</option>
+                        <option value="eliminatoria">Eliminatoria</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="fase" class="form-label">Fase</label>
+                    <input type="text" name="fase" id="fase" class="form-control">
+                </div>
+                <div class="text-center mt-3">
+                    <a href="{{ route('partidos.index') }}" class="btn btn-outline-secondary m-1">
+                        <i class="fas fa-arrow-left"></i> Volver a la lista
+                    </a>
+                    <button type="submit" class="btn btn-outline-primary m-1">Crear Partido</button>
+                </div>
+                
+            </form>
         </div>
-        <div class="mb-3">
-            <label for="grupo_id" class="form-label">Grupo</label>
-            <select name="grupo_id" id="grupo_id" class="form-control" required disabled>
-                <option value="">Seleccione un grupo</option>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="equipo_local_id" class="form-label">Equipo Local</label>
-            <select name="equipo_local_id" id="equipo_local_id" class="form-control" required disabled>
-                <option value="">Seleccione el equipo local</option>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="equipo_visitante_id" class="form-label">Equipo Visitante</label>
-            <select name="equipo_visitante_id" id="equipo_visitante_id" class="form-control" required disabled>
-                <option value="">Seleccione el equipo visitante</option>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="fecha" class="form-label">Fecha y Hora</label>
-            <input type="datetime-local" name="fecha" id="fecha" class="form-control" required>
-        </div>
-        <div class="mb-3">
-            <label for="tipo" class="form-label">Tipo</label>
-            <select name="tipo" id="tipo" class="form-control" required>
-                <option value="grupo">Grupo</option>
-                <option value="eliminatoria">Eliminatoria</option>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="fase" class="form-label">Fase</label>
-            <input type="text" name="fase" id="fase" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-primary">Crear Partido</button>
-    </form>
+    </div>
 </div>
 
 @push('scripts')
