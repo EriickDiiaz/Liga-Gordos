@@ -17,11 +17,12 @@
                     <!-- Player content -->
                     <div class="position-relative" style="z-index: 1;">
                         <div class="text-center mb-4">
-                            @if($jugador->foto)
+                        <img src="{{ asset($jugador->foto) }}" class="card-img-top mt-3" alt="{{ $jugador->nombre }}" class="img-fluid rounded" style="max-width: 300px;">
+                            <!--@if($jugador->foto)
                                 <img src="{{ asset('storage/' . $jugador->foto) }}" alt="{{ $jugador->nombre }}" class="img-fluid rounded" style="max-height: 300px;">
                             @else
                                 <img src="{{ asset('img/default-player.png') }}" alt="Default" class="img-fluid rounded" style="max-height: 300px;">
-                            @endif
+                            @endif-->
                         </div>
                         <h4 class="card-title">Información del Jugador</h4>
                         <p><strong>Nombre:</strong> {{ $jugador->nombre }}</p>

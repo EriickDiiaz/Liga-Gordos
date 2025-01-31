@@ -17,7 +17,7 @@ class EquiposJugadoresSeeder extends Seeder
         for ($i = 1; $i <= 32; $i++) {
             $equipo = Equipo::create([
                 'nombre' => $faker->unique()->company . ' FC',
-                'logo' => 'logos/equipo' . $i . '.png', // Asumiendo que tienes estas imágenes
+                'logo' => 'img/default-team.png',
                 'color_primario' => $faker->hexColor,
                 'color_secundario' => $faker->hexColor,
                 'estado' => $faker->boolean(80), // 80% de probabilidad de estar activo
@@ -38,7 +38,7 @@ class EquiposJugadoresSeeder extends Seeder
                     'fecha_nacimiento' => $faker->date('Y-m-d', '-18 years'), // Jugadores mayores de 18 años
                     'dorsal' => $j, // Números del 1 al 15
                     'tipo' => $tipo,
-                    'foto' => 'jugadores/jugador' . $faker->numberBetween(1, 50) . '.png', // Asumiendo que tienes estas imágenes
+                    'foto' => 'img/default-player.png',
                     'equipo_id' => $equipo->id,
                 ]);
             }

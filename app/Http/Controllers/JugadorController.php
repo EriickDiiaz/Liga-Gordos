@@ -28,6 +28,8 @@ class JugadorController extends Controller
         if ($request->hasFile('foto')) {
             $path = $request->file('foto')->store('jugadores', 'public');
             $validatedData['foto'] = $path;
+        } else {
+            $validatedData['foto'] = 'img/default-player.png';
         }
 
         Jugador::create($validatedData);
@@ -40,7 +42,6 @@ class JugadorController extends Controller
         return view('jugador.show', compact('jugador'));
     }
 
-
     public function edit(Jugador $jugador)
     {
         $equipos = Equipo::all();
@@ -52,7 +53,7 @@ class JugadorController extends Controller
         $validatedData = $this->validateJugador($request, $jugador->id);
         
         if ($request->hasFile('foto')) {
-            if ($jugador->foto) {
+            if ($jugador->foto && $jugador->foto != 'img/default-player.png') {
                 Storage::disk('public')->delete($jugador->foto);
             }
             $path = $request->file('foto')->store('jugadores', 'public');
@@ -65,7 +66,7 @@ class JugadorController extends Controller
 
     public function destroy(Jugador $jugador)
     {
-        if ($jugador->foto) {
+        if ($jugador->foto && $jugador->foto != 'img/default-player.png') {
             Storage::disk('public')->delete($jugador->foto);
         }
         $jugador->delete();

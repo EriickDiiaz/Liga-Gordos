@@ -32,11 +32,7 @@
                     <tr>
                         <td>{{ $jugador->dorsal }}</td>
                         <td>
-                            @if($jugador->foto)
-                                <img class="img-thumbnail" src="{{ asset('storage/' . $jugador->foto) }}" alt="{{ $jugador->nombre }}" style="width: 50px; height: 50px; object-fit: cover;">
-                            @else
-                                <img class="img-thumbnail" src="{{ asset('img/default-player.png') }}" alt="Default" style="width: 50px; height: 50px; object-fit: cover;">
-                            @endif
+                            <img class="img-thumbnail" src="{{ asset($jugador->foto) }}" class="card-img-top mt-3" alt="{{ $jugador->nombre }}" style="width: 50px; height: 50px; object-fit: cover;">
                         </td>
                         <td>{{ $jugador->nombre }}</td>
                         <td>{{ $jugador->cedula }}</td>

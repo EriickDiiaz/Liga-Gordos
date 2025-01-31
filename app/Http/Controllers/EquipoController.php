@@ -32,6 +32,8 @@ class EquipoController extends Controller
             $logoName = time() . '.' . $logo->getClientOriginalExtension();
             $logo->move(public_path('logos'), $logoName);
             $equipo->logo = 'logos/' . $logoName;
+        } else {
+            $equipo->logo = 'img/default-team.png';
         }
 
         $equipo->save();
@@ -107,3 +109,4 @@ class EquipoController extends Controller
         return $request->validate($rules, $messages);
     }
 }
+
