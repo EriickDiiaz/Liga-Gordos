@@ -10,8 +10,46 @@
             <p><strong>Tipo:</strong> {{ ucfirst($torneo->tipo) }}</p>
             <p><strong>Fecha de Inicio:</strong> {{ $torneo->fecha_inicio->format('d/m/Y') }}</p>
             <p><strong>Estado:</strong> {{ ucfirst($torneo->estado) }}</p>
+            <p><strong>Equipos participantes:</strong> </p>
         </div>
     </div>
+
+    <h2 class="mb-3">Tablas de Posiciones</h2>
+    @foreach($torneo->grupos as $grupo)
+        <h3>{{ $grupo->nombre }}</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Posición</th>
+                    <th>Equipo</th>
+                    <th>PJ</th>
+                    <th>PG</th>
+                    <th>PE</th>
+                    <th>PP</th>
+                    <th>GF</th>
+                    <th>GC</th>
+                    <th>DG</th>
+                    <th>PTS</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($tablasPosiciones[$grupo->id] as $index => $estadisticas)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $estadisticas['equipo']->nombre }}</td>
+                        <td>{{ $estadisticas['PJ'] }}</td>
+                        <td>{{ $estadisticas['PG'] }}</td>
+                        <td>{{ $estadisticas['PE'] }}</td>
+                        <td>{{ $estadisticas['PP'] }}</td>
+                        <td>{{ $estadisticas['GF'] }}</td>
+                        <td>{{ $estadisticas['GC'] }}</td>
+                        <td>{{ $estadisticas['DG'] }}</td>
+                        <td>{{ $estadisticas['PTS'] }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endforeach
 
     <div class="row"> 
         <div class="col-md-6">
