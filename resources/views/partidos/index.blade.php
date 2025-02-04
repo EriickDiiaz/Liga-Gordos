@@ -12,7 +12,7 @@
                 <div class="card h-100 text-center">
                     <div class="card-body">
                         <h3 class="card-title">{{ $partido->torneo->nombre }}</h3>
-                        <h5 class="card-subtitle mb-2 text-muted">{{ $partido->fase }} - Grupo {{ $partido->grupo->nombre ?? 'Sin grupo' }}</h5>
+                        <h5 class="card-subtitle mb-2 text-muted">{{ $partido->fase }} - {{ $partido->grupo->nombre ?? 'Sin grupo' }}</h5>
                         <div class="d-flex my-3">
                             <div class="col-4">
                                 <img src="{{ asset($partido->equipoLocal->logo) }}" alt="{{ $partido->equipoLocal->nombre }}" class="img-fluid" style="max-height: 100px;">

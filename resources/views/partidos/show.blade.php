@@ -7,7 +7,7 @@
     <div class="card mb-4">
         <div class="card-body text-center">
             <h1 class="card-title">{{ $partido->torneo->nombre }}</h1>
-            <h5 class="card-subtitle mb-2 text-muted">{{ $partido->fase }} - Grupo {{ $partido->grupo->nombre ?? 'Sin grupo' }}</h5>
+            <h5 class="card-subtitle mb-2 text-muted">{{ $partido->fase }} - {{ $partido->grupo->nombre ?? 'Sin grupo' }}</h5>
             
 
             <div class="d-flex my-3">

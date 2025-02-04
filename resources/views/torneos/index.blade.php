@@ -32,7 +32,7 @@
                         <td>{{ ucfirst($torneo->tipo) }}</td>
                         <td>{{ $torneo->fecha_inicio instanceof \Carbon\Carbon ? $torneo->fecha_inicio->format('d/m/Y') : $torneo->fecha_inicio }}</td>
                         <td>{{ ucfirst($torneo->estado) }}</td>
-                        <td>Num de equipos</td>
+                        <td>{{ $torneo->equipos->count() }}</td>
                         <td>
                             <a href="{{ route('torneos.show', $torneo) }}" class="btn btn-outline-light m-1">
                                 <i class="fas fa-eye"></i> Ver
