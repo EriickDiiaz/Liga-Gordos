@@ -17,6 +17,7 @@
                             <div class="col-4">
                                 <img src="{{ asset($partido->equipoLocal->logo) }}" alt="{{ $partido->equipoLocal->nombre }}" class="img-fluid" style="max-height: 100px;">
                                 <h6 class="mt-2">{{ $partido->equipoLocal->nombre }}</h6>
+                                <h2>{{ $partido->goles_local ?? 0 }}</h2>
                             </div>
                             <div class="col-4 d-flex align-items-center justify-content-center">
                                 <h1 class="mx-2">VS</h1>
@@ -24,6 +25,7 @@
                             <div class="col-4">
                                 <img src="{{ asset($partido->equipoVisitante->logo) }}" alt="{{ $partido->equipoVisitante->nombre }}" class="img-fluid" style="max-height: 100px;">
                                 <h6 class="mt-2">{{ $partido->equipoVisitante->nombre }}</h6>
+                                <h2>{{ $partido->goles_visitante ?? 0 }}</h2>
                             </div>
                         </div>
                         <span class="badge bg-{{ $partido->estado == 'programado' ? 'primary' : ($partido->estado == 'en_curso' ? 'success' : 'secondary') }}">

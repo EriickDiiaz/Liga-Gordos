@@ -5,6 +5,7 @@
     <h1 class="mb-3">{{ $equipo->nombre }}</h1>
     
     <div class="card">
+        <div class="card-header" style="border-color: {{ $equipo->color_primario }}; background: {{ $equipo->color_primario }};"></div>
         <div class="card-body">
             <div class="row">
                 <!-- Left side: Team information -->
@@ -80,6 +81,7 @@
                 </div>
             </div>
         </div>
+        <div class="card-footer" style="border-color: {{ $equipo->color_secundario }}; background: {{ $equipo->color_secundario }};"></div>
     </div>
     <div class="text-center mt-3">
         <a href="{{ route('equipos.index') }}" class="btn btn-outline-secondary m-1">
