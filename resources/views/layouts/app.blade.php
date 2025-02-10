@@ -104,13 +104,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('partidos.index') }}">Partidos</a>
                         </li>
-                        @auth
-                            @can('manage roles')
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('roles.index') }}">Roles y Permisos</a>
-                                </li>
-                            @endcan
-                        @endauth
+                        @role('Administrador')
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('roles.index') }}">Roles y Permisos</a>
+                            </li>
+                        @endrole
                     </ul>
 
                     <!-- Right Side Of Navbar -->

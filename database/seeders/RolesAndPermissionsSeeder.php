@@ -14,25 +14,18 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::create(['name' => 'crear equipos']);
-        Permission::create(['name' => 'editar equipos']);
-        Permission::create(['name' => 'borrar equipos']);
-        Permission::create(['name' => 'crear jugadores']);
-        Permission::create(['name' => 'editar jugadores']);
-        Permission::create(['name' => 'borrar jugadores']);
-        Permission::create(['name' => 'crear torneos']);
-        Permission::create(['name' => 'editar torneos']);
-        Permission::create(['name' => 'borrar torneos']);
-        Permission::create(['name' => 'crear partidos']);
-        Permission::create(['name' => 'editar partidos']);
-        Permission::create(['name' => 'registrar acciones']);
-        Permission::create(['name' => 'borrar partidos']);
-        Permission::create(['name' => 'crear roles']);
-        Permission::create(['name' => 'editar roles']);
-        Permission::create(['name' => 'borrar roles']);
-        Permission::create(['name' => 'crear permisos']);
-        Permission::create(['name' => 'editar permisos']);
-        Permission::create(['name' => 'borrar permisos']);
+        $permissions = [
+            'crear equipos', 'editar equipos', 'borrar equipos',
+            'crear jugadores', 'editar jugadores', 'borrar jugadores',
+            'crear torneos', 'editar torneos', 'borrar torneos',
+            'crear partidos', 'editar partidos', 'registrar acciones', 'borrar partidos',
+            'gestion roles', 'crear roles', 'editar roles', 'borrar roles',
+            'crear permisos', 'editar permisos', 'borrar permisos',            
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission]);
+        }
         
         // create roles and assign created permissions
 

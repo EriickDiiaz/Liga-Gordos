@@ -17,5 +17,9 @@ class AdminUserSeeder extends Seeder
             'email' => 'admin',
             'password' => Hash::make('password'),
         ]);
+
+        // Asignar el rol de Administrador al usuario admin
+        $adminRole = Role::findByName('Administrador');
+        $admin->assignRole($adminRole);
     }
 }
