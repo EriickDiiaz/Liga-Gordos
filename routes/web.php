@@ -15,6 +15,28 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::resource('equipos', EquipoController::class);
+
+Route::get('/equipos', [EquipoController::class, 'index'])->name('equipos.index');
+Route::get('/equipos/{equipo}', [EquipoController::class, 'show'])->name('equipos.show');
+
+Route::group(['middleware' => ['auth']], function () {
+    Route::group(['middleware' => ['permission:crear equipos']], function () {
+        Route::get('/equipos/create', [EquipoController::class, 'create'])->name('equipos.create');
+        Route::post('/equipos', [EquipoController::class, 'store'])->name('equipos.store');
+    });
+
+    Route::group(['middleware' => ['permission:editar equipos']], function () {
+        Route::get('/equipos/{equipo}/edit', [EquipoController::class, 'edit'])->name('equipos.edit');
+        Route::put('/equipos/{equipo}', [EquipoController::class, 'update'])->name('equipos.update');
+    });
+
+    Route::delete('/equipos/{equipo}', [EquipoController::class, 'destroy'])
+        ->name('equipos.destroy')
+        ->middleware('permission:borrar equipos');
+});
+
+
+
 Route::resource('jugador', JugadorController::class);
 Route::resource('torneos', TorneoController::class);
 

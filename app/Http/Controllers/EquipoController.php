@@ -7,6 +7,14 @@ use Illuminate\Http\Request;
 
 class EquipoController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index', 'show']);
+        $this->middleware('permission:crear equipos', ['only' => ['create', 'store']]);
+        $this->middleware('permission:editar equipos', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:borrar equipos', ['only' => ['destroy']]);
+    }
+
     public function index()
     {
         $equipos = Equipo::all();
@@ -15,9 +23,6 @@ class EquipoController extends Controller
 
     public function create()
     {
-        if (request()->ajax()) {
-            return view('equipos._form')->render();
-        }
         return view('equipos.create');
     }
 
@@ -38,29 +43,29 @@ class EquipoController extends Controller
 
         $equipo->save();
 
-        if ($request->ajax()) {
-            return response()->json(['success' => true, 'message' => 'Equipo creado exitosamente.']);
-        }
-
         return redirect()->route('equipos.index')->with('success', 'Equipo creado exitosamente.');
     }
 
     public function show(Equipo $equipo)
     {
-        $equipo->load('jugadores');
         return view('equipos.show', compact('equipo'));
     }
 
     public function edit(Equipo $equipo)
     {
-        if (request()->ajax()) {
-            return view('equipos._form', compact('equipo'))->render();
+        if (auth()->user()->hasRole('Capitán') && auth()->user()->equipo_id !== $equipo->id) {
+            abort(403, 'No tienes permiso para editar este equipo.');
         }
+
         return view('equipos.edit', compact('equipo'));
     }
 
     public function update(Request $request, Equipo $equipo)
     {
+        if (auth()->user()->hasRole('Capitán') && auth()->user()->equipo_id !== $equipo->id) {
+            abort(403, 'No tienes permiso para editar este equipo.');
+        }
+
         $this->validateEquipo($request, $equipo->id);
 
         $equipo->fill($request->except('logo'));
@@ -73,10 +78,6 @@ class EquipoController extends Controller
         }
 
         $equipo->save();
-
-        if ($request->ajax()) {
-            return response()->json(['success' => true, 'message' => 'Equipo actualizado exitosamente.']);
-        }
 
         return redirect()->route('equipos.index')->with('success', 'Equipo actualizado exitosamente.');
     }

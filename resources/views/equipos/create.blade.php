@@ -6,44 +6,52 @@
 
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <form action="{{ route('equipos.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="form-group mb-3">
-                    <label for="nombre">Nombre del Equipo</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" required>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="color_primario">Color Primario</label>
-                            <input type="color" class="form-control" id="color_primario" name="color_primario" required>
+            @auth
+                @can('crear equipos')
+                    <form action="{{ route('equipos.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group mb-3">
+                            <label for="nombre">Nombre del Equipo</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="color_secundario">Color Secundario (opcional)</label>
-                            <input type="color" class="form-control" id="color_secundario" name="color_secundario">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="color_primario">Color Primario</label>
+                                    <input type="color" class="form-control" id="color_primario" name="color_primario" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="color_secundario">Color Secundario (opcional)</label>
+                                    <input type="color" class="form-control" id="color_secundario" name="color_secundario">
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="logo">Logo del Equipo</label>
-                    <input type="file" class="form-control" id="logo" name="logo">
-                </div>
-                <div class="form-group mb-3">
-                    <label for="estado">Estado</label>
-                    <select class="form-control" id="estado" name="estado">
-                        <option value="1">Activo</option>
-                        <option value="0">Inactivo</option>
-                    </select>
-                </div>
-                <div class="text-center mt-3">
-                    <a href="{{ route('equipos.index') }}" class="btn btn-outline-secondary m-1">
-                        <i class="fas fa-arrow-left"></i> Volver a la lista
-                    </a>    
-                    <button type="submit" class="btn btn-outline-success m-1">Crear Equipo</button>
-                </div>        
-            </form>
+                        <div class="form-group mb-3">
+                            <label for="logo">Logo del Equipo</label>
+                            <input type="file" class="form-control" id="logo" name="logo">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="estado">Estado</label>
+                            <select class="form-control" id="estado" name="estado">
+                                <option value="1">Activo</option>
+                                <option value="0">Inactivo</option>
+                            </select>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a href="{{ route('equipos.index') }}" class="btn btn-outline-secondary m-1">
+                                <i class="fas fa-arrow-left"></i> Volver a la lista
+                            </a>    
+                            <button type="submit" class="btn btn-outline-success m-1">Crear Equipo</button>
+                        </div>        
+                    </form>
+                @else
+                    <p class="text-center">No tienes permiso para crear equipos.</p>
+                @endcan
+            @else
+                <p class="text-center">Debes iniciar sesión para crear equipos.</p>
+            @endauth
         </div>
     </div>
 </div>

@@ -34,9 +34,13 @@
                 <div class="col-md-8">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5>Jugadores</h5>
-                        <a href="{{ route('jugador.create', ['equipo_id' => $equipo->id]) }}" class="btn btn-outline-success">
-                            <i class="fas fa-plus"></i> Agregar Jugador
-                        </a>
+                        @auth
+                            @can('crear jugadores')
+                                <a href="{{ route('jugador.create', ['equipo_id' => $equipo->id]) }}" class="btn btn-outline-success">
+                                    <i class="fas fa-plus"></i> Agregar Jugador
+                                </a>
+                            @endcan
+                        @endauth
                     </div>
                     <table id="playersTable" class="table table-dark table-hover">
                         <thead>
@@ -63,16 +67,22 @@
                                     <a href="{{ route('jugador.show', $jugador) }}" class="btn btn-outline-light btn-sm">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ route('jugador.edit', $jugador) }}" class="btn btn-outline-primary btn-sm">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <form action="{{ route('jugador.destroy', $jugador) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm delete-jugador" data-id="{{ $jugador->id }}">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </form>
+                                    @auth
+                                        @can('editar jugadores')
+                                            <a href="{{ route('jugador.edit', $jugador) }}" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        @endcan
+                                        @can('borrar jugadores')
+                                            <form action="{{ route('jugador.destroy', $jugador) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-outline-danger btn-sm delete-jugador" data-id="{{ $jugador->id }}">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        @endcan
+                                    @endauth
                                 </td>
                             </tr>
                             @endforeach
@@ -87,9 +97,13 @@
         <a href="{{ route('equipos.index') }}" class="btn btn-outline-secondary m-1">
             <i class="fas fa-arrow-left"></i> Volver a la lista
         </a>    
-        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary m-1">
-            <i class="fas fa-edit"></i> Editar
-        </a>
+        @auth
+            @can('editar equipos')
+                <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary m-1">
+                    <i class="fas fa-edit"></i> Editar
+                </a>
+            @endcan
+        @endauth
     </div>
 </div>
 @endsection
