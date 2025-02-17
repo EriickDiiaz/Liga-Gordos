@@ -56,7 +56,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $capitanRole = Role::create(['name' => 'Capitán']);
         $capitanRole->givePermissionTo([
-            'crear jugadores', 'editar jugadores', 'borrar jugadores'
+            'crear jugadores', 'editar jugadores'
         ]);
     }
 }

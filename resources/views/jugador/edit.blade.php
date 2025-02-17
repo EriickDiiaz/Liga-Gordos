@@ -53,8 +53,10 @@
                 <div class="text-center mt-3">
                     <a href="{{ route('jugador.index') }}" class="btn btn-outline-secondary m-1">
                         <i class="fas fa-arrow-left"></i> Volver a la lista
-                    </a>    
+                    </a>
+                    @can('editar jugadores')
                     <button type="submit" class="btn btn-outline-primary m-1">Actualizar Jugador</button>
+                    @endcan
                 </div>        
             </form>
         </div>

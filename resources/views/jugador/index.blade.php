@@ -9,10 +9,10 @@
         </div>
     @endif
     
-    <h1 class="mb-4">Jugadores</h1>    
-    
+    <h1 class="mb-4">Jugadores</h1>
+    @can('crear jugadores')
     <a href="{{ route('jugador.create') }}" class="btn btn-outline-success mb-3">Crear Nuevo Jugador</a>
-    
+    @endcan
     <div class="table-responsive">
         <table id="jugadoresTable" class="table table-striped table-hover">
             <thead>
@@ -40,19 +40,23 @@
                         <td>{{ ucfirst($jugador->tipo) }}</td>
                         <td>{{ $jugador->equipo->nombre }}</td>
                         <td>
-                            <a href="{{ route('jugador.show', $jugador) }}" class="btn btn-outline-light btn-sm">
+                            <a href="{{ route('jugador.show', $jugador) }}" class="btn btn-outline-light">
                                 <i class="fas fa-eye"></i> Ver
                             </a>
-                            <a href="{{ route('jugador.edit', $jugador) }}" class="btn btn-outline-primary btn-sm">
+                            @can('editar jugadores')
+                            <a href="{{ route('jugador.edit', $jugador) }}" class="btn btn-outline-primary">
                                 <i class="fas fa-edit"></i> Editar
                             </a>
+                            @endcan
+                            @can('borrar jugadores')
                             <form action="{{ route('jugador.destroy', $jugador) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-outline-danger btn-sm delete-jugador" data-id="{{ $jugador->id }}">
+                                <button type="submit" class="btn btn-outline-danger delete-jugador" data-id="{{ $jugador->id }}">
                                     <i class="fas fa-trash-alt"></i> Eliminar
                                 </button>
                             </form>
+                            @endcan
                         </td>
                     </tr>
                 @endforeach

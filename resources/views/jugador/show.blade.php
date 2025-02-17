@@ -39,13 +39,46 @@
             <div class="text-center mt-3">
                 <a href="{{ route('jugador.index') }}" class="btn btn-outline-secondary m-1">
                     <i class="fas fa-arrow-left"></i> Volver a la lista
-                </a>    
+                </a>
+                @can('editar jugadores')
                 <a href="{{ route('jugador.edit', $jugador) }}" class="btn btn-outline-primary m-1">
                     <i class="fas fa-edit"></i> Editar
                 </a>
+                @endcan
+                @can('borrar jugadores')
+                <form action="{{ route('jugador.destroy', $jugador) }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-outline-danger m-1 delete-jugador" data-id="{{ $jugador->id }}">
+                        <i class="fas fa-trash-alt"></i> Eliminar
+                    </button>
+                </form>
+                @endcan
             </div>
         </div>
     </div>
 </div>
 @endsection
 
+@push('scripts')
+<script>
+    $('.delete-jugador').click(function(e) {
+        e.preventDefault();
+        const jugadorId = $(this).data('id');
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "No podrás revertir esta acción!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $(this).closest('form').submit();
+            }
+        });
+    });
+</script>
+@endpush
