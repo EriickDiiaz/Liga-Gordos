@@ -99,7 +99,7 @@
                             <a class="nav-link" href="{{ route('jugador.index') }}">Jugadores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('torneos.index') }}">Torneos</a>
+                            <a class="nav-link" href="{{ route('torneos.index') }}">Torneo</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('partidos.index') }}">Partidos</a>
@@ -119,12 +119,6 @@
                             @if (Route::has('login'))
                                 <li class="nav-item">
                                     <a class="nav-link btn btn-custom mx-1" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link btn btn-custom mx-1" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
                             @endif
                         @else
