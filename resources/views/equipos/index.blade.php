@@ -11,8 +11,9 @@
     @endif
     
     <h1 class="mb-3">Equipos</h1>
-    
+    @can('crear equipos')
     <a href="{{ route('equipos.create') }}" class="btn btn-outline-success mb-3">Crear Nuevo Equipo</a>
+    @endcan
     <div class="row row-cols-1 row-cols-md-3 g-4">
         @foreach($equipos as $equipo)
             <div class="col">
@@ -31,23 +32,29 @@
                             @endif
                         </p>
                         
-                        <p class="mb-1">Jugadores Habilidosos:</p>
-                        <p class="mb-1">Jugadores con Brazalete:</p>
-                        <p class="mb-1">Total de Jugadores:</p>
+                        <p class="mb-1">Jugadores Habilidosos: {{ $equipo->jugadores->where('tipo', 'habilidoso')->count() }}</p>
+                        <p class="mb-1">Jugadores con Brazalete: {{ $equipo->jugadores->where('tipo', 'brazalete')->count() }}</p>
+                        <p class="mb-1">Total de Jugadores: {{ $equipo->jugadores->count() }}</p>
                         <div class="text-center mt-3">
                             <a href="{{ route('equipos.show', $equipo) }}" class="btn btn-outline-light m-1">
                                 <i class="fas fa-eye"></i> Ver
                             </a>
-                            <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary m-1">
-                                <i class="fas fa-edit"></i> Editar
-                            </a>
-                            <form action="{{ route('equipos.destroy', $equipo) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-outline-danger m-1 delete-equipo" data-id="{{ $equipo->id }}">
-                                    <i class="fas fa-trash-alt"></i> Eliminar
-                                </button>
-                            </form>
+                            @auth
+                                @can('editar equipos')
+                                    <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary m-1">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </a>
+                                @endcan
+                                @can('borrar equipos')
+                                    <form action="{{ route('equipos.destroy', $equipo) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline-danger m-1 delete-equipo" data-id="{{ $equipo->id }}">
+                                            <i class="fas fa-trash-alt"></i> Eliminar
+                                        </button>
+                                    </form>
+                                @endcan
+                            @endauth
                             
                         </div>
                     </div>

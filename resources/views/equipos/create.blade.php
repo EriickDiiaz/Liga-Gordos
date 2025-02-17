@@ -40,8 +40,10 @@
                 <div class="text-center mt-3">
                     <a href="{{ route('equipos.index') }}" class="btn btn-outline-secondary m-1">
                         <i class="fas fa-arrow-left"></i> Volver a la lista
-                    </a>    
+                    </a>
+                    @can('crear equipos')
                     <button type="submit" class="btn btn-outline-success m-1">Crear Equipo</button>
+                    @endcan
                 </div>        
             </form>
         </div>
