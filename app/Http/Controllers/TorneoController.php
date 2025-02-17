@@ -11,27 +11,68 @@ class TorneoController extends Controller
 {
     public function index()
     {
-        $torneos = Torneo::all();
-        return view('torneos.index', compact('torneos'));
+        $torneos = Torneo::with(['equipos', 'grupos.equipos', 'partidos.equipoLocal', 'partidos.equipoVisitante'])->get();
+        
+        $tablasPosiciones = [];
+        foreach ($torneos as $torneo) {
+            $tablasPosiciones[$torneo->id] = [];
+            foreach ($torneo->grupos as $grupo) {
+                $tablasPosiciones[$torneo->id][$grupo->id] = $this->calcularTablaPosiciones($grupo);
+            }
+        }
+        
+        return view('torneos.index', compact('torneos', 'tablasPosiciones'));
     }
 
     public function create()
     {
-        return view('torneos.create');
+        $equipos = Equipo::all();
+        return view('torneos.create', compact('equipos'));
     }
 
     public function store(Request $request)
     {
+        $this->authorize('crear torneos');
+
         $validatedData = $request->validate([
             'nombre' => 'required|string|max:255',
             'tipo' => 'required|in:eliminatoria,liga,mixto',
             'fecha_inicio' => 'required|date',
             'estado' => 'required|in:planificado,en_curso,finalizado',
+            'grupos' => 'array',
+            'grupos.*.nombre' => 'required|string|max:255',
+            'grupos.*.equipos' => 'array',
+            'grupos.*.equipos.*' => 'exists:equipos,id',
         ]);
 
-        $torneo = Torneo::create($validatedData);
+        DB::beginTransaction();
 
-        return redirect()->route('torneos.show', $torneo)->with('success', 'Torneo creado exitosamente.');
+        try {
+            $torneo = Torneo::create([
+                'nombre' => $validatedData['nombre'],
+                'tipo' => $validatedData['tipo'],
+                'fecha_inicio' => $validatedData['fecha_inicio'],
+                'estado' => $validatedData['estado'],
+            ]);
+
+            if (isset($validatedData['grupos'])) {
+                foreach ($validatedData['grupos'] as $grupoData) {
+                    $grupo = $torneo->grupos()->create([
+                        'nombre' => $grupoData['nombre'],
+                    ]);
+
+                    if (isset($grupoData['equipos'])) {
+                        $grupo->equipos()->attach($grupoData['equipos']);
+                    }
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('torneos.show', $torneo)->with('success', 'Torneo creado exitosamente con sus grupos y equipos.');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->withInput()->with('error', 'Hubo un error al crear el torneo. Por favor, inténtelo de nuevo.');
+        }
     }
 
     public function show(Torneo $torneo)
@@ -48,6 +89,7 @@ class TorneoController extends Controller
 
     public function edit(Torneo $torneo)
     {
+        $torneo->load('grupos.equipos');
         return view('torneos.edit', compact('torneo'));
     }
 
@@ -62,7 +104,7 @@ class TorneoController extends Controller
 
         $torneo->update($validatedData);
 
-        return redirect()->route('torneos.show', $torneo)->with('success', 'Torneo actualizado exitosamente.');
+        return redirect()->route('torneos.edit', $torneo)->with('success', 'Torneo actualizado exitosamente.');
     }
 
     public function destroy(Torneo $torneo)
@@ -79,28 +121,35 @@ class TorneoController extends Controller
 
         $grupo = $torneo->grupos()->create($validatedData);
 
-        return redirect()->route('torneos.show', $torneo)->with('success', 'Grupo agregado exitosamente.');
+        return redirect()->route('torneos.edit', $torneo)->with('success', 'Grupo agregado exitosamente.');
+    }
+
+    public function removeGroup(Torneo $torneo, Grupo $grupo)
+    {
+        $grupo->delete();
+
+        return redirect()->route('torneos.edit', $torneo)->with('success', 'Grupo eliminado exitosamente.');
     }
 
     public function addEquipoToTorneo(Request $request, Torneo $torneo)
     {
         $validatedData = $request->validate([
             'equipo_id' => 'required|exists:equipos,id',
-            'grupo_id' => 'nullable|exists:grupos,id',
+            'grupo_id' => 'required|exists:grupos,id',
         ]);
 
         $torneo->equipos()->attach($validatedData['equipo_id'], [
-            'grupo_id' => $validatedData['grupo_id'] ?? null,
+            'grupo_id' => $validatedData['grupo_id'],
         ]);
 
-        return redirect()->route('torneos.show', $torneo)->with('success', 'Equipo agregado exitosamente al torneo.');
+        return redirect()->route('torneos.edit', $torneo)->with('success', 'Equipo agregado exitosamente al grupo.');
     }
 
-    public function removeEquipoFromTorneo(Request $request, Torneo $torneo, Equipo $equipo)
+    public function removeEquipoFromTorneo(Torneo $torneo, Equipo $equipo)
     {
         $torneo->equipos()->detach($equipo->id);
 
-        return redirect()->route('torneos.show', $torneo)->with('success', 'Equipo removido exitosamente del torneo.');
+        return redirect()->route('torneos.edit', $torneo)->with('success', 'Equipo removido exitosamente del torneo.');
     }
 
     private function calcularTablaPosiciones($grupo)

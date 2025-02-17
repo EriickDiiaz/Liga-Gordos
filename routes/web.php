@@ -19,6 +19,7 @@ Route::resource('jugador', JugadorController::class);
 Route::resource('torneos', TorneoController::class);
 
 Route::post('/torneos/{torneo}/grupos', [TorneoController::class, 'addGroup'])->name('torneos.addGroup');
+Route::delete('/torneos/{torneo}/grupos/{grupo}', [TorneoController::class, 'removeGroup'])->name('torneos.removeGroup');
 Route::post('/torneos/{torneo}/equipos', [TorneoController::class, 'addEquipoToTorneo'])->name('torneos.addEquipo');
 Route::delete('/torneos/{torneo}/equipos/{equipo}', [TorneoController::class, 'removeEquipoFromTorneo'])->name('torneos.removeEquipo');
 
