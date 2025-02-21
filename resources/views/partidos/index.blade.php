@@ -3,8 +3,10 @@
 @section('content')
 <div class="container">
     <h1 class="mb-3">Partidos</h1> 
-    
+
+    @can('crear partidos')
     <a href="{{ route('partidos.create') }}" class="btn btn-outline-success mb-3">Crear Nuevo Partido</a>
+    @endcan
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         @foreach($partidos as $partido)
@@ -37,9 +39,12 @@
                         <a href="{{ route('partidos.show', $partido) }}" class="btn btn-outline-light m-1">
                             <i class="fas fa-eye"></i> Ver
                         </a>
+                        @can('editar partidos')
                         <a href="{{ route('partidos.edit', $partido) }}" class="btn btn-outline-primary m-1">
                             <i class="fas fa-edit"></i> Editar
                         </a>
+                        @endcan
+                        @can('borrar partidos')
                         <form action="{{ route('partidos.destroy', $partido) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
@@ -47,6 +52,7 @@
                                 <i class="fas fa-trash-alt"></i> Eliminar
                             </button>
                         </form>
+                        @endcan
                     </div>
                 </div>
             </div>

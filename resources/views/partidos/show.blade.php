@@ -66,7 +66,7 @@
             @endforeach
         </tbody>
     </table>
-
+    @can('registrar acciones')
     <h3 class="text-center">Registrar Nueva Acción</h3>
     <div class="row justify-content-center">
         <div class="col-md-6">
@@ -97,13 +97,16 @@
                 </div>                
             </form>
         </div>
+        @endcan
     </div>
 
     <div class="text-center mt-4">
         <a href="{{ route('partidos.index') }}" class="btn btn-outline-secondary m-1">
             <i class="fas fa-arrow-left"></i> Volver a la lista
         </a>
+        @can('editar partidos')
         <a href="{{ route('partidos.edit', $partido) }}" class="btn btn-outline-primary m-1">Editar Partido</a>
+        @endcan
     </div>
 </div>
 @endsection

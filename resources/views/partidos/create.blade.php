@@ -54,7 +54,9 @@
                     <a href="{{ route('partidos.index') }}" class="btn btn-outline-secondary m-1">
                         <i class="fas fa-arrow-left"></i> Volver a la lista
                     </a>
+                    @can('crear partidos')
                     <button type="submit" class="btn btn-outline-primary m-1">Crear Partido</button>
+                    @endcan
                 </div>
                 
             </form>

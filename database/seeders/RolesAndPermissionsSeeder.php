@@ -51,7 +51,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $mesaTecnicaRole = Role::create(['name' => 'Mesa Técnica']);
         $mesaTecnicaRole->givePermissionTo([
-            'editar partidos', 'registrar acciones'
+            'registrar acciones'
         ]);
 
         $capitanRole = Role::create(['name' => 'Capitán']);
