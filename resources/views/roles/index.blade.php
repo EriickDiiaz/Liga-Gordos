@@ -11,13 +11,12 @@
         </div>
     @endif
 
-    <a href="{{ route('roles.create') }}" class="btn btn-outline-success mb-3">Crear Nuevo Rol</a>
-
     <div class="card mb-4">
-        <div class="card-header">
-            <h2 class="d-inline">Roles</h2>
-            
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Roles</h2>
+            <a href="{{ route('roles.create') }}" class="btn btn-outline-success">Crear Nuevo Rol</a>
         </div>
+
         <div class="card-body">
             <table class="table table-hover">
                 <thead>
@@ -55,20 +54,51 @@
                     @endforeach
                 </tbody>
             </table>
-            
         </div>
     </div>
 
     <div class="card">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h2 class="mb-0">Permisos</h2>
+            <a href="{{ route('permissions.create') }}" class="btn btn-outline-success">Crear Nuevo Permiso</a>
         </div>
         <div class="card-body">
-            <ul class="list-group">
-                @foreach($permissions as $permission)
-                    <li class="list-group-item">{{ $permission->name }}</li>
-                @endforeach
-            </ul>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Roles</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($permissions as $permission)
+                    <tr>
+                        <td>{{ $permission->name }}</td>
+                        <td>
+                            @foreach($permission->roles as $role)
+                                <span class="badge bg-secondary me-1">{{ $role->name }}</span>
+                            @endforeach
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <a href="{{ route('permissions.edit', $permission) }}" class="btn btn-outline-primary d-inline">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                
+                                <form action="{{ route('permissions.destroy', $permission) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-outline-danger m-1 delete-permission" data-id="{{ $permission->id }}">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -77,27 +107,35 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const deleteButtons = document.querySelectorAll('.delete-role');
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                const equipoId = this.getAttribute('data-id');
-                Swal.fire({
-                    title: '¿Estás seguro?',
-                    text: "No podrás revertir esta acción!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Sí, eliminar!',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        this.closest('form').submit();
-                    }
+        const deleteRoleButtons = document.querySelectorAll('.delete-role');
+        const deletePermissionButtons = document.querySelectorAll('.delete-permission');
+
+        function setupDeleteButtons(buttons, type) {
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const id = this.getAttribute('data-id');
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: `No podrás revertir esta acción! Se eliminará este ${type}.`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, eliminar!',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            this.closest('form').submit();
+                        }
+                    });
                 });
             });
-        });
+        }
+
+        setupDeleteButtons(deleteRoleButtons, 'rol');
+        setupDeleteButtons(deletePermissionButtons, 'permiso');
     });
 </script>
 @endpush
+

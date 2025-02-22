@@ -4,6 +4,7 @@ use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\JugadorController;
 use App\Http\Controllers\TorneoController;
 use App\Http\Controllers\PartidoController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -31,4 +32,5 @@ Route::post('/partidos/{partido}/registrar-accion', [PartidoController::class, '
 Route::delete('/partidos/{partido}/acciones/{accion}', [PartidoController::class, 'eliminarAccion'])->name('partidos.eliminar-accion');
 
 Route::resource('roles', RoleController::class);
+Route::resource('permissions', PermissionController::class)->except(['index', 'show']);
 
