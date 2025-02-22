@@ -6,6 +6,7 @@ use App\Models\Torneo;
 use App\Models\Equipo;
 use App\Models\Grupo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TorneoController extends Controller
 {
@@ -39,40 +40,11 @@ class TorneoController extends Controller
             'tipo' => 'required|in:eliminatoria,liga,mixto',
             'fecha_inicio' => 'required|date',
             'estado' => 'required|in:planificado,en_curso,finalizado',
-            'grupos' => 'array',
-            'grupos.*.nombre' => 'required|string|max:255',
-            'grupos.*.equipos' => 'array',
-            'grupos.*.equipos.*' => 'exists:equipos,id',
         ]);
 
-        DB::beginTransaction();
+        $torneo = Torneo::create($validatedData);
 
-        try {
-            $torneo = Torneo::create([
-                'nombre' => $validatedData['nombre'],
-                'tipo' => $validatedData['tipo'],
-                'fecha_inicio' => $validatedData['fecha_inicio'],
-                'estado' => $validatedData['estado'],
-            ]);
-
-            if (isset($validatedData['grupos'])) {
-                foreach ($validatedData['grupos'] as $grupoData) {
-                    $grupo = $torneo->grupos()->create([
-                        'nombre' => $grupoData['nombre'],
-                    ]);
-
-                    if (isset($grupoData['equipos'])) {
-                        $grupo->equipos()->attach($grupoData['equipos']);
-                    }
-                }
-            }
-
-            DB::commit();
-            return redirect()->route('torneos.show', $torneo)->with('success', 'Torneo creado exitosamente con sus grupos y equipos.');
-        } catch (\Exception $e) {
-            DB::rollback();
-            return back()->withInput()->with('error', 'Hubo un error al crear el torneo. Por favor, inténtelo de nuevo.');
-        }
+        return redirect()->route('torneos.index')->with('success', 'Torneo actualizado exitosamente.');
     }
 
     public function show(Torneo $torneo)
@@ -104,7 +76,7 @@ class TorneoController extends Controller
 
         $torneo->update($validatedData);
 
-        return redirect()->route('torneos.edit', $torneo)->with('success', 'Torneo actualizado exitosamente.');
+        return redirect()->route('torneos.index')->with('success', 'Torneo actualizado exitosamente.');
     }
 
     public function destroy(Torneo $torneo)
