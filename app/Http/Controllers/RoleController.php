@@ -10,7 +10,7 @@ class RoleController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'can:gestionar roles y permisos']);
+        $this->middleware(['auth', 'can:Gestionar Roles y Permisos']);
     }
 
     public function index()

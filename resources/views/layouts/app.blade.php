@@ -105,7 +105,7 @@
                             <a class="nav-link" href="{{ route('partidos.index') }}">Partidos</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="">Roles y Permisos</a>
+                            <a class="nav-link" href="{{ route('roles.index') }}">Roles y Permisos</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="">Usuarios</a>

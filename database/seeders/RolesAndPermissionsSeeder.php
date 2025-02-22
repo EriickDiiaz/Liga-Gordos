@@ -12,25 +12,25 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         // Crear permisos
         $permissions = [
-            'crear equipos',
-            'editar equipos',
-            'borrar equipos',
+            'Crear Equipos',
+            'Editar Equipos',
+            'Borrar Equipos',
 
-            'crear jugadores',
-            'editar jugadores',
-            'borrar jugadores',
+            'Crear Jugadores',
+            'Editar Jugadores',
+            'Borrar Jugadores',
 
-            'crear torneos',
-            'editar torneos',
-            'borrar torneos',
+            'Crear Torneos',
+            'Editar Torneos',
+            'Borrar Torneos',
 
-            'crear partidos',
-            'editar partidos',
-            'borrar partidos',
-            'registrar acciones',            
+            'Crear Partidos',
+            'Editar Partidos',
+            'Borrar Partidos',
+            'Registrar Acciones',            
 
-            'gestionar usuarios',
-            'gestionar roles y permisos'
+            'Gestionar Usuarios',
+            'Gestionar Roles y Permisos'
         ];
 
         foreach ($permissions as $permission) {
@@ -43,20 +43,20 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $directorRole = Role::create(['name' => 'Director de Liga']);
         $directorRole->givePermissionTo([
-            'crear equipos', 'editar equipos', 'borrar equipos',
-            'crear jugadores', 'editar jugadores', 'borrar jugadores',
-            'crear torneos', 'editar torneos', 'borrar torneos',
-            'crear partidos', 'editar partidos', 'registrar acciones', 'borrar partidos'
+            'Crear Equipos', 'Editar Equipos', 'Borrar Equipos',
+            'Crear Jugadores', 'Editar Jugadores', 'Borrar Jugadores',
+            'Crear Torneos', 'Editar Torneos', 'Borrar Torneos',
+            'Crear Partidos', 'Editar Partidos', 'Registrar Acciones', 'Borrar Partidos'
         ]);
 
         $mesaTecnicaRole = Role::create(['name' => 'Mesa Técnica']);
         $mesaTecnicaRole->givePermissionTo([
-            'registrar acciones'
+            'Registrar Acciones'
         ]);
 
         $capitanRole = Role::create(['name' => 'Capitán']);
         $capitanRole->givePermissionTo([
-            'crear jugadores', 'editar jugadores'
+            'Crear Jugadores', 'Editar Jugadores'
         ]);
     }
 }

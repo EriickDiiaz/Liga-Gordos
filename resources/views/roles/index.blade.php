@@ -11,9 +11,12 @@
         </div>
     @endif
 
+    <a href="{{ route('roles.create') }}" class="btn btn-outline-success mb-3">Crear Nuevo Rol</a>
+
     <div class="card mb-4">
         <div class="card-header">
-            <h2 class="mb-0">Roles</h2>
+            <h2 class="d-inline">Roles</h2>
+            
         </div>
         <div class="card-body">
             <table class="table table-hover">
@@ -34,18 +37,25 @@
                             @endforeach
                         </td>
                         <td>
-                            <a href="{{ route('roles.edit', $role) }}" class="btn btn-sm btn-primary">Editar</a>
-                            <form action="{{ route('roles.destroy', $role) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este rol?')">Eliminar</button>
-                            </form>
+                            <div class="d-flex align-items-center">
+                                <a href="{{ route('roles.edit', $role) }}" class="btn btn-outline-primary d-inline">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                
+                                <form action="{{ route('roles.destroy', $role) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-outline-danger m-1 delete-role" data-id="{{ $role->id }}">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
-            <a href="{{ route('roles.create') }}" class="btn btn-success mt-3">Crear Nuevo Rol</a>
+            
         </div>
     </div>
 
@@ -64,3 +74,30 @@
 </div>
 @endsection
 
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteButtons = document.querySelectorAll('.delete-role');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const equipoId = this.getAttribute('data-id');
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "No podrás revertir esta acción!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminar!',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.closest('form').submit();
+                    }
+                });
+            });
+        });
+    });
+</script>
+@endpush
