@@ -11,7 +11,7 @@
         </div>
     @endif
     
-    @can('crear torneos')
+    @can('Crear Torneos')
     <a href="{{ route('torneos.create') }}" class="btn btn-outline-success mb-3">Crear Nuevo Torneo</a>
     @endcan
     
@@ -31,12 +31,12 @@
                     </div>
                     <div class="col-md-6">
                         <h5>Acciones</h5>
-                        @can('editar torneos')
+                        @can('Editar Torneos')
                         <a href="{{ route('torneos.edit', $torneo) }}" class="btn btn-outline-primary m-1">
                             <i class="fas fa-edit"></i> Editar
                         </a>
                         @endcan
-                        @can('borrar torneos')
+                        @can('Borrar Torneos')
                         <form action="{{ route('torneos.destroy', $torneo) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
@@ -126,12 +126,12 @@
                                     <a href="{{ route('partidos.show', $partido) }}" class="btn btn-outline-light m-1">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    @can('editar partidos')
+                                    @can('Editar Partidos')
                                     <a href="{{ route('partidos.edit', $partido) }}" class="btn btn-outline-primary">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     @endcan
-                                    @can('borrar partidos')
+                                    @can('Borrar Partidos')
                                     <form action="{{ route('partidos.destroy', $partido) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')

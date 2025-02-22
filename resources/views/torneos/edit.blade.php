@@ -43,7 +43,7 @@
             <a href="{{ route('torneos.index') }}" class="btn btn-outline-secondary m-1">
                 <i class="fas fa-arrow-left"></i> Volver a la lista
             </a>
-            @can('editar torneos') 
+            @can('Editar Torneos') 
             <button type="submit" class="btn btn-outline-primary m-1">Actualizar Torneo</button>
             @endcan
         </div>
@@ -60,7 +60,7 @@
                         @csrf
                         <div class="input-group">
                             <input type="text" name="nombre" class="form-control" placeholder="Nombre del grupo" required>
-                            @can('editar torneos')
+                            @can('Editar Torneos')
                             <button type="submit" class="btn btn-outline-primary">Agregar Grupo</button>
                             @endcan
                         </div>
@@ -71,7 +71,7 @@
                                 <div class="card h-100">
                                     <div class="card-header d-flex justify-content-between align-items-center">
                                         {{ $grupo->nombre }}
-                                        @can('borrar torneos')
+                                        @can('Borrar Torneos')
                                         <form action="{{ route('torneos.removeGroup', [$torneo, $grupo]) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
@@ -89,7 +89,7 @@
                                                         <img src="{{ asset($equipo->logo) }}" alt="{{ $equipo->nombre }}" class="img-fluid me-2" style="max-height: 30px; max-width: 30px;">
                                                         {{ $equipo->nombre }}
                                                     </div>
-                                                    @can('borrar torneos')
+                                                    @can('Borrar Torneos')
                                                     <form action="{{ route('torneos.removeEquipo', [$torneo, $equipo]) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
@@ -133,7 +133,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        @can('editar torneos')
+                        @can('Editar Torneos')
                         <button type="submit" class="btn btn-outline-primary">Agregar Equipo al Grupo</button>
                         @endcan
                     </form>

@@ -40,12 +40,12 @@
                 <a href="{{ route('jugador.index') }}" class="btn btn-outline-secondary m-1">
                     <i class="fas fa-arrow-left"></i> Volver a la lista
                 </a>
-                @can('editar jugadores')
+                @can('Editar Jugadores')
                 <a href="{{ route('jugador.edit', $jugador) }}" class="btn btn-outline-primary m-1">
                     <i class="fas fa-edit"></i> Editar
                 </a>
                 @endcan
-                @can('borrar jugadores')
+                @can('Borrar Jugadores')
                 <form action="{{ route('jugador.destroy', $jugador) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')

@@ -11,7 +11,7 @@
     @endif
     
     <h1 class="mb-3">Equipos</h1>
-    @can('crear equipos')
+    @can('Crear Equipos')
     <a href="{{ route('equipos.create') }}" class="btn btn-outline-success mb-3">Crear Nuevo Equipo</a>
     @endcan
     <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -40,12 +40,12 @@
                                 <i class="fas fa-eye"></i> Ver
                             </a>
                             @auth
-                                @can('editar equipos')
+                                @can('Editar Equipos')
                                     <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary m-1">
                                         <i class="fas fa-edit"></i> Editar
                                     </a>
                                 @endcan
-                                @can('borrar equipos')
+                                @can('Borrar Equipos')
                                     <form action="{{ route('equipos.destroy', $equipo) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
@@ -54,8 +54,7 @@
                                         </button>
                                     </form>
                                 @endcan
-                            @endauth
-                            
+                            @endauth                            
                         </div>
                     </div>
                 </div>

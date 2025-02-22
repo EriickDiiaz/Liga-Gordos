@@ -10,7 +10,7 @@
     @endif
     
     <h1 class="mb-4">Jugadores</h1>
-    @can('crear jugadores')
+    @can('Crear Jugadores')
     <a href="{{ route('jugador.create') }}" class="btn btn-outline-success mb-3">Crear Nuevo Jugador</a>
     @endcan
     <div class="table-responsive">
@@ -43,12 +43,12 @@
                             <a href="{{ route('jugador.show', $jugador) }}" class="btn btn-outline-light">
                                 <i class="fas fa-eye"></i> Ver
                             </a>
-                            @can('editar jugadores')
+                            @can('Editar Jugadores')
                             <a href="{{ route('jugador.edit', $jugador) }}" class="btn btn-outline-primary">
                                 <i class="fas fa-edit"></i> Editar
                             </a>
                             @endcan
-                            @can('borrar jugadores')
+                            @can('Borrar Jugadores')
                             <form action="{{ route('jugador.destroy', $jugador) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')

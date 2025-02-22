@@ -4,7 +4,7 @@
 <div class="container">
     <h1 class="mb-3">Partidos</h1> 
 
-    @can('crear partidos')
+    @can('Crear Partidos')
     <a href="{{ route('partidos.create') }}" class="btn btn-outline-success mb-3">Crear Nuevo Partido</a>
     @endcan
 
@@ -39,12 +39,12 @@
                         <a href="{{ route('partidos.show', $partido) }}" class="btn btn-outline-light m-1">
                             <i class="fas fa-eye"></i> Ver
                         </a>
-                        @can('editar partidos')
+                        @can('Editar Partidos')
                         <a href="{{ route('partidos.edit', $partido) }}" class="btn btn-outline-primary m-1">
                             <i class="fas fa-edit"></i> Editar
                         </a>
                         @endcan
-                        @can('borrar partidos')
+                        @can('Borrar Partidos')
                         <form action="{{ route('partidos.destroy', $partido) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')

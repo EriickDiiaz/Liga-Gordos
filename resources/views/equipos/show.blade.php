@@ -34,7 +34,7 @@
                 <div class="col-md-8">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5>Jugadores</h5>
-                        @can('crear jugadores')
+                        @can('Crear Jugadores')
                         <a href="{{ route('jugador.create', ['equipo_id' => $equipo->id]) }}" class="btn btn-outline-success">
                             <i class="fas fa-plus"></i> Agregar Jugador
                         </a>
@@ -65,12 +65,12 @@
                                     <a href="{{ route('jugador.show', $jugador) }}" class="btn btn-outline-light btn-sm">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    @can('editar jugadores')
+                                    @can('Editar Jugadores')
                                     <a href="{{ route('jugador.edit', $jugador) }}" class="btn btn-outline-primary btn-sm">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     @endcan
-                                    @can('borrar jugadores')
+                                    @can('Borrar Jugadores')
                                     <form action="{{ route('jugador.destroy', $jugador) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
@@ -93,7 +93,7 @@
         <a href="{{ route('equipos.index') }}" class="btn btn-outline-secondary m-1">
             <i class="fas fa-arrow-left"></i> Volver a la lista
         </a>
-        @can('editar equipos') 
+        @can('Editar Equipos') 
         <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary m-1">
             <i class="fas fa-edit"></i> Editar
         </a>
