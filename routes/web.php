@@ -6,6 +6,7 @@ use App\Http\Controllers\TorneoController;
 use App\Http\Controllers\PartidoController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::resource('equipos', EquipoController::class);
 Route::resource('jugador', JugadorController::class);
 Route::resource('torneos', TorneoController::class);
+route::resource('usuarios', UserController::class);
 
 Route::post('/torneos/{torneo}/grupos', [TorneoController::class, 'addGroup'])->name('torneos.addGroup');
 Route::delete('/torneos/{torneo}/grupos/{grupo}', [TorneoController::class, 'removeGroup'])->name('torneos.removeGroup');
