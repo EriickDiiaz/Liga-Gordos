@@ -9,12 +9,12 @@ class PermissionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'can:gestionar roles y permisos']);
+        $this->middleware(['auth', 'can:Gestionar Roles y Permisos']);
     }
 
     public function create()
     {
-        return view('permissions.create');
+        return view('permissions.form');
     }
 
     public function store(Request $request)
@@ -30,7 +30,7 @@ class PermissionController extends Controller
 
     public function edit(Permission $permission)
     {
-        return view('permissions.edit', compact('permission'));
+        return view('permissions.form', compact('permission'));
     }
 
     public function update(Request $request, Permission $permission)
