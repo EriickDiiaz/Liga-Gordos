@@ -17,6 +17,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            $table->unsignedBigInteger('equipo_id')->nullable();
+            $table->foreign('equipo_id')->references('id')->on('equipos')->onDelete('set null');
+            
             $table->rememberToken();
             $table->timestamps();
         });
@@ -42,7 +46,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        //Schema::dropIfExists('users');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['equipo_id']);
+            $table->dropColumn('equipo_id');
+        });
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }

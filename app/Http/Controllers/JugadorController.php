@@ -11,7 +11,11 @@ class JugadorController extends Controller
 {
     public function index()
     {
-        $jugadores = Jugador::with('equipo')->get();
+        if (auth()->user()->hasRole('capitan')) {
+            $jugadores = Jugador::where('equipo_id', auth()->user()->equipo_id)->get();
+        } else {
+            $jugadores = Jugador::all();
+        }
         return view('jugador.index', compact('jugadores'));
     }
 
@@ -44,12 +48,18 @@ class JugadorController extends Controller
 
     public function edit(Jugador $jugador)
     {
+        if (auth()->user()->hasRole('capitan') && $jugador->equipo_id !== auth()->user()->equipo_id) {
+            abort(403, 'No tienes permiso para editar este jugador.');
+        }
         $equipos = Equipo::all();
         return view('jugador.edit', compact('jugador', 'equipos'));
     }
 
     public function update(Request $request, Jugador $jugador)
     {
+        if (auth()->user()->hasRole('capitan') && $jugador->equipo_id !== auth()->user()->equipo_id) {
+            abort(403, 'No tienes permiso para editar este jugador.');
+        }
         $validatedData = $this->validateJugador($request, $jugador->id);
         
         if ($request->hasFile('foto')) {
@@ -66,6 +76,9 @@ class JugadorController extends Controller
 
     public function destroy(Jugador $jugador)
     {
+        if (auth()->user()->hasRole('capitan') && $jugador->equipo_id !== auth()->user()->equipo_id) {
+            abort(403, 'No tienes permiso para eliminar este jugador.');
+        }
         if ($jugador->foto && $jugador->foto != 'img/default-player.png') {
             Storage::disk('public')->delete($jugador->foto);
         }
