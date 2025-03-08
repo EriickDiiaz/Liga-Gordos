@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EquipoController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JugadorController;
 use App\Http\Controllers\TorneoController;
 use App\Http\Controllers\PartidoController;
@@ -16,7 +17,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'welcome'])->name('welcome');
+
 Route::resource('equipos', EquipoController::class);
 Route::resource('jugador', JugadorController::class);
 Route::resource('torneos', TorneoController::class);

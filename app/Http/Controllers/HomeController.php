@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Partido;
+use App\Models\Equipo;
+use App\Models\Torneo;
 
 class HomeController extends Controller
 {
@@ -24,5 +27,25 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
+    }
+
+    /**
+     * Show the welcome page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function welcome()
+    {
+        $proximosPartidos = Partido::with(['equipoLocal', 'equipoVisitante', 'torneo'])
+            ->where('fecha', '>=', now())
+            ->where('estado', 'programado')
+            ->orderBy('fecha', 'asc')
+            ->take(3)
+            ->get();
+            
+        $equipos = Equipo::where('estado', 1)->get();
+        $torneosActivos = Torneo::where('estado', 'en_curso')->count();
+        
+        return view('welcome', compact('proximosPartidos', 'equipos', 'torneosActivos'));
     }
 }
