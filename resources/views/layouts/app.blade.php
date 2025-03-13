@@ -25,6 +25,10 @@
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css">
 
+    <!-- Bootstrap Table CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.1/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.1/dist/extensions/card-view/bootstrap-table-card-view.css">
+
     <!-- Custom CSS -->
     <style>
         :root {
@@ -99,17 +103,21 @@
                             <a class="nav-link" href="{{ route('jugador.index') }}">Jugadores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('torneos.index') }}">Torneo</a>
+                            <a class="nav-link" href="{{ route('torneos.index') }}">Torneos</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('partidos.index') }}">Partidos</a>
                         </li>
+                        @can('gestionar roles y permisos')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('roles.index') }}">Roles y Permisos</a>
                         </li>
+                        @endcan
+                        @can('gestionar usuarios')
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('usuarios.index') }}">Usuarios</a>
+                            <a class="nav-link" href="{{ route('users.index') }}">Usuarios</a>
                         </li>
+                        @endcan
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -146,18 +154,22 @@
         </main>
     </div>
 
-    <!-- jQuery -->
+    <!-- Scripts de Bootstrap y jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- SweetAlert2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
 
+    <!-- Bootstrap Table JS -->
+    <script src="https://unpkg.com/bootstrap-table@1.21.1/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.21.1/dist/extensions/card-view/bootstrap-table-card-view.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.21.1/dist/locale/bootstrap-table-es-ES.min.js"></script>
+    
     @stack('scripts')
 </body>
 </html>
