@@ -11,12 +11,6 @@
                 </div>
                 <h1 class="display-3 fw-bold mb-4">Liga de los Gordos</h1>
                 <p class="lead mb-4">Donde la pasión por el fútbol se une con la amistad y la competencia sana</p>
-                @guest
-                    <div class="mt-4">
-                        <a href="{{ route('login') }}" class="btn btn-outline-light btn-lg mx-2">Iniciar Sesión</a>
-                        <a href="{{ route('register') }}" class="btn btn-primary btn-lg mx-2">Registrarse</a>
-                    </div>
-                @endguest
             </div>
         </div>
     </div>
@@ -234,7 +228,7 @@
         <div class="container text-center">
             <h2 class="mb-4">¿Quieres unirte a la Liga de los Gordos?</h2>
             <p class="lead mb-4">Si tienes un equipo o quieres formar parte de uno, ¡contáctanos!</p>
-            <a href="#" class="btn btn-light btn-lg">Contáctanos</a>
+            <a href="#" class="btn btn-outline-light btn-lg">Contáctanos</a>
         </div>
     </section>
 </div>
