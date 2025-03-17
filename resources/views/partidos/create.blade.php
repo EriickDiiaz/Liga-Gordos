@@ -12,7 +12,7 @@
                     <label for="torneo_id" class="form-label">Torneo</label>
                     <select name="torneo_id" id="torneo_id" class="form-control" required>
                         <option value="">Seleccione un torneo</option>
-                        @foreach($torneos as $torneo)
+                        @foreach($torneos->sortBy('nombre') as $torneo)
                             <option value="{{ $torneo->id }}">{{ $torneo->nombre }}</option>
                         @endforeach
                     </select>
@@ -77,6 +77,9 @@
                 fetch(`{{ route('partidos.getGrupos') }}?torneo_id=${this.value}`)
                     .then(response => response.json())
                     .then(data => {
+                        // Ordenar grupos alfabéticamente
+                        data.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                        
                         grupoSelect.innerHTML = '<option value="">Seleccione un grupo</option>';
                         data.forEach(grupo => {
                             grupoSelect.innerHTML += `<option value="${grupo.id}">${grupo.nombre}</option>`;
@@ -95,6 +98,9 @@
                 fetch(`{{ route('partidos.getEquipos') }}?grupo_id=${this.value}`)
                     .then(response => response.json())
                     .then(data => {
+                        // Ordenar equipos alfabéticamente por nombre
+                        data.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                        
                         equipoLocalSelect.innerHTML = '<option value="">Seleccione el equipo local</option>';
                         equipoVisitanteSelect.innerHTML = '<option value="">Seleccione el equipo visitante</option>';
                         data.forEach(equipo => {

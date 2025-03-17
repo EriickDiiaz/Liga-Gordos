@@ -75,7 +75,7 @@
     
     <!-- Mensaje de No Resultados -->
     <div id="no-results" class="alert alert-info mt-3 d-none">
-        No se encontraron partidos que coincidan con tu búsqueda.
+        ¡Uy! No se encontraron partidos.
     </div>
 </div>
 

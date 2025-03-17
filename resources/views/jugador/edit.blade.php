@@ -36,7 +36,7 @@
                 <div class="form-group mb-3">
                     <label for="equipo_id">Equipo</label>
                     <select class="form-control" id="equipo_id" name="equipo_id" required>
-                        @foreach($equipos as $equipo)
+                        @foreach($equipos->sortBy('nombre') as $equipo)
                             <option value="{{ $equipo->id }}" {{ $jugador->equipo_id == $equipo->id ? 'selected' : '' }}>
                                 {{ $equipo->nombre }}
                             </option>
