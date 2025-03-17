@@ -33,7 +33,7 @@ class TorneoController extends Controller
 
     public function store(Request $request)
     {
-        $this->authorize('crear torneos');
+        $this->authorize('Crear Torneos');
 
         $validatedData = $request->validate([
             'nombre' => 'required|string|max:255',

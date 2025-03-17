@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- <meta name="csrf-token" content="{{ csrf_token() }}">-->
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
@@ -24,10 +24,6 @@
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css">
-
-    <!-- Bootstrap Table CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.1/dist/bootstrap-table.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.1/dist/extensions/card-view/bootstrap-table-card-view.css">
 
     <!-- Custom CSS -->
     <style>
@@ -108,14 +104,14 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('partidos.index') }}">Partidos</a>
                         </li>
-                        @can('gestionar roles y permisos')
+                        @can('Gestionar Roles y Permisos')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('roles.index') }}">Roles y Permisos</a>
                         </li>
                         @endcan
-                        @can('gestionar usuarios')
+                        @can('Gestionar Usuarios')
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('users.index') }}">Usuarios</a>
+                            <a class="nav-link" href="{{ route('usuarios.index') }}">Usuarios</a>
                         </li>
                         @endcan
                     </ul>
@@ -164,12 +160,8 @@
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
-
-    <!-- Bootstrap Table JS -->
-    <script src="https://unpkg.com/bootstrap-table@1.21.1/dist/bootstrap-table.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.21.1/dist/extensions/card-view/bootstrap-table-card-view.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.21.1/dist/locale/bootstrap-table-es-ES.min.js"></script>
     
     @stack('scripts')
 </body>
 </html>
+
