@@ -9,6 +9,7 @@ use App\Models\Grupo;
 use App\Models\AccionPartido;
 use App\Models\Jugador;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PartidoController extends Controller
 {
@@ -59,6 +60,9 @@ class PartidoController extends Controller
 
     public function store(Request $request)
     {
+        // Log para depuración
+        Log::info('Datos recibidos en store:', $request->all());
+        
         // Validación base para todos los tipos de partidos
         $rules = [
             'equipo_local_id' => 'required|exists:equipos,id',
@@ -72,6 +76,7 @@ class PartidoController extends Controller
         if ($request->tipo == 'grupo') {
             $rules['torneo_id'] = 'required|exists:torneos,id';
             $rules['grupo_id'] = 'required|exists:grupos,id';
+            $rules['fase'] = 'nullable|string';
         } elseif ($request->tipo == 'eliminatoria') {
             $rules['torneo_id'] = 'required|exists:torneos,id';
             $rules['fase'] = 'required|string';
@@ -86,6 +91,9 @@ class PartidoController extends Controller
         }
 
         $validatedData = $request->validate($rules);
+        
+        // Log para depuración
+        Log::info('Datos validados:', $validatedData);
 
         // Crear el partido
         $partido = Partido::create($validatedData);
@@ -133,6 +141,9 @@ class PartidoController extends Controller
 
     public function update(Request $request, Partido $partido)
     {
+        // Log para depuración
+        Log::info('Datos recibidos en update:', $request->all());
+        
         // Validación base para todos los tipos de partidos
         $rules = [
             'equipo_local_id' => 'required|exists:equipos,id',
@@ -148,6 +159,7 @@ class PartidoController extends Controller
         if ($partido->esLiga()) {
             $rules['torneo_id'] = 'required|exists:torneos,id';
             $rules['grupo_id'] = 'required|exists:grupos,id';
+            $rules['fase'] = 'nullable|string';
         } elseif ($partido->esEliminatoria()) {
             $rules['torneo_id'] = 'required|exists:torneos,id';
             $rules['fase'] = 'required|string';
@@ -156,6 +168,10 @@ class PartidoController extends Controller
         }
 
         $validatedData = $request->validate($rules);
+        
+        // Log para depuración
+        Log::info('Datos validados en update:', $validatedData);
+        
         $partido->update($validatedData);
 
         return redirect()->route('partidos.show', $partido)->with('success', 'Partido actualizado exitosamente.');

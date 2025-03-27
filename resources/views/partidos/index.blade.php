@@ -27,7 +27,6 @@
             <div class="col partido-item">
                 <div class="card h-100 text-center">
                     <div class="card-body p-2">
-                        <!-- Título diferente según el tipo de partido -->
                         @if($partido->esAmistoso())
                             <h5 class="card-title">Partido Amistoso</h5>
                             <p class="card-subtitle mb-2 text-muted small">{{ $partido->descripcion }}</p>
@@ -41,7 +40,6 @@
                                 @endif
                             </p>
                         @endif
-                        
                         <div class="d-flex my-2">
                             <div class="col-4">
                                 <img src="{{ asset($partido->equipoLocal->logo) }}" alt="{{ $partido->equipoLocal->nombre }}" class="img-fluid" style="max-height: 60px;">
