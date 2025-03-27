@@ -124,9 +124,9 @@ class TorneoController extends Controller
         return redirect()->route('torneos.edit', $torneo)->with('success', 'Equipo removido exitosamente del torneo.');
     }
 
-    private function calcularTablaPosiciones($grupo)
-    {
-        $tabla = [];
+private function calcularTablaPosiciones($grupo)
+{
+    $tabla = [];
         foreach ($grupo->equipos as $equipo) {
             $estadisticas = [
                 'equipo' => $equipo,
@@ -140,53 +140,58 @@ class TorneoController extends Controller
                 'PTS' => 0
             ];
 
-            foreach ($grupo->torneo->partidos as $partido) {
+            // Solo considerar partidos de liga (tipo='grupo')
+            foreach ($grupo->torneo->partidos->where('tipo', 'grupo') as $partido) {
                 if ($partido->equipo_local_id == $equipo->id || $partido->equipo_visitante_id == $equipo->id) {
-                    $estadisticas['PJ']++;
-                    
-                    if ($partido->equipo_local_id == $equipo->id) {
-                        $estadisticas['GF'] += $partido->goles_local;
-                        $estadisticas['GC'] += $partido->goles_visitante;
+                    // Solo contar partidos finalizados
+                    if ($partido->estado == 'finalizado') {
+                        $estadisticas['PJ']++;
                         
-                        if ($partido->goles_local > $partido->goles_visitante) {
-                            $estadisticas['PG']++;
-                            $estadisticas['PTS'] += 3;
-                        } elseif ($partido->goles_local < $partido->goles_visitante) {
-                            $estadisticas['PP']++;
+                        if ($partido->equipo_local_id == $equipo->id) {
+                            $estadisticas['GF'] += $partido->goles_local;
+                            $estadisticas['GC'] += $partido->goles_visitante;
+                            
+                            if ($partido->goles_local > $partido->goles_visitante) {
+                                $estadisticas['PG']++;
+                                $estadisticas['PTS'] += 3;
+                            } elseif ($partido->goles_local < $partido->goles_visitante) {
+                                $estadisticas['PP']++;
+                            } else {
+                                $estadisticas['PE']++;
+                                $estadisticas['PTS'] += 1;
+                            }
                         } else {
-                            $estadisticas['PE']++;
-                            $estadisticas['PTS'] += 1;
-                        }
-                    } else {
-                        $estadisticas['GF'] += $partido->goles_visitante;
-                        $estadisticas['GC'] += $partido->goles_local;
-                        
-                        if ($partido->goles_visitante > $partido->goles_local) {
-                            $estadisticas['PG']++;
-                            $estadisticas['PTS'] += 3;
-                        } elseif ($partido->goles_visitante < $partido->goles_local) {
-                            $estadisticas['PP']++;
-                        } else {
-                            $estadisticas['PE']++;
-                            $estadisticas['PTS'] += 1;
+                            $estadisticas['GF'] += $partido->goles_visitante;
+                            $estadisticas['GC'] += $partido->goles_local;
+                            
+                            if ($partido->goles_visitante > $partido->goles_local) {
+                                $estadisticas['PG']++;
+                                $estadisticas['PTS'] += 3;
+                            } elseif ($partido->goles_visitante < $partido->goles_local) {
+                                $estadisticas['PP']++;
+                            } else {
+                                $estadisticas['PE']++;
+                                $estadisticas['PTS'] += 1;
+                            }
                         }
                     }
+                    }
                 }
+                
+                $estadisticas['DG'] = $estadisticas['GF'] - $estadisticas['GC'];
+                $tabla[] = $estadisticas;
             }
-            
-            $estadisticas['DG'] = $estadisticas['GF'] - $estadisticas['GC'];
-            $tabla[] = $estadisticas;
+
+            usort($tabla, function($a, $b) {
+                if ($a['PTS'] == $b['PTS']) {
+                    return $b['DG'] - $a['DG'];
+                }
+                return $b['PTS'] - $a['PTS'];
+            });
+
+            return $tabla;
         }
 
-        // Ordenar la tabla por puntos (PTS) y luego por diferencia de goles (DG)
-        usort($tabla, function($a, $b) {
-            if ($a['PTS'] == $b['PTS']) {
-                return $b['DG'] - $a['DG'];
-            }
-            return $b['PTS'] - $a['PTS'];
-        });
 
-        return $tabla;
-    }
 }
 

@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolesAndPermissionsSeeder::class,
             AdminUserSeeder::class,
-            //EquiposJugadoresSeeder::class,            
+            EquiposJugadoresSeeder::class,            
         ]);
     }
 }
