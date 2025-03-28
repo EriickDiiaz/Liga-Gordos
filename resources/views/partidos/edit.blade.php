@@ -67,11 +67,28 @@
                                 <option value="{{ $partido->fase }}" {{ !in_array($partido->fase, ['Octavos de Final', 'Cuartos de Final', 'Semifinal', 'Final']) ? 'selected' : '' }}>{{ $partido->fase }}</option>
                             </select>
                         </div>
+                        
+                        <!-- Mantener el valor de es_ida -->
+                        <input type="hidden" name="es_ida" value="{{ $partido->es_ida ? '1' : '0' }}">
+                        
                         <div class="mb-3">
-                            <p><strong>Tipo:</strong> {{ $partido->esIda() ? 'Partido de IDA' : 'Partido de VUELTA' }}</p>
-                            @if(!$partido->esIda() && $partido->partidoRelacionado)
-                                <p><strong>Partido de ida relacionado:</strong> {{ $partido->partidoRelacionado->equipoLocal->nombre }} vs {{ $partido->partidoRelacionado->equipoVisitante->nombre }}</p>
-                            @endif
+                            <div class="alert alert-info">
+                                @if($partido->esIda())
+                                    <i class="fas fa-info-circle"></i> Este es un partido de ida.
+                                    @if($partido->partidosVuelta->count() > 0)
+                                        Tiene un partido de vuelta asociado.
+                                    @else
+                                        No tiene partido de vuelta asociado.
+                                    @endif
+                                @else
+                                    <i class="fas fa-info-circle"></i> Este es un partido de vuelta.
+                                    @if($partido->partidoRelacionado)
+                                        Está asociado al partido de ida: {{ $partido->partidoRelacionado->equipoLocal->nombre }} vs {{ $partido->partidoRelacionado->equipoVisitante->nombre }}
+                                    @else
+                                        No está asociado a ningún partido de ida.
+                                    @endif
+                                @endif
+                            </div>
                         </div>
                     @endif
                 @endif
@@ -82,6 +99,12 @@
                         <select name="equipo_local_id" id="equipo_local_id" class="form-control" required>
                             @if($partido->esLiga() && $partido->grupo)
                                 @foreach($partido->grupo->equipos->sortBy('nombre') as $equipo)
+                                    <option value="{{ $equipo->id }}" {{ $partido->equipo_local_id == $equipo->id ? 'selected' : '' }}>
+                                        {{ $equipo->nombre }}
+                                    </option>
+                                @endforeach
+                            @elseif($partido->esEliminatoria() && $partido->torneo)
+                                @foreach($partido->torneo->equipos->sortBy('nombre') as $equipo)
                                     <option value="{{ $equipo->id }}" {{ $partido->equipo_local_id == $equipo->id ? 'selected' : '' }}>
                                         {{ $equipo->nombre }}
                                     </option>
@@ -100,6 +123,12 @@
                         <select name="equipo_visitante_id" id="equipo_visitante_id" class="form-control" required>
                             @if($partido->esLiga() && $partido->grupo)
                                 @foreach($partido->grupo->equipos->sortBy('nombre') as $equipo)
+                                    <option value="{{ $equipo->id }}" {{ $partido->equipo_visitante_id == $equipo->id ? 'selected' : '' }}>
+                                        {{ $equipo->nombre }}
+                                    </option>
+                                @endforeach
+                            @elseif($partido->esEliminatoria() && $partido->torneo)
+                                @foreach($partido->torneo->equipos->sortBy('nombre') as $equipo)
                                     <option value="{{ $equipo->id }}" {{ $partido->equipo_visitante_id == $equipo->id ? 'selected' : '' }}>
                                         {{ $equipo->nombre }}
                                     </option>
@@ -157,54 +186,87 @@
         const equipoLocalSelect = document.getElementById('equipo_local_id');
         const equipoVisitanteSelect = document.getElementById('equipo_visitante_id');
         
-        if (torneoSelect && grupoSelect) {
+        if (torneoSelect) {
             torneoSelect.addEventListener('change', function() {
                 if (this.value) {
-                    fetch(`{{ route('partidos.getGrupos') }}?torneo_id=${this.value}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            grupoSelect.innerHTML = '<option value="">Sin grupo</option>';
-                            data.forEach(grupo => {
-                                grupoSelect.innerHTML += `<option value="${grupo.id}">${grupo.nombre}</option>`;
-                            });
-                        })
-                        .catch(error => console.error('Error:', error));
-                } else {
-                    grupoSelect.innerHTML = '<option value="">Sin grupo</option>';
+                    // Si es un partido de liga, cargar grupos
+                    if ('{{ $partido->tipo }}' === 'grupo') {
+                        fetch(`{{ route('partidos.getGrupos') }}?torneo_id=${this.value}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                grupoSelect.innerHTML = '<option value="">Sin grupo</option>';
+                                data.forEach(grupo => {
+                                    grupoSelect.innerHTML += `<option value="${grupo.id}">${grupo.nombre}</option>`;
+                                });
+                            })
+                            .catch(error => console.error('Error:', error));
+                    } 
+                    // Si es un partido de eliminatoria, cargar equipos del torneo
+                    else if ('{{ $partido->tipo }}' === 'eliminatoria') {
+                        fetch(`{{ route('partidos.getEquiposTorneo') }}?torneo_id=${this.value}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                // Ordenar equipos alfabéticamente por nombre
+                                data.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                                
+                                equipoLocalSelect.innerHTML = '';
+                                equipoVisitanteSelect.innerHTML = '';
+                                data.forEach(equipo => {
+                                    const optionLocal = document.createElement('option');
+                                    optionLocal.value = equipo.id;
+                                    optionLocal.textContent = equipo.nombre;
+                                    if (equipo.id == {{ $partido->equipo_local_id }}) {
+                                        optionLocal.selected = true;
+                                    }
+                                    equipoLocalSelect.appendChild(optionLocal);
+                                    
+                                    const optionVisitante = document.createElement('option');
+                                    optionVisitante.value = equipo.id;
+                                    optionVisitante.textContent = equipo.nombre;
+                                    if (equipo.id == {{ $partido->equipo_visitante_id }}) {
+                                        optionVisitante.selected = true;
+                                    }
+                                    equipoVisitanteSelect.appendChild(optionVisitante);
+                                });
+                            })
+                            .catch(error => console.error('Error:', error));
+                    }
                 }
             });
             
-            grupoSelect.addEventListener('change', function() {
-                if (this.value) {
-                    fetch(`{{ route('partidos.getEquipos') }}?grupo_id=${this.value}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            // Ordenar equipos alfabéticamente por nombre
-                            data.sort((a, b) => a.nombre.localeCompare(b.nombre));
-                            
-                            equipoLocalSelect.innerHTML = '';
-                            equipoVisitanteSelect.innerHTML = '';
-                            data.forEach(equipo => {
-                                const optionLocal = document.createElement('option');
-                                optionLocal.value = equipo.id;
-                                optionLocal.textContent = equipo.nombre;
-                                if (equipo.id == {{ $partido->equipo_local_id }}) {
-                                    optionLocal.selected = true;
-                                }
-                                equipoLocalSelect.appendChild(optionLocal);
+            if (grupoSelect) {
+                grupoSelect.addEventListener('change', function() {
+                    if (this.value) {
+                        fetch(`{{ route('partidos.getEquipos') }}?grupo_id=${this.value}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                // Ordenar equipos alfabéticamente por nombre
+                                data.sort((a, b) => a.nombre.localeCompare(b.nombre));
                                 
-                                const optionVisitante = document.createElement('option');
-                                optionVisitante.value = equipo.id;
-                                optionVisitante.textContent = equipo.nombre;
-                                if (equipo.id == {{ $partido->equipo_visitante_id }}) {
-                                    optionVisitante.selected = true;
-                                }
-                                equipoVisitanteSelect.appendChild(optionVisitante);
-                            });
-                        })
-                        .catch(error => console.error('Error:', error));
-                }
-            });
+                                equipoLocalSelect.innerHTML = '';
+                                equipoVisitanteSelect.innerHTML = '';
+                                data.forEach(equipo => {
+                                    const optionLocal = document.createElement('option');
+                                    optionLocal.value = equipo.id;
+                                    optionLocal.textContent = equipo.nombre;
+                                    if (equipo.id == {{ $partido->equipo_local_id }}) {
+                                        optionLocal.selected = true;
+                                    }
+                                    equipoLocalSelect.appendChild(optionLocal);
+                                    
+                                    const optionVisitante = document.createElement('option');
+                                    optionVisitante.value = equipo.id;
+                                    optionVisitante.textContent = equipo.nombre;
+                                    if (equipo.id == {{ $partido->equipo_visitante_id }}) {
+                                        optionVisitante.selected = true;
+                                    }
+                                    equipoVisitanteSelect.appendChild(optionVisitante);
+                                });
+                            })
+                            .catch(error => console.error('Error:', error));
+                    }
+                });
+            }
         }
     });
 </script>

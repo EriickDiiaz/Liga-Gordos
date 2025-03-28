@@ -42,20 +42,52 @@ class PartidoController extends Controller
         return response()->json($equipos);
     }
 
+    // Modificar el método getEquiposTorneo para asegurarnos de que devuelve solo los equipos del torneo
+    public function getEquiposTorneo(Request $request)
+    {
+        $torneo = Torneo::with('equipos')->findOrFail($request->torneo_id);
+        
+        // Log para depuración
+        Log::info('Obteniendo equipos del torneo:', [
+            'torneo_id' => $request->torneo_id,
+            'nombre_torneo' => $torneo->nombre,
+            'cantidad_equipos' => $torneo->equipos->count()
+        ]);
+        
+        return response()->json($torneo->equipos);
+    }
+
     public function getPartidosIda(Request $request)
     {
         $torneoId = $request->torneo_id;
         $fase = $request->fase;
         
+        // Log para depuración
+        Log::info('Buscando partidos de ida:', [
+            'torneo_id' => $torneoId,
+            'fase' => $fase
+        ]);
+        
         $partidosIda = Partido::where('torneo_id', $torneoId)
             ->where('fase', $fase)
             ->where('tipo', 'eliminatoria')
             ->where('es_ida', true)
-            ->whereDoesntHave('partidosVuelta')
             ->with(['equipoLocal', 'equipoVisitante'])
             ->get();
         
-        return response()->json($partidosIda);
+        // Filtrar solo los partidos que no tienen partido de vuelta asociado
+        $partidosIdaDisponibles = $partidosIda->filter(function($partido) {
+            $tieneVuelta = Partido::where('partido_relacionado_id', $partido->id)->exists();
+            return !$tieneVuelta;
+        });
+        
+        // Log para depuración
+        Log::info('Partidos de ida encontrados:', [
+            'total' => $partidosIda->count(),
+            'disponibles' => $partidosIdaDisponibles->count()
+        ]);
+        
+        return response()->json($partidosIdaDisponibles->values());
     }
 
     public function store(Request $request)

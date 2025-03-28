@@ -40,7 +40,7 @@
             <p><strong>Tipo:</strong> {{ ucfirst($partido->tipo) }}</p>
             
             @if($partido->esEliminatoria() && $partido->partidoRelacionado)
-                <div class="mt-4 p-3 card">
+                <div class="mt-4 p-3 card border-warning-subtle">
                     <h4>Resultado Global</h4>
                     @php
                         $resultadoGlobal = $partido->resultadoGlobal();
@@ -106,6 +106,7 @@
     <table class="table">
         <thead>
             <tr>
+                <th>Dorsal</th>
                 <th>Jugador</th>
                 <th>Equipo</th>
                 <th>Acción</th>
@@ -115,6 +116,7 @@
         <tbody>
             @foreach($partido->acciones as $accion)
                 <tr>
+                    <td>{{ $accion->jugador->dorsal }}
                     <td>{{ $accion->jugador->nombre }}</td>
                     <td>{{ $accion->jugador->equipo->nombre }}</td>
                     <td>
@@ -146,10 +148,10 @@
                     <select name="jugador_id" id="jugador_id" class="form-control" required>
                         <option value="">Seleccione un jugador</option>
                         @foreach($partido->equipoLocal->jugadores as $jugador)
-                            <option value="{{ $jugador->id }}">{{ $jugador->nombre }} ({{ $partido->equipoLocal->nombre }})</option>
+                            <option value="{{ $jugador->id }}">{{ $jugador->dorsal }} {{ $jugador->nombre }} ({{ $partido->equipoLocal->nombre }})</option>
                         @endforeach
                         @foreach($partido->equipoVisitante->jugadores as $jugador)
-                            <option value="{{ $jugador->id }}">{{ $jugador->nombre }} ({{ $partido->equipoVisitante->nombre }})</option>
+                            <option value="{{ $jugador->id }}">{{ $jugador->dorsal }} {{ $jugador->nombre }} ({{ $partido->equipoVisitante->nombre }})</option>
                         @endforeach
                     </select>
                 </div>

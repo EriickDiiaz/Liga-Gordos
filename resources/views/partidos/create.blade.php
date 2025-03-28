@@ -73,29 +73,17 @@
                             <option value="Final">Final</option>
                         </select>
                     </div>
+                    
+                    <!-- Campo oculto para establecer es_ida como true por defecto -->
+                    <input type="hidden" name="es_ida" value="1">
+                    
                     <div class="mb-3">
-                        <label class="form-label">Tipo de Partido</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="es_ida" id="es_ida_1" value="1" checked>
-                            <label class="form-check-label" for="es_ida_1">
-                                Partido de Ida
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="es_ida" id="es_ida_0" value="0">
-                            <label class="form-check-label" for="es_ida_0">
-                                Partido de Vuelta
-                            </label>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> Este será un partido único de eliminatoria.
                         </div>
                     </div>
-                    <div id="partido-ida-container" class="mb-3 d-none">
-                        <label for="partido_relacionado_id" class="form-label">Partido de Ida</label>
-                        <select name="partido_relacionado_id" id="partido_relacionado_id" class="form-control">
-                            <option value="">Seleccione el partido de ida</option>
-                            <!-- Se llenará dinámicamente con JavaScript -->
-                        </select>
-                    </div>
-                    <div id="crear-vuelta-container" class="mb-3">
+                    
+                    <div class="mb-3">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="crear_vuelta" id="crear_vuelta" value="1" checked>
                             <label class="form-check-label" for="crear_vuelta">
@@ -168,10 +156,6 @@
         const torneoSelectLiga = document.getElementById('torneo_id_liga');
         const torneoSelectEliminatoria = document.getElementById('torneo_id_eliminatoria');
         const grupoSelect = document.getElementById('grupo_id');
-        const esIdaRadios = document.querySelectorAll('input[name="es_ida"]');
-        const partidoIdaContainer = document.getElementById('partido-ida-container');
-        const crearVueltaContainer = document.getElementById('crear-vuelta-container');
-        const partidoRelacionadoSelect = document.getElementById('partido_relacionado_id');
         const equipoLocalSelect = document.getElementById('equipo_local_id');
         const equipoVisitanteSelect = document.getElementById('equipo_visitante_id');
         const faseLigaInput = document.getElementById('fase_liga');
@@ -257,49 +241,23 @@
             }
         });
 
-        // Mostrar/ocultar opciones según si es partido de ida o vuelta
-        esIdaRadios.forEach(radio => {
-            radio.addEventListener('change', function() {
-                if (this.value === '1') { // Partido de ida
-                    partidoIdaContainer.classList.add('d-none');
-                    partidoRelacionadoSelect.disabled = true;
-                    crearVueltaContainer.classList.remove('d-none');
-                    document.getElementById('crear_vuelta').disabled = false;
-                } else { // Partido de vuelta
-                    partidoIdaContainer.classList.remove('d-none');
-                    partidoRelacionadoSelect.disabled = false;
-                    crearVueltaContainer.classList.add('d-none');
-                    document.getElementById('crear_vuelta').disabled = true;
-                    
-                    // Cargar partidos de ida disponibles
-                    const torneoId = document.getElementById('torneo_id_eliminatoria').value;
-                    const fase = document.getElementById('fase_eliminatoria').value;
-                    
-                    if (torneoId && fase) {
-                        fetch(`{{ url('/partidos/get-partidos-ida') }}?torneo_id=${torneoId}&fase=${fase}`)
-                            .then(response => response.json())
-                            .then(data => {
-                                partidoRelacionadoSelect.innerHTML = '<option value="">Seleccione el partido de ida</option>';
-                                data.forEach(partido => {
-                                    partidoRelacionadoSelect.innerHTML += `<option value="${partido.id}">${partido.equipoLocal.nombre} vs ${partido.equipoVisitante.nombre}</option>`;
-                                });
-                            })
-                            .catch(error => console.error('Error:', error));
-                    }
-                }
-            });
-        });
-
-        // Actualizar partidos de ida cuando cambia el torneo o la fase
+        // Cargar equipos del torneo cuando se selecciona un torneo en la sección de Eliminatoria
         torneoSelectEliminatoria.addEventListener('change', function() {
-            if (document.getElementById('es_ida_0').checked) {
-                document.getElementById('es_ida_0').dispatchEvent(new Event('change'));
-            }
-        });
-
-        faseEliminatoriaSelect.addEventListener('change', function() {
-            if (document.getElementById('es_ida_0').checked) {
-                document.getElementById('es_ida_0').dispatchEvent(new Event('change'));
+            if (this.value) {
+                fetch(`{{ route('partidos.getEquiposTorneo') }}?torneo_id=${this.value}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Ordenar equipos alfabéticamente por nombre
+                        data.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                        
+                        equipoLocalSelect.innerHTML = '<option value="">Seleccione el equipo local</option>';
+                        equipoVisitanteSelect.innerHTML = '<option value="">Seleccione el equipo visitante</option>';
+                        data.forEach(equipo => {
+                            equipoLocalSelect.innerHTML += `<option value="${equipo.id}">${equipo.nombre}</option>`;
+                            equipoVisitanteSelect.innerHTML += `<option value="${equipo.id}">${equipo.nombre}</option>`;
+                        });
+                    })
+                    .catch(error => console.error('Error:', error));
             }
         });
     });
