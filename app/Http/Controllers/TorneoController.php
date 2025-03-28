@@ -12,8 +12,9 @@ class TorneoController extends Controller
 {
     public function index()
     {
-        $torneos = Torneo::with(['equipos', 'grupos.equipos', 'partidos.equipoLocal', 'partidos.equipoVisitante'])->get();
+        $torneos = Torneo::with(['grupos.equipos', 'equipos', 'partidos.equipoLocal', 'partidos.equipoVisitante'])->get();
         
+        // Calcular tablas de posiciones para cada grupo de cada torneo
         $tablasPosiciones = [];
         foreach ($torneos as $torneo) {
             $tablasPosiciones[$torneo->id] = [];
@@ -124,9 +125,10 @@ class TorneoController extends Controller
         return redirect()->route('torneos.edit', $torneo)->with('success', 'Equipo removido exitosamente del torneo.');
     }
 
-private function calcularTablaPosiciones($grupo)
-{
-    $tabla = [];
+// Método para calcular la tabla de posiciones
+    private function calcularTablaPosiciones($grupo)
+    {
+        $tabla = [];
         foreach ($grupo->equipos as $equipo) {
             $estadisticas = [
                 'equipo' => $equipo,
@@ -175,22 +177,22 @@ private function calcularTablaPosiciones($grupo)
                             }
                         }
                     }
-                    }
                 }
-                
-                $estadisticas['DG'] = $estadisticas['GF'] - $estadisticas['GC'];
-                $tabla[] = $estadisticas;
             }
-
-            usort($tabla, function($a, $b) {
-                if ($a['PTS'] == $b['PTS']) {
-                    return $b['DG'] - $a['DG'];
-                }
-                return $b['PTS'] - $a['PTS'];
-            });
-
-            return $tabla;
+            
+            $estadisticas['DG'] = $estadisticas['GF'] - $estadisticas['GC'];
+            $tabla[] = $estadisticas;
         }
+
+        usort($tabla, function($a, $b) {
+            if ($a['PTS'] == $b['PTS']) {
+                return $b['DG'] - $a['DG'];
+            }
+            return $b['PTS'] - $a['PTS'];
+        });
+
+        return $tabla;
+    }
 
 
 }
