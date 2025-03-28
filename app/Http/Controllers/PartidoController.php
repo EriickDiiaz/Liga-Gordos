@@ -42,7 +42,6 @@ class PartidoController extends Controller
         return response()->json($equipos);
     }
 
-    // Modificar el método getEquiposTorneo para asegurarnos de que devuelve solo los equipos del torneo
     public function getEquiposTorneo(Request $request)
     {
         $torneo = Torneo::with('equipos')->findOrFail($request->torneo_id);
@@ -261,6 +260,98 @@ class PartidoController extends Controller
 
         $accion->delete();
         return redirect()->route('partidos.show', $partido)->with('success', 'Acción eliminada exitosamente.');
+    }
+
+    // Método para iniciar un partido (cambiar estado a 'en_curso')
+    public function iniciarPartido(Partido $partido)
+    {
+        if ($partido->estado !== 'programado') {
+            return redirect()->route('partidos.show', $partido)->with('error', 'Solo se pueden iniciar partidos que estén programados.');
+        }
+
+        $partido->estado = 'en_curso';
+        $partido->save();
+
+        return redirect()->route('partidos.show', $partido)->with('success', 'Partido iniciado exitosamente.');
+    }
+
+    // Método para finalizar un partido (cambiar estado a 'finalizado')
+    public function finalizarPartido(Partido $partido)
+    {
+        if ($partido->estado !== 'en_curso') {
+            return redirect()->route('partidos.show', $partido)->with('error', 'Solo se pueden finalizar partidos que estén en curso.');
+        }
+
+        $partido->estado = 'finalizado';
+        $partido->save();
+
+        // Si es un partido de liga, actualizar las estadísticas de los equipos en el torneo
+        if ($partido->esLiga() && $partido->torneo) {
+            $this->actualizarEstadisticasEquipos($partido);
+        }
+
+        return redirect()->route('partidos.show', $partido)->with('success', 'Partido finalizado exitosamente.');
+    }
+
+    // Método para actualizar las estadísticas de los equipos en un torneo
+    private function actualizarEstadisticasEquipos(Partido $partido)
+    {
+        // Obtener los equipos del partido
+        $equipoLocal = $partido->equipoLocal;
+        $equipoVisitante = $partido->equipoVisitante;
+        $torneo = $partido->torneo;
+
+        // Actualizar estadísticas del equipo local
+        $estadisticasLocal = $torneo->equipos()->where('equipo_id', $equipoLocal->id)->first()->pivot;
+        $estadisticasLocal->partidos_jugados += 1;
+        $estadisticasLocal->goles_favor += $partido->goles_local ?? 0;
+        $estadisticasLocal->goles_contra += $partido->goles_visitante ?? 0;
+
+        // Actualizar estadísticas del equipo visitante
+        $estadisticasVisitante = $torneo->equipos()->where('equipo_id', $equipoVisitante->id)->first()->pivot;
+        $estadisticasVisitante->partidos_jugados += 1;
+        $estadisticasVisitante->goles_favor += $partido->goles_visitante ?? 0;
+        $estadisticasVisitante->goles_contra += $partido->goles_local ?? 0;
+
+        // Determinar el resultado y actualizar victorias, empates y derrotas
+        if ($partido->goles_local > $partido->goles_visitante) {
+            // Victoria local
+            $estadisticasLocal->victorias += 1;
+            $estadisticasLocal->puntos += 3;
+            $estadisticasVisitante->derrotas += 1;
+        } elseif ($partido->goles_local < $partido->goles_visitante) {
+            // Victoria visitante
+            $estadisticasVisitante->victorias += 1;
+            $estadisticasVisitante->puntos += 3;
+            $estadisticasLocal->derrotas += 1;
+        } else {
+            // Empate
+            $estadisticasLocal->empates += 1;
+            $estadisticasLocal->puntos += 1;
+            $estadisticasVisitante->empates += 1;
+            $estadisticasVisitante->puntos += 1;
+        }
+
+        // Guardar los cambios
+        $torneo->equipos()->updateExistingPivot($equipoLocal->id, [
+            'partidos_jugados' => $estadisticasLocal->partidos_jugados,
+            'victorias' => $estadisticasLocal->victorias,
+            'empates' => $estadisticasLocal->empates,
+            'derrotas' => $estadisticasLocal->derrotas,
+            'goles_favor' => $estadisticasLocal->goles_favor,
+            'goles_contra' => $estadisticasLocal->goles_contra,
+            'puntos' => $estadisticasLocal->puntos
+        ]);
+
+        $torneo->equipos()->updateExistingPivot($equipoVisitante->id, [
+            'partidos_jugados' => $estadisticasVisitante->partidos_jugados,
+            'victorias' => $estadisticasVisitante->victorias,
+            'empates' => $estadisticasVisitante->empates,
+            'derrotas' => $estadisticasVisitante->derrotas,
+            'goles_favor' => $estadisticasVisitante->goles_favor,
+            'goles_contra' => $estadisticasVisitante->goles_contra,
+            'puntos' => $estadisticasVisitante->puntos
+        ]);
     }
 }
 

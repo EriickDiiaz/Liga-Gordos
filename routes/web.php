@@ -68,6 +68,13 @@ Route::get('/partidos/equipos-torneo', [PartidoController::class, 'getEquiposTor
 Route::post('/partidos/{partido}/acciones', [PartidoController::class, 'registrarAccion'])->name('partidos.registrar-accion');
 Route::delete('/partidos/{partido}/acciones/{accion}', [PartidoController::class, 'eliminarAccion'])->name('partidos.eliminar-accion');
 
+// Rutas para iniciar y finalizar partidos
+Route::post('/partidos/{partido}/iniciar', [PartidoController::class, 'iniciarPartido'])->name('partidos.iniciar');
+Route::post('/partidos/{partido}/finalizar', [PartidoController::class, 'finalizarPartido'])->name('partidos.finalizar');
+
+// Añadir una ruta para depurar los equipos de un torneo
+Route::get('/partidos/debug-equipos-torneo/{torneo}', [PartidoController::class, 'debugEquiposTorneo'])->name('partidos.debugEquiposTorneo');
+
 /*
 |--------------------------------------------------------------------------
 | Rutas de Administración de Usuarios y Permisos
