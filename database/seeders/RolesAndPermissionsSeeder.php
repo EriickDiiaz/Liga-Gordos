@@ -19,6 +19,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'Crear Jugadores',
             'Editar Jugadores',
             'Borrar Jugadores',
+            'Ver Cedula',
 
             'Crear Torneos',
             'Editar Torneos',
@@ -44,14 +45,14 @@ class RolesAndPermissionsSeeder extends Seeder
         $directorRole = Role::create(['name' => 'Director de Liga']);
         $directorRole->givePermissionTo([
             'Crear Equipos', 'Editar Equipos', 'Borrar Equipos',
-            'Crear Jugadores', 'Editar Jugadores', 'Borrar Jugadores',
+            'Crear Jugadores', 'Editar Jugadores', 'Borrar Jugadores', 'Ver Cedula',
             'Crear Torneos', 'Editar Torneos', 'Borrar Torneos',
             'Crear Partidos', 'Editar Partidos', 'Registrar Acciones', 'Borrar Partidos'
         ]);
 
         $mesaTecnicaRole = Role::create(['name' => 'Mesa Técnica']);
         $mesaTecnicaRole->givePermissionTo([
-            'Registrar Acciones'
+            'Registrar Acciones', 'Ver Cedula',
         ]);
 
         $capitanRole = Role::create(['name' => 'Capitán']);

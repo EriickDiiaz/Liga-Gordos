@@ -20,7 +20,9 @@
                     <th>#</th>
                     <th>Foto</th>
                     <th>Nombre</th>
-                    <th>Cédula</th>
+                    @can('Ver Cedula')
+                    <th>Cédula</th>   
+                    @endcan                    
                     <th>Edad</th>
                     <th>Tipo</th>
                     <th>Equipo</th>
@@ -35,7 +37,9 @@
                             <img class="img-thumbnail" src="{{ asset($jugador->foto) }}" class="card-img-top mt-3" alt="{{ $jugador->nombre }}" style="width: 50px; height: 50px; object-fit: cover;">
                         </td>
                         <td>{{ $jugador->nombre }}</td>
-                        <td>{{ $jugador->cedula }}</td>
+                        @can('Ver Cedula')
+                        <td>{{ $jugador->cedula }}</td> 
+                        @endcan                        
                         <td>{{ $jugador->edad }}</td>                        
                         <td>{{ ucfirst($jugador->tipo) }}</td>
                         <td>{{ $jugador->equipo->nombre }}</td>

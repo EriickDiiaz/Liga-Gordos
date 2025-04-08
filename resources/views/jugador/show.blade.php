@@ -26,7 +26,9 @@
                         </div>
                         <h4 class="card-title">Información del Jugador</h4>
                         <p><strong>Nombre:</strong> {{ $jugador->nombre }}</p>
+                        @can('Ver Cedula')
                         <p><strong>Cédula:</strong> {{ $jugador->cedula }}</p>
+                        @endcan                        
                         <p><strong>Fecha de Nacimiento:</strong> {{ $jugador->fecha_nacimiento ? $jugador->fecha_nacimiento->format('d/m/Y') : 'No establecida' }}</p>
                         <p><strong>Edad:</strong> {{ $jugador->edad }} años</p>
                         <p><strong>Dorsal:</strong> {{ $jugador->dorsal }}</p>
