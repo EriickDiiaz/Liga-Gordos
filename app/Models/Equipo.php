@@ -9,7 +9,7 @@ class Equipo extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nombre', 'logo', 'color_primario', 'color_secundario', 'estado'];
+    protected $fillable = ['nombre', 'logo', 'color_primario', 'color_secundario', 'instagram', 'tiktok', 'estado'];
 
     protected $casts = [
         'estado' => 'boolean',

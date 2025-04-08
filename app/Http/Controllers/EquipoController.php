@@ -93,6 +93,8 @@ class EquipoController extends Controller
             'nombre' => 'required|unique:equipos,nombre' . ($id ? ",$id" : ''),
             'color_primario' => 'required',
             'logo' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'instagram' => 'nullable',
+            'tiktok' => 'nullable',
             'estado' => 'boolean',
         ];
 

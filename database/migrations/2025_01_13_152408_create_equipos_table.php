@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->string('color_primario');
             $table->string('color_secundario')->nullable();
+            $table->string('instagram')->nullable();
+            $table->string('tiktok')->nullable();
             $table->boolean('estado')->default(true);
             $table->timestamps();
         });

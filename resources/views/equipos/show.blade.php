@@ -28,6 +28,23 @@
                     <p class="text-center mb-1">Jugadores Habilidosos: {{ $equipo->jugadores->where('tipo', 'habilidoso')->count() }}</p>
                     <p class="text-center mb-1">Jugadores con Brazalete: {{ $equipo->jugadores->where('tipo', 'brazalete')->count() }}</p>
                     <p class="text-center mb-1">Total de Jugadores: {{ $equipo->jugadores->count() }}</p>
+                    <p class="card-text text-center mb-1">
+                        Estado: <span class="badge {{ $equipo->estado ? 'bg-success' : 'bg-danger' }}">
+                            {{ $equipo->estado ? 'Activo' : 'Inactivo' }}
+                        </span>
+                    </p>
+                    <p class="card-text text-center mb-1">
+                    @if($equipo->instagram)                        
+                        <a href="{{ $equipo->instagram}}" target="blank">
+                            <i class="fa-brands fa-instagram m-2"></i>
+                        </a>
+                    @endif
+                    @if($equipo->tiktok)                        
+                        <a href="{{ $equipo->tiktok }}" target="blank">
+                            <i class="fa-brands fa-tiktok m-2"></i>
+                        </a>
+                    @endif
+                    </p>
                 </div>
                 
                 <!-- Right side: Players table -->

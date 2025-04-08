@@ -27,6 +27,20 @@
                         </div>
                     </div>
                 </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="instagram">instagram (Opcional)</label>
+                            <input type="text" class="form-control" id="instagram" name="instagram" value="{{ $equipo->instagram }}">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="tiktok">Tik-Tok (opcional)</label>
+                            <input type="text" class="form-control" id="tiktok" name="tiktok" value="{{ $equipo->tiktok }}">
+                        </div>
+                    </div>
+                </div>
                 <div class="form-group mb-3">
                     <label for="logo">Logo del Equipo</label>
                     <input type="file" class="form-control" id="logo" name="logo">
