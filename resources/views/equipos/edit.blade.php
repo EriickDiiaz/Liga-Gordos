@@ -30,7 +30,7 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="instagram">instagram (Opcional)</label>
+                            <label for="instagram">Instagram (Opcional)</label>
                             <input type="text" class="form-control" id="instagram" name="instagram" value="{{ $equipo->instagram }}">
                         </div>
                     </div>

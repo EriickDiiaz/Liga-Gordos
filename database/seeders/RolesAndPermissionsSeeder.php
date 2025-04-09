@@ -28,7 +28,12 @@ class RolesAndPermissionsSeeder extends Seeder
             'Crear Partidos',
             'Editar Partidos',
             'Borrar Partidos',
-            'Registrar Acciones',            
+            'Registrar Acciones', 
+            
+            'Gestionar Patrocinadores',
+            'Crear Patrocinadores',
+            'Editar Patrocinadores',
+            'Borrar Patrocinadores',
 
             'Gestionar Usuarios',
             'Gestionar Roles y Permisos'

@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JugadorController;
 use App\Http\Controllers\TorneoController;
 use App\Http\Controllers\PartidoController;
+use App\Http\Controllers\PatrocinadorController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -77,10 +78,11 @@ Route::get('/partidos/debug-equipos-torneo/{torneo}', [PartidoController::class,
 
 /*
 |--------------------------------------------------------------------------
-| Rutas de Administración de Usuarios y Permisos
+| Rutas de Administración de Usuarios, Permisos y Patrocinantes
 |--------------------------------------------------------------------------
 */
 Route::resource('usuarios', UserController::class);
+Route::resource('patrocinador', PatrocinadorController::class);
 Route::resource('roles', RoleController::class);
 Route::resource('permissions', PermissionController::class)->except(['index', 'show']);
 

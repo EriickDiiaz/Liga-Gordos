@@ -104,6 +104,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('partidos.index') }}">Partidos</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('patrocinador.index') }}">Patrocinadores</a>
+                        </li>
                         @can('Gestionar Roles y Permisos')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('roles.index') }}">Roles y Permisos</a>
@@ -114,6 +117,7 @@
                             <a class="nav-link" href="{{ route('usuarios.index') }}">Usuarios</a>
                         </li>
                         @endcan
+                        
                     </ul>
 
                     <!-- Right Side Of Navbar -->

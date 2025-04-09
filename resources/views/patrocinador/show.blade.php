@@ -33,18 +33,18 @@
                             {{ $equipo->estado ? 'Activo' : 'Inactivo' }}
                         </span>
                     </p>
-                    <div class="d-flex justify-content-center align-items-center">
-                        @if($equipo->instagram)
-                            <a href="{{ $equipo->instagram }}" target="blank" class="mx-2">
-                                <i class="fa-brands fa-instagram" style="font-size: 1.5rem;"></i>
-                            </a>
-                        @endif
-                        @if($equipo->tiktok)
-                            <a href="{{ $equipo->tiktok }}" target="blank" class="mx-2">
-                                <i class="fa-brands fa-tiktok" style="font-size: 1.5rem;"></i>
-                            </a>
-                        @endif
-                    </div>
+                    <p class="card-text text-center mb-1">
+                    @if($equipo->instagram)                        
+                        <a href="{{ $equipo->instagram}}" target="blank">
+                            <i class="fa-brands fa-instagram m-2"></i>
+                        </a>
+                    @endif
+                    @if($equipo->tiktok)                        
+                        <a href="{{ $equipo->tiktok }}" target="blank">
+                            <i class="fa-brands fa-tiktok m-2"></i>
+                        </a>
+                    @endif
+                    </p>
                 </div>
                 
                 <!-- Right side: Players table -->
