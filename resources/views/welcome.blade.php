@@ -24,7 +24,7 @@
                 @if($proximosPartidos->count() > 0)
                     @foreach($proximosPartidos as $partido)
                         <div class="col-md-4 mb-4">
-                            <div class="card h-100 bg-dark text-white border-warning">
+                            <div class="card h-100 bg-dark text-white border">
                                 <div class="card-header text-center">
                                     <h5>
                                         @if($partido->torneo)
@@ -42,7 +42,7 @@
                                             <h6>{{ $partido->equipoLocal->nombre }}</h6>
                                         </div>
                                         <div class="col-2">
-                                            <span class="display-6">V</span>
+                                            <span class="display-6">VS</span>
                                         </div>
                                         <div class="col-5 text-center">
                                             <img src="{{ asset($partido->equipoVisitante->logo) }}" alt="{{ $partido->equipoVisitante->nombre }}" class="img-fluid mb-2" style="max-height: 80px;">
@@ -74,14 +74,14 @@
         <div class="container">
             <h2 class="text-center mb-5 text-dark">Nuestros Patrocinadores</h2>
         
-            <div class="sponsors-container">
+            <div class="teams-container">
                 @if(isset($patrocinadores) && $patrocinadores->count() > 0)
-                    <div class="sponsors-grid">
+                    <div class="teams-grid">
                         @foreach($patrocinadores as $patrocinador)
-                            <a href="{{ route('patrocinador.index') }}" class="sponsor-circle-link">
-                                <div class="sponsor-circle" style="background-image: url('{{ asset($patrocinador->logo) }}')">
-                                    <div class="sponsor-overlay">
-                                        <div class="sponsor-name">{{ $patrocinador->nombre }}</div>
+                            <a href="{{ route('patrocinador.index', $patrocinador) }}" class="team-circle-link">
+                                <div class="team-circle" style="background-image: url('{{ asset($patrocinador->logo) }}'); border: 3px solid #ff9a02;">
+                                    <div class="team-overlay" style="background: linear-gradient(rgba(0,0,0,0.7), #ff9a02);">
+                                        <div class="team-name">{{ $patrocinador->nombre }}</div>
                                     </div>
                                 </div>
                             </a>
@@ -105,37 +105,42 @@
         <div class="container">
             <h2 class="text-center mb-5">Equipos Participantes</h2>
             
-            <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
-                @foreach($equipos as $equipo)
-                    <div class="col">
-                        <div class="card h-100 team-card">
-                            <div class="card-header" style="background-color: {{ $equipo->color_primario }}; height: 10px;"></div>
-                            <div class="card-body text-center">
-                                <img src="{{ asset($equipo->logo) }}" alt="{{ $equipo->nombre }}" class="img-fluid mb-3" style="max-height: 100px;">
-                                <h5 class="card-title">{{ $equipo->nombre }}</h5>
-                                <p class="card-text">
-                                    <small>Jugadores: {{ $equipo->jugadores->count() }}</small>
-                                </p>
-                            </div>
-                            <div class="card-footer text-center" style="background-color: {{ $equipo->color_secundario ?? $equipo->color_primario }}; height: 10px;">
-                            </div>
-                        </div>
+            <div class="teams-container">
+                @if($equipos->count() > 0)
+                    <div class="teams-grid">
+                        @foreach($equipos as $equipo)
+                            <a href="{{ route('equipos.show', $equipo) }}" class="team-circle-link">
+                                <div class="team-circle" style="background-image: url('{{ asset($equipo->logo) }}'); border: 3px solid {{ $equipo->color_primario }};">
+                                    <div class="team-overlay" style="background: linear-gradient(rgba(0,0,0,0.7), {{ $equipo->color_primario }});">
+                                        <div class="team-name">{{ $equipo->nombre }}</div>
+                                        <div class="team-players">{{ $equipo->jugadores->count() }} jugadores</div>
+                                    </div>
+                                </div>
+                            </a>
+                        @endforeach
                     </div>
-                @endforeach
+                @else
+                    <div class="text-center">
+                        <p>No hay equipos registrados actualmente.</p>
+                    </div>
+                @endif
             </div>
             
             <div class="text-center mt-5">
                 <div class="stats-box p-4 d-inline-block bg-dark text-white rounded">
                     <div class="row">
                         <div class="col-md-4 text-center mb-3 mb-md-0">
+                            <i class="fas fa-shield-alt fa-2x mb-2 text-warning"></i>
                             <h3>{{ $equipos->count() }}</h3>
                             <p class="mb-0">Equipos</p>
                         </div>
                         <div class="col-md-4 text-center mb-3 mb-md-0">
+                            <i class="fas fa-running fa-2x mb-2 text-warning"></i>
                             <h3>{{ App\Models\Jugador::count() }}</h3>
                             <p class="mb-0">Jugadores</p>
                         </div>
                         <div class="col-md-4 text-center">
+                            <i class="fas fa-trophy fa-2x mb-2 text-warning"></i>
                             <h3>{{ $torneosActivos }}</h3>
                             <p class="mb-0">Torneos Activos</p>
                         </div>
@@ -265,7 +270,7 @@
         <div class="container text-center">
             <h2 class="mb-4">¿Quieres unirte a la Liga de los Gordos?</h2>
             <p class="lead mb-4">Si tienes un equipo o quieres formar parte de uno, ¡contáctanos!</p>
-            <a href="#" class="btn btn-outline-light btn-lg">Contáctanos</a>
+            <a href="#" class="btn btn-outline-dark btn-lg">Contáctanos</a>
         </div>
     </section>
 </div>
@@ -282,13 +287,13 @@
         box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 
-    /* Estilos para los patrocinadores */
-    .sponsors-container {
+    /* Estilos para los equipos y patrocinadores */
+    .teams-container {
         padding: 20px 0;
         overflow: hidden;
     }
     
-    .sponsors-grid {
+    .teams-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: 20px;
@@ -297,17 +302,17 @@
         margin: 0 auto;
     }
     
-    .sponsor-circle-link {
+    .team-circle-link {
         text-decoration: none;
         display: block;
     }
     
-    .sponsor-circle {
+    .team-circle {
         width: 150px;
         height: 150px;
         border-radius: 50%;
         background-color: white;
-        background-size: cover;
+        background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
         position: relative;
@@ -316,14 +321,14 @@
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     
-    .sponsor-overlay {
+    .team-overlay {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.7);
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         opacity: 0;
@@ -331,66 +336,88 @@
         border-radius: 50%;
     }
     
-    .sponsor-name {
+    .team-name {
         color: white;
         font-weight: bold;
         text-align: center;
-        padding: 10px;
+        padding: 5px 10px;
         transform: translateY(20px);
         transition: transform 0.3s ease;
     }
     
-    .sponsor-circle:hover {
+    .team-players {
+        color: white;
+        font-size: 0.8rem;
+        text-align: center;
+        padding: 0 10px;
+        transform: translateY(20px);
+        transition: transform 0.3s ease 0.1s;
+    }
+    
+    .team-circle:hover {
         transform: scale(1.1) rotate(5deg);
         box-shadow: 0 15px 30px rgba(0,0,0,0.2);
     }
     
-    .sponsor-circle:hover .sponsor-overlay {
+    .team-circle:hover .team-overlay {
         opacity: 1;
     }
     
-    .sponsor-circle:hover .sponsor-name {
+    .team-circle:hover .team-name,
+    .team-circle:hover .team-players {
         transform: translateY(0);
     }
     
-    /* Responsive adjustments */
+    /* Responsive adjustments for teams */
     @media (max-width: 1200px) {
-        .sponsors-grid {
+        .teams-grid {
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
         }
-        .sponsor-circle {
+        .team-circle {
             width: 130px;
             height: 130px;
         }
     }
     
     @media (max-width: 992px) {
-        .sponsors-grid {
+        .teams-grid {
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
         }
-        .sponsor-circle {
+        .team-circle {
             width: 120px;
             height: 120px;
         }
     }
     
     @media (max-width: 768px) {
-        .sponsors-grid {
+        .teams-grid {
             grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
         }
-        .sponsor-circle {
+        .team-circle {
             width: 100px;
             height: 100px;
+        }
+        .team-name {
+            font-size: 0.9rem;
+        }
+        .team-players {
+            font-size: 0.7rem;
         }
     }
     
     @media (max-width: 576px) {
-        .sponsors-grid {
+        .teams-grid {
             grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
         }
-        .sponsor-circle {
+        .team-circle {
             width: 80px;
             height: 80px;
+        }
+        .team-name {
+            font-size: 0.8rem;
+        }
+        .team-players {
+            font-size: 0.6rem;
         }
     }
 </style>
