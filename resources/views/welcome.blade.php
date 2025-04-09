@@ -24,9 +24,15 @@
                 @if($proximosPartidos->count() > 0)
                     @foreach($proximosPartidos as $partido)
                         <div class="col-md-4 mb-4">
-                            <div class="card h-100 bg-dark text-white border">
+                            <div class="card h-100 bg-dark text-white border-warning">
                                 <div class="card-header text-center">
-                                    <h5>{{ $partido->torneo->nombre }}</h5>
+                                    <h5>
+                                        @if($partido->torneo)
+                                            {{ $partido->torneo->nombre }}
+                                        @else
+                                            Partido Amistoso
+                                        @endif
+                                    </h5>
                                     <span class="badge bg-primary">{{ $partido->fecha->format('d/m/Y h:i A') }}</span>
                                 </div>
                                 <div class="card-body text-center">
@@ -36,7 +42,7 @@
                                             <h6>{{ $partido->equipoLocal->nombre }}</h6>
                                         </div>
                                         <div class="col-2">
-                                            <span class="display-6">VS</span>
+                                            <span class="display-6">V</span>
                                         </div>
                                         <div class="col-5 text-center">
                                             <img src="{{ asset($partido->equipoVisitante->logo) }}" alt="{{ $partido->equipoVisitante->nombre }}" class="img-fluid mb-2" style="max-height: 80px;">
@@ -59,6 +65,37 @@
             
             <div class="text-center mt-4">
                 <a href="{{ route('partidos.index') }}" class="btn btn-outline-warning">Ver Todos los Partidos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sponsors Section -->
+    <section class="py-5" style="background: linear-gradient(#FFD54F, #ff9a02);">
+        <div class="container">
+            <h2 class="text-center mb-5 text-dark">Nuestros Patrocinadores</h2>
+        
+            <div class="sponsors-container">
+                @if(isset($patrocinadores) && $patrocinadores->count() > 0)
+                    <div class="sponsors-grid">
+                        @foreach($patrocinadores as $patrocinador)
+                            <a href="{{ route('patrocinador.index') }}" class="sponsor-circle-link">
+                                <div class="sponsor-circle" style="background-image: url('{{ asset($patrocinador->logo) }}')">
+                                    <div class="sponsor-overlay">
+                                        <div class="sponsor-name">{{ $patrocinador->nombre }}</div>
+                                    </div>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="text-center text-dark">
+                        <p>No hay patrocinadores registrados actualmente.</p>
+                    </div>
+                @endif
+            </div>
+        
+            <div class="text-center mt-4">
+                <a href="{{ route('patrocinador.index') }}" class="btn btn-outline-dark">Ver Todos los Patrocinadores</a>
             </div>
         </div>
     </section>
@@ -244,6 +281,117 @@
         border-radius: 10px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
+
+    /* Estilos para los patrocinadores */
+    .sponsors-container {
+        padding: 20px 0;
+        overflow: hidden;
+    }
+    
+    .sponsors-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+        justify-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .sponsor-circle-link {
+        text-decoration: none;
+        display: block;
+    }
+    
+    .sponsor-circle {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background-color: white;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .sponsor-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        border-radius: 50%;
+    }
+    
+    .sponsor-name {
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        padding: 10px;
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+    }
+    
+    .sponsor-circle:hover {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+    
+    .sponsor-circle:hover .sponsor-overlay {
+        opacity: 1;
+    }
+    
+    .sponsor-circle:hover .sponsor-name {
+        transform: translateY(0);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 1200px) {
+        .sponsors-grid {
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        }
+        .sponsor-circle {
+            width: 130px;
+            height: 130px;
+        }
+    }
+    
+    @media (max-width: 992px) {
+        .sponsors-grid {
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        }
+        .sponsor-circle {
+            width: 120px;
+            height: 120px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .sponsors-grid {
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        }
+        .sponsor-circle {
+            width: 100px;
+            height: 100px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .sponsors-grid {
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        }
+        .sponsor-circle {
+            width: 80px;
+            height: 80px;
+        }
+    }
 </style>
 @endsection
-

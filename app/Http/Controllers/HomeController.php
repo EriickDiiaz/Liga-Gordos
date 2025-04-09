@@ -42,10 +42,11 @@ class HomeController extends Controller
             ->orderBy('fecha', 'asc')
             ->take(3)
             ->get();
-            
+        
         $equipos = Equipo::where('estado', 1)->get();
         $torneosActivos = Torneo::where('estado', 'en_curso')->count();
+        $patrocinadores = \App\Models\Patrocinador::all();
         
-        return view('welcome', compact('proximosPartidos', 'equipos', 'torneosActivos'));
+        return view('welcome', compact('proximosPartidos', 'equipos', 'torneosActivos', 'patrocinadores'));
     }
 }
