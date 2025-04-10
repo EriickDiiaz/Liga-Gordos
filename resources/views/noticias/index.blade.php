@@ -26,7 +26,7 @@
             <tbody>
                 @foreach($noticias as $noticia)
                     <tr>
-                        <td>{{ $noticia->created_at }}</td>
+                        <td>{{ $noticia->created_at->format('d/m/Y') }}</td>
                         <td>{{ $noticia->titulo }}</td>                       
                         <td>{{ $noticia->contenido }}</td>
                         <td>
@@ -66,7 +66,7 @@
             "responsive": true,
             "order": [[2, "asc"]], // Order by the Name column (index 2) ascending
             "columnDefs": [
-                { "orderable": false, "targets": [4] } // Disable sorting for photo and actions columns
+                { "orderable": false, "targets": [3] } // Disable sorting for photo and actions columns
             ]
         });
 

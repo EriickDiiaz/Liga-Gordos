@@ -55,13 +55,17 @@ class NoticiaController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, Noticia $noticia)
-    {
-        $this->validateNoticia($request, $noticia->id);    
-        
-        $noticia->save();
-        
-        return redirect()->route('noticias.index')->with('success', 'Noticia actualizada exitosamente.');
-    }
+{
+    $this->validateNoticia($request, $noticia->id);
+
+    // Asignar los datos actualizados al modelo
+    $noticia->fill($request->all());
+
+    // Guardar los cambios en la base de datos
+    $noticia->save();
+
+    return redirect()->route('noticias.index')->with('success', 'Noticia actualizada exitosamente.');
+}
 
     /**
      * Remove the specified resource from storage.
