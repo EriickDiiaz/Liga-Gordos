@@ -35,6 +35,11 @@ class RolesAndPermissionsSeeder extends Seeder
             'Editar Patrocinadores',
             'Borrar Patrocinadores',
 
+            'Gestionar Noticias',
+            'Crear Noticias',
+            'Editar Noticias',
+            'Borrar Noticias',
+
             'Gestionar Usuarios',
             'Gestionar Roles y Permisos'
         ];

@@ -107,6 +107,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('patrocinador.index') }}">Patrocinadores</a>
                         </li>
+                        @can('Gestionar Noticias')
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('noticias.index') }}">Noticias</a>
+                        </li>
+                        @endcan
                         @can('Gestionar Roles y Permisos')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('roles.index') }}">Roles y Permisos</a>
