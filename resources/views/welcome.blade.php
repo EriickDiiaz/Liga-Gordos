@@ -42,7 +42,7 @@
                                             <h6>{{ $partido->equipoLocal->nombre }}</h6>
                                         </div>
                                         <div class="col-2">
-                                            <span class="display-6">VS</span>
+                                            <span class="display-6">V</span>
                                         </div>
                                         <div class="col-5 text-center">
                                             <img src="{{ asset($partido->equipoVisitante->logo) }}" alt="{{ $partido->equipoVisitante->nombre }}" class="img-fluid mb-2" style="max-height: 80px;">
@@ -227,40 +227,27 @@
     <section class="py-5">
         <div class="container">
             <h2 class="text-center mb-5">Últimas Noticias</h2>
-            
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <img src="{{ asset('img/news-1.jpg') }}" class="card-img-top" alt="Noticia 1">
-                        <div class="card-body">
-                            <h5 class="card-title">Inauguración de la Temporada 2023</h5>
-                            <p class="card-text">La nueva temporada de la Liga de los Gordos comenzará el próximo 15 de marzo con un partido inaugural entre los finalistas del año pasado.</p>
-                            <p class="card-text"><small class="text-muted">Publicado el 1 de marzo, 2023</small></p>
+
+                @if($ultimasNoticias->count() > 0)
+                    <div class="row">
+                        @foreach ($ultimasNoticias as $noticia)
+                            <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <i class=""></i>
+                                <div class="card-body">
+                                    <h4 class="card-title"><i class="fas fa-solid fa-newspaper me-2 text-warning"></i>{{ $noticia->titulo }}</h4>
+                                    <p class="card-text">{{ $noticia->contenido }}</p>
+                                    <p class="card-text"><small class="text-muted">Publicado el {{ $noticia->created_at->format('d/m/Y H:M') }}</small></p>
+                                </div>
+                            </div>
                         </div>
+                        @endforeach
+                    </div>                    
+                @else
+                    <div class="col-12 text-center">
+                        <p class="text-white">No hay Noticias recientes.</p>
                     </div>
-                </div>
-                
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <img src="{{ asset('img/news-2.jpg') }}" class="card-img-top" alt="Noticia 2">
-                        <div class="card-body">
-                            <h5 class="card-title">Nuevas Instalaciones</h5>
-                            <p class="card-text">La liga estrena nuevas instalaciones con césped artificial de última generación y vestuarios renovados para mayor comodidad de los jugadores.</p>
-                            <p class="card-text"><small class="text-muted">Publicado el 15 de febrero, 2023</small></p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <img src="{{ asset('img/news-3.jpg') }}" class="card-img-top" alt="Noticia 3">
-                        <div class="card-body">
-                            <h5 class="card-title">Nuevos Equipos se Unen a la Liga</h5>
-                            <p class="card-text">Cinco nuevos equipos se han unido a nuestra liga para la temporada 2023, elevando el nivel de competición y emoción.</p>
-                            <p class="card-text"><small class="text-muted">Publicado el 5 de febrero, 2023</small></p>
-                        </div>
-                    </div>
-                </div>
+                @endif
             </div>
         </div>
     </section>

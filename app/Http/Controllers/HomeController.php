@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Partido;
 use App\Models\Equipo;
+use App\Models\Noticia;
 use App\Models\Torneo;
+
 
 class HomeController extends Controller
 {
@@ -42,11 +44,15 @@ class HomeController extends Controller
             ->orderBy('fecha', 'asc')
             ->take(3)
             ->get();
-        
+           
+        $ultimasNoticias = Noticia::orderBy('created_at', 'desc')
+            ->take(3)
+            ->get();
+            
         $equipos = Equipo::where('estado', 1)->get();
         $torneosActivos = Torneo::where('estado', 'en_curso')->count();
         $patrocinadores = \App\Models\Patrocinador::all();
         
-        return view('welcome', compact('proximosPartidos', 'equipos', 'torneosActivos', 'patrocinadores'));
+        return view('welcome', compact('proximosPartidos', 'equipos', 'torneosActivos', 'patrocinadores', 'ultimasNoticias'));
     }
 }
