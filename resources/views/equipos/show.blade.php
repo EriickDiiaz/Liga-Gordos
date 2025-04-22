@@ -62,7 +62,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Nombre</th>
-                                <th>Cédula</th>
+                                <th class="cedula-column">Cédula</th> {{-- Siempre presente en el DOM --}}
                                 <th>F/N</th>
                                 <th>Edad</th>
                                 <th>Tipo</th>
@@ -74,7 +74,7 @@
                             <tr>
                                 <td>{{ $jugador->dorsal }}</td>
                                 <td>{{ $jugador->nombre }}</td>
-                                <td>{{ $jugador->cedula }}</td>
+                                <td class="cedula-column">{{ $jugador->cedula }}</td> {{-- Siempre presente en el DOM --}}
                                 <td>{{ $jugador->fecha_nacimiento->format('d/m/Y') }}</td>
                                 <td>{{ $jugador->edad }}</td>
                                 <td>{{ ucfirst($jugador->tipo) }}</td>
@@ -122,7 +122,7 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
-        $('#playersTable').DataTable({
+        const table = $('#playersTable').DataTable({
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json",
                 "search": "Buscar:",
@@ -136,9 +136,16 @@
             "info": false,
             "searching": true,
             "lengthChange": false,
-            "pageLength": -1
+            "pageLength": -1,
+            "responsive": true
         });
 
+        // Ocultar la columna "Cédula" si el usuario no está autenticado
+        @guest
+            table.column('.cedula-column').visible(false);
+        @endguest
+
+        // Confirmación para eliminar jugador
         $('.delete-jugador').click(function(e) {
             e.preventDefault();
             var form = $(this).closest('form');
