@@ -20,9 +20,7 @@
                     <th>#</th>
                     <th>Foto</th>
                     <th>Nombre</th>
-                    @can('Ver Cedula')
-                    <th>Cédula</th>   
-                    @endcan                    
+                    <th class="cedula-column">Cédula</th> {{-- Siempre presente en el DOM --}}
                     <th>Edad</th>
                     <th>Tipo</th>
                     <th>Equipo</th>
@@ -34,13 +32,11 @@
                     <tr>
                         <td>{{ $jugador->dorsal }}</td>
                         <td>
-                            <img class="img-thumbnail" src="{{ asset($jugador->foto) }}" class="card-img-top mt-3" alt="{{ $jugador->nombre }}" style="width: 50px; height: 50px; object-fit: cover;">
+                            <img class="img-thumbnail" src="{{ asset($jugador->foto) }}" alt="{{ $jugador->nombre }}" style="width: 50px; height: 50px; object-fit: cover;">
                         </td>
                         <td>{{ $jugador->nombre }}</td>
-                        @can('Ver Cedula')
-                        <td>{{ $jugador->cedula }}</td> 
-                        @endcan                        
-                        <td>{{ $jugador->edad }}</td>                        
+                        <td class="cedula-column">{{ $jugador->cedula }}</td> {{-- Siempre presente en el DOM --}}
+                        <td>{{ $jugador->edad }}</td>
                         <td>{{ ucfirst($jugador->tipo) }}</td>
                         <td>{{ $jugador->equipo->nombre }}</td>
                         <td>
@@ -70,23 +66,28 @@
 </div>
 
 @endsection
-
 @push('scripts')
 <script>
     $(document).ready(function() {
-        $('#jugadoresTable').DataTable({
+        const table = $('#jugadoresTable').DataTable({
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
             },
             "pageLength": 10,
             "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
             "responsive": true,
-            "order": [[2, "asc"]], // Order by the Name column (index 2) ascending
+            "order": [[2, "asc"]], // Ordenar por la columna Nombre (índice 2)
             "columnDefs": [
-                { "orderable": false, "targets": [1, 7] } // Disable sorting for photo and actions columns
+                { "orderable": false, "targets": [1, 7] } // Deshabilitar orden en Foto y Acciones
             ]
         });
 
+        // Ocultar la columna "Cédula" si el usuario no tiene permiso
+        @cannot('Ver Cedula')
+            table.column('.cedula-column').visible(false);
+        @endcannot
+
+        // Confirmación para eliminar jugador
         $('.delete-jugador').click(function(e) {
             e.preventDefault();
             const jugadorId = $(this).data('id');
