@@ -28,6 +28,10 @@ Auth::routes();
 Route::get('/', [HomeController::class, 'welcome'])->name('welcome');
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
+Route::get('/prueba', function () {
+    return response()->json(['mensaje' => 'Ruta de prueba alcanzada']);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Rutas de Equipos
@@ -58,11 +62,9 @@ Route::delete('/torneos/{torneo}/equipos/{equipo}', [TorneoController::class, 'r
 | Rutas de Partidos
 |--------------------------------------------------------------------------
 */
-// Rutas de recursos principales
-Route::resource('partidos', PartidoController::class);
-
 // Rutas para obtener datos relacionados
 Route::get('/partidos/grupos', [PartidoController::class, 'getGrupos'])->name('partidos.getGrupos');
+
 Route::get('/partidos/equipos', [PartidoController::class, 'getEquipos'])->name('partidos.getEquipos');
 Route::get('/partidos/equipos-torneo', [PartidoController::class, 'getEquiposTorneo'])->name('partidos.getEquiposTorneo');
 
@@ -77,6 +79,8 @@ Route::post('/partidos/{partido}/finalizar', [PartidoController::class, 'finaliz
 // Añadir una ruta para depurar los equipos de un torneo
 Route::get('/partidos/debug-equipos-torneo/{torneo}', [PartidoController::class, 'debugEquiposTorneo'])->name('partidos.debugEquiposTorneo');
 
+// Rutas de recursos principales
+Route::resource('partidos', PartidoController::class);
 /*
 |--------------------------------------------------------------------------
 | Rutas de Administración de Usuarios.
