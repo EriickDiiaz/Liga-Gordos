@@ -23,7 +23,7 @@
                 </div>
                 <div class="form-group mb-3">
                     <label for="dorsal">Dorsal</label>
-                    <input type="number" class="form-control" id="dorsal" name="dorsal" min="1" max="99" value="{{ $jugador->dorsal }}" required>
+                    <input type="number" class="form-control" id="dorsal" name="dorsal" min="0" max="999" value="{{ $jugador->dorsal }}" required>
                 </div>
                 <div class="form-group mb-3">
                     <label for="tipo">Tipo de Jugador</label>

@@ -91,7 +91,7 @@ class JugadorController extends Controller
             'nombre' => 'required|string|max:255',
             'cedula' => 'required|string|unique:jugadores,cedula,' . $id,
             'fecha_nacimiento' => 'required|date',
-            'dorsal' => 'required|integer|min:1|max:99',
+            'dorsal' => 'required|integer|min:0|max:999',
             'tipo' => 'required|in:habilidoso,brazalete,portero',
             'equipo_id' => 'required|exists:equipos,id',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
