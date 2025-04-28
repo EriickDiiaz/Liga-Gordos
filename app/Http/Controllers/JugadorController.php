@@ -23,16 +23,22 @@ class JugadorController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $this->validateJugador($request);
+        
+        $this->validateJugador($request);
+
+        $jugador = new Jugador($request->all());
         
         if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('jugadores', 'public');
-            $validatedData['foto'] = $path;
+            $foto = $request->file('foto');
+            $fotoName = time() . '.' . $foto->getClientOriginalExtension();
+            $foto->move(public_path('fotos'), $fotoName);
+            $jugador->foto = 'fotos/' . $fotoName;
         } else {
-            $validatedData['foto'] = 'img/default-player.png';
+            $jugador->foto = 'img/default-player.png';
         }
+        
+        $jugador->save();
 
-        Jugador::create($validatedData);
         return redirect()->route('jugador.index')->with('success', 'Jugador creado exitosamente.');
     }
 
@@ -50,28 +56,34 @@ class JugadorController extends Controller
 
     public function update(Request $request, Jugador $jugador)
     {
-        $validatedData = $this->validateJugador($request, $jugador->id);
-        
+        $this->validateJugador($request, $jugador->id);
+
+        $jugador->fill($request->except('foto'));
+
         if ($request->hasFile('foto')) {
-            if ($jugador->foto && $jugador->foto != 'img/default-player.png') {
-                Storage::disk('public')->delete($jugador->foto);
-            }
-            $path = $request->file('foto')->store('jugadores', 'public');
-            $validatedData['foto'] = $path;
+            $foto = $request->file('foto');
+            $fotoName = time() . '.' . $foto->getClientOriginalExtension();
+            $foto->move(public_path('fotos'), $fotoName);
+            $jugador->foto = 'fotos/' . $fotoName;
         }
 
-        $jugador->update($validatedData);
+        $jugador->save();
         return redirect()->route('jugador.index')->with('success', 'Jugador actualizado exitosamente.');
     }
 
     public function destroy(Jugador $jugador)
     {
         if ($jugador->foto && $jugador->foto != 'img/default-player.png') {
-            Storage::disk('public')->delete($jugador->foto);
+            $fotoPath = public_path($jugador->foto);
+            if (file_exists($fotoPath)) {
+                unlink($fotoPath);
+            }
         }
+
         $jugador->delete();
+
         return redirect()->route('jugador.index')->with('success', 'Jugador eliminado exitosamente.');
-    }
+        }
 
     private function validateJugador(Request $request, $id = null)
     {

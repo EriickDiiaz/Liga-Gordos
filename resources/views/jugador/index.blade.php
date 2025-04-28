@@ -20,7 +20,7 @@
                     <th>#</th>
                     <th>Foto</th>
                     <th>Nombre</th>
-                    <th class="cedula-column">Cédula</th> {{-- Siempre presente en el DOM --}}
+                    <th class="cedula-column">Cédula</th>
                     <th>Edad</th>
                     <th>Tipo</th>
                     <th>Equipo</th>
@@ -35,7 +35,7 @@
                             <img class="img-thumbnail" src="{{ asset($jugador->foto) }}" alt="{{ $jugador->nombre }}" style="width: 50px; height: 50px; object-fit: cover;">
                         </td>
                         <td>{{ $jugador->nombre }}</td>
-                        <td class="cedula-column">{{ $jugador->cedula }}</td> {{-- Siempre presente en el DOM --}}
+                        <td class="cedula-column">{{ $jugador->cedula }}</td>
                         <td>{{ $jugador->edad }}</td>
                         <td>{{ ucfirst($jugador->tipo) }}</td>
                         <td>{{ $jugador->equipo->nombre }}</td>
