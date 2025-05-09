@@ -257,7 +257,7 @@
         <div class="container text-center">
             <h2 class="mb-4">¿Quieres unirte a la Liga de los Gordos?</h2>
             <p class="lead mb-4">Si tienes un equipo o quieres formar parte de uno, ¡contáctanos!</p>
-            <a href="#" class="btn btn-outline-dark btn-lg">Contáctanos</a>
+            <a href="https://wa.me/+584120279953" class="btn btn-outline-dark btn-lg">Contáctanos</a>
         </div>
     </section>
 </div>

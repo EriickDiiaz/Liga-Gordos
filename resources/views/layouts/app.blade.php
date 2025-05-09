@@ -73,6 +73,43 @@
             background-color: var(--soft-yellow);
             color: var(--black);
         }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #app {
+            flex: 1 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        main {
+            flex: 1 0 auto;
+        }
+        
+        .footer {
+            flex-shrink: 0;
+            border-top: 3px solid var(--mustard);
+        }
+        
+        .social-icons a:hover {
+            color: var(--mustard) !important;
+            transform: scale(1.2);
+            transition: all 0.3s ease;
+        }
+        
+        .footer a:hover {
+            color: var(--mustard) !important;
+            transition: color 0.3s ease;
+        }
+
+        .footer-logo {
+            max-height: 50px; /* Ajusta el tamaño según sea necesario */
+            width: auto; /* Mantiene la proporción de la imagen */
+        }
     </style>
 
     <!-- Scripts -->
@@ -107,22 +144,16 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('patrocinador.index') }}">Patrocinadores</a>
                         </li>
-                        @can('Gestionar Noticias')
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('noticias.index') }}">Noticias</a>
-                        </li>
-                        @endcan
-                        @can('Gestionar Roles y Permisos')
+                        @can('gestionar roles y permisos')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('roles.index') }}">Roles y Permisos</a>
                         </li>
                         @endcan
-                        @can('Gestionar Usuarios')
+                        @can('gestionar usuarios')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('usuarios.index') }}">Usuarios</a>
                         </li>
                         @endcan
-                        
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -157,6 +188,19 @@
         <main class="py-4">
             @yield('content')
         </main>
+
+        <footer class="footer mt-auto py-3" style="background-color: var(--black);">
+            <div class="container text-center">
+                <div class="row">
+                    <ul class="list-unstyled">
+                        <li>© 2025 Liga de los Gordos</li>
+                        <li>Liga de los Gordos ha sido desarrollado por <a href="mailto:erick.diaz.1.2@gmail.com" style="color: var(--mustard);">Erick Diaz</a> y Viking Team Web Services</li>
+                        <li><a href="https://wa.me/+584122122246" class="text-decoration-none" style="color: var(--soft-yellow);"><i class="fab fa-whatsapp me-2"></i>WhatsApp</a></li>
+                        <li><a href="https://www.instagram.com/vikingteamvzla/"><img src="{{ asset('img/viking-team-logo.png') }}" alt="Viking Team Logo" class="footer-logo"></a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
     </div>
 
     <!-- Scripts de Bootstrap y jQuery -->
@@ -170,7 +214,24 @@
     <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
     
+    <script>
+        // Configuración global para DataTables
+        $.extend(true, $.fn.dataTable.defaults, {
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+            },
+            "responsive": true,
+            "pageLength": 10
+        });
+        
+        // Configurar CSRF token para AJAX
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
+
     @stack('scripts')
 </body>
 </html>
-
