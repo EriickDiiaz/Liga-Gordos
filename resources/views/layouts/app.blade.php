@@ -122,7 +122,7 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <img src="{{ asset('img/liga-gordos-logo.png') }}" alt="Liga de Gordos Logo" class="img-fluid">
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{'Toggle navigation'}}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -162,7 +162,7 @@
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
-                                    <a class="nav-link btn btn-custom mx-1" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    <a class="nav-link btn btn-custom mx-1" href="{{ route('login') }}">Iniciar Sesión</a>
                                 </li>
                             @endif
                         @else
