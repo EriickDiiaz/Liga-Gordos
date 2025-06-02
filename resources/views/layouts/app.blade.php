@@ -144,12 +144,12 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('patrocinador.index') }}">Patrocinadores</a>
                         </li>
-                        @can('gestionar roles y permisos')
+                        @can('Gestionar Roles y Permisos')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('roles.index') }}">Roles y Permisos</a>
                         </li>
                         @endcan
-                        @can('gestionar usuarios')
+                        @can('Gestionar Usuarios')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('usuarios.index') }}">Usuarios</a>
                         </li>
