@@ -1,7 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="container">
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <h1 class="mb-3 text-center">Editar Usuario: {{ $usuario->name }}</h1>
 
     <div class="row justify-content-center">
@@ -37,6 +48,19 @@
                         </div>
                     @endforeach
                 </div>
+                <div class="mb-3">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="active" name="active" {{ $usuario->active ? 'checked' : '' }}>
+                        <label class="form-check-label" for="active">Usuario Activo</label>
+                    </div>
+                </div>
+
+                <div class="mb-3" id="active_until_container">
+                    <label for="active_until" class="form-label">Activo Hasta (opcional)</label>
+                    <input type="date" class="form-control" id="active_until" name="active_until" 
+                        value="{{ old('active_until', $usuario->active_until ? $usuario->active_until->format('Y-m-d') : '') }}">
+                    <div class="form-text">Deja este campo vacío para que el usuario no tenga fecha de expiración.</div>
+                </div>
                 <div class="text-center mt-3">
                     <a href="{{ route('usuarios.index') }}" class="btn btn-outline-secondary m-1">Volver a la lista</a>
                     <button type="submit" class="btn btn-outline-primary m-1">Actualizar Usuario</button>
@@ -46,4 +70,25 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const activeSwitch = document.getElementById('active');
+        const activeUntilContainer = document.getElementById('active_until_container');
+
+        function toggleActiveUntilVisibility() {
+            if (activeSwitch.checked) {
+                activeUntilContainer.style.display = 'block';
+            } else {
+                activeUntilContainer.style.display = 'none';
+                document.getElementById('active_until').value = '';
+            }
+        }
+
+        activeSwitch.addEventListener('change', toggleActiveUntilVisibility);
+        toggleActiveUntilVisibility();
+    });
+</script>
+@endpush
 

@@ -35,29 +35,53 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $messages = [
+            'name.required' => 'El nombre es obligatorio.',
+            'name.max' => 'El nombre no debe exceder 255 caracteres.',
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'El correo electrónico debe ser válido.',
+            'email.max' => 'El correo electrónico no debe exceder 255 caracteres.',
+            'email.unique' => 'Este correo electrónico ya está en uso.',
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
+            'roles.array' => 'Los roles deben ser un arreglo.',
+            'active.in' => 'El estado debe ser activo o inactivo.',
+            'active_until.date' => 'La fecha de activación debe ser una fecha válida.',
+            'active_until.after_or_equal' => 'La fecha de activación debe ser hoy o una fecha futura.',
+        ];
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'roles' => 'nullable|array',
-            'active' => 'boolean',
+            'active' => 'nullable|in:0,1,true,false,on,off',
             'active_until' => 'nullable|date|after_or_equal:today',
-        ]);
+        ], $messages);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'active' => $request->has('active'),
-            'active_until' => $request->active_until,
-        ]);
+        try {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'active' => $request->boolean('active', false),
+                'active_until' => $request->active_until,
+            ]);
 
-        if ($request->has('roles')) {
-            $user->syncRoles($request->roles);
+            if ($request->has('roles') && !empty($request->roles)) {
+                // Convertir IDs de roles a nombres de roles
+                $roleNames = Role::whereIn('id', $request->roles)->pluck('name')->toArray();
+                $user->syncRoles($roleNames);
+            }
+
+            return redirect()->route('usuarios.index')
+                ->with('success', 'Usuario creado exitosamente.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput();
         }
-
-        return redirect()->route('usuarios.index')
-            ->with('success', 'Usuario creado exitosamente.');
     }
 
     public function edit(User $usuario)
@@ -68,34 +92,56 @@ class UserController extends Controller
 
     public function update(Request $request, User $usuario)
     {
+        $messages = [
+            'name.required' => 'El nombre es obligatorio.',
+            'name.max' => 'El nombre no debe exceder 255 caracteres.',
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'El correo electrónico debe ser válido.',
+            'email.max' => 'El correo electrónico no debe exceder 255 caracteres.',
+            'email.unique' => 'Este correo electrónico ya está en uso.',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
+            'password.confirmed' => 'Las contraseñas no coinciden.',
+            'roles.array' => 'Los roles deben ser un arreglo.',
+            'active.in' => 'El estado debe ser activo o inactivo.',
+            'active_until.date' => 'La fecha de activación debe ser una fecha válida.',
+        ];
+
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $usuario->id,
+            'email' => 'required|string|max:255|unique:users,email,' . $usuario->id,
             'password' => 'nullable|string|min:8|confirmed',
             'roles' => 'nullable|array',
-            'active' => 'boolean',
+            'active' => 'nullable|in:0,1,true,false,on,off',
             'active_until' => 'nullable|date',
-        ]);
+        ], $messages);
 
-        $usuario->name = $request->name;
-        $usuario->email = $request->email;
-        $usuario->active = $request->has('active');
-        $usuario->active_until = $request->active_until;
-        
-        if ($request->filled('password')) {
-            $usuario->password = Hash::make($request->password);
+        try {
+            $usuario->name = $request->name;
+            $usuario->email = $request->email;
+            $usuario->active = $request->boolean('active', false);
+            $usuario->active_until = $request->active_until;
+
+            if ($request->filled('password')) {
+                $usuario->password = Hash::make($request->password);
+            }
+
+            $usuario->save();
+
+            if ($request->has('roles') && !empty($request->roles)) {
+                // Convertir IDs de roles a nombres de roles
+                $roleNames = Role::whereIn('id', $request->roles)->pluck('name')->toArray();
+                $usuario->syncRoles($roleNames);
+            } else {
+                $usuario->syncRoles([]);
+            }
+
+            return redirect()->route('usuarios.index')
+                ->with('success', 'Usuario actualizado exitosamente.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()
+                ->withErrors($e->validator)
+                ->withInput();
         }
-
-        $usuario->save();
-
-        if ($request->has('roles')) {
-            $usuario->syncRoles($request->roles);
-        } else {
-            $usuario->syncRoles([]);
-        }
-
-        return redirect()->route('usuarios.index')
-            ->with('success', 'Usuario actualizado exitosamente.');
     }
 
     public function destroy(User $usuario)
@@ -103,7 +149,7 @@ class UserController extends Controller
         // Evitar eliminar al usuario actual
         if ($usuario->id === auth()->id()) {
             return redirect()->route('usuarios.index')
-                ->with('error', 'No puedes eliminar tu propio usuario.');
+                ->with('error', 'No puedes eliminar tu propio usuario.'); 
         }
 
         $usuario->delete();
@@ -155,4 +201,3 @@ class UserController extends Controller
             ->with('success', "Usuario activado hasta {$usuario->active_until->format('d/m/Y')}.");
     }
 }
-

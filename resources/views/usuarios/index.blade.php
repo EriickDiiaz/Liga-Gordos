@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="container">
-    <h1 class="mb-4">Gestión de Usuarios</h1>
 
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -17,6 +16,8 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+    
+    <h1 class="mb-4">Gestión de Usuarios</h1>    
 
     <div class="mb-3">
         <a href="{{ route('usuarios.create') }}" class="btn btn-outline-success">
