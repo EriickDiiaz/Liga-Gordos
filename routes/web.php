@@ -87,6 +87,9 @@ Route::resource('partidos', PartidoController::class);
 |--------------------------------------------------------------------------
 */
 Route::resource('usuarios', UserController::class);
+Route::resource('usuarios', App\Http\Controllers\UserController::class);
+Route::patch('/usuarios/{usuario}/toggle-active', [App\Http\Controllers\UserController::class, 'toggleActive'])->name('usuarios.toggle-active');
+Route::patch('/usuarios/{usuario}/set-active-until', [App\Http\Controllers\UserController::class, 'setActiveUntil'])->name('usuarios.set-active-until');
 
 /*
 |--------------------------------------------------------------------------
