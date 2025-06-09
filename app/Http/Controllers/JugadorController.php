@@ -75,15 +75,39 @@ class JugadorController extends Controller
 
     private function validateJugador(Request $request, $id = null)
     {
-        return $request->validate([
+        $rules = [
             'nombre' => 'required|string|max:255',
-            'cedula' => 'required|string|unique:jugadores,cedula,' . $id,
+            'cedula' => 'required|integer|unique:jugadores,cedula,' . $id,
             'fecha_nacimiento' => 'required|date',
-            'dorsal' => 'required|integer|min:1|max:99',
+            'dorsal' => 'required|integer|min:0|max:999',
             'tipo' => 'required|in:habilidoso,brazalete,portero',
             'equipo_id' => 'required|exists:equipos,id',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        ];
+
+        $messages = [
+            'nombre.required' => 'El nombre del jugador es obligatorio.',
+            'nombre.string' => 'El nombre del jugador debe ser una cadena de texto.',
+            'nombre.max' => 'El nombre del jugador no puede tener más de 255 caracteres.',
+            'cedula.required' => 'La cédula del jugador es obligatoria.',
+            'cedula.integer' => 'La cédula debe ser un número.',
+            'cedula.unique' => 'La cédula ya está registrada para otro jugador.',
+            'fecha_nacimiento.required' => 'La fecha de nacimiento es obligatoria.',
+            'fecha_nacimiento.date' => 'La fecha de nacimiento debe ser una fecha válida.',
+            'dorsal.required' => 'El dorsal del jugador es obligatorio.',
+            'dorsal.integer' => 'El dorsal debe ser un número entero.',
+            'dorsal.min' => 'El dorsal no puede ser menor que 0.',
+            'dorsal.max' => 'El dorsal no puede ser mayor que 999.',
+            'tipo.required' => 'El tipo de jugador es obligatorio.',
+            'tipo.in' => 'El tipo de jugador debe ser uno de los siguientes: habilidoso, brazalete, portero.',
+            'equipo_id.required' => 'El equipo del jugador es obligatorio.',
+            'equipo_id.exists' => 'El equipo seleccionado no existe.',
+            'foto.image' => 'La foto debe ser una imagen.',
+            'foto.mimes' => 'La foto debe ser un archivo de tipo: jpeg, png, jpg, gif.',
+            'foto.max' => 'La foto no puede exceder los 2 MB.',
+        ];
+
+        return $request->validate($rules, $messages);
     }
 }
 
