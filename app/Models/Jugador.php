@@ -38,5 +38,19 @@ class Jugador extends Model
     {
         return $this->equipo ? $this->equipo->nombre : 'Sin equipo';
     }
+
+    // Nueva relación para torneos
+    public function torneos()
+    {
+        return $this->belongsToMany(Torneo::class, 'jugadores_torneo')
+                    ->withPivot('goles', 'tarjetas_amarillas', 'tarjetas_rojas', 'porterias_imbatidas', 'activo')
+                    ->withTimestamps();
+    }
+    
+    // Método para verificar si el jugador está inscrito en un torneo específico
+    public function estaInscritoEnTorneo($torneoId)
+    {
+        return $this->torneos()->where('torneo_id', $torneoId)->exists();
+    }
 }
 

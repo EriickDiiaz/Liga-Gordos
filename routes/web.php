@@ -3,6 +3,7 @@
 use App\Http\Controllers\EquipoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JugadorController;
+use App\Http\Controllers\JugadorTorneoController;
 use App\Http\Controllers\NoticiaController;
 use App\Http\Controllers\TorneoController;
 use App\Http\Controllers\PartidoController;
@@ -57,6 +58,21 @@ Route::delete('/torneos/{torneo}/grupos/{grupo}', [TorneoController::class, 'rem
 Route::post('/torneos/{torneo}/equipos', [TorneoController::class, 'addEquipoToTorneo'])->name('torneos.addEquipo');
 Route::delete('/torneos/{torneo}/equipos/{equipo}', [TorneoController::class, 'removeEquipoFromTorneo'])->name('torneos.removeEquipo');
 
+// Rutas para gestión de plantillas de torneos
+Route::get('/torneos/{torneo}/plantillas', [JugadorTorneoController::class, 'index'])
+    ->name('plantillas.index');
+    
+Route::get('/torneos/{torneo}/plantillas/{equipo}', [JugadorTorneoController::class, 'show'])
+    ->name('plantillas.show');
+    
+Route::post('/torneos/{torneo}/plantillas/{equipo}/agregar', [JugadorTorneoController::class, 'agregarJugador'])
+    ->name('plantillas.agregar');
+    
+Route::delete('/torneos/{torneo}/plantillas/{equipo}/quitar/{jugador}', [JugadorTorneoController::class, 'quitarJugador'])
+    ->name('plantillas.quitar');
+    
+Route::put('/torneos/{torneo}/plantillas/{equipo}/estadisticas/{jugador}', [JugadorTorneoController::class, 'actualizarEstadisticas'])
+    ->name('plantillas.estadisticas');
 /*
 |--------------------------------------------------------------------------
 | Rutas de Partidos

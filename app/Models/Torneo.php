@@ -30,5 +30,28 @@ class Torneo extends Model
     {
         return $this->hasMany(Partido::class);
     }
+
+    // Nueva relación para jugadores
+    public function jugadores()
+    {
+        return $this->belongsToMany(Jugador::class, 'jugadores_torneo')
+                    ->withPivot('equipo_id', 'goles', 'tarjetas_amarillas', 'tarjetas_rojas', 'porterias_imbatidas', 'activo')
+                    ->withTimestamps();
+    }
+    
+    // Método para obtener jugadores de un equipo específico en este torneo
+    public function jugadoresDeEquipo($equipoId)
+    {
+        return $this->jugadores()
+                    ->wherePivot('equipo_id', $equipoId)
+                    ->wherePivot('activo', true)
+                    ->get();
+    }
+    
+    // Método para verificar si un equipo ha alcanzado el límite de jugadores
+    public function equipoAlcanzoLimite($equipoId, $limite = 15)
+    {
+        return $this->jugadoresDeEquipo($equipoId)->count() >= $limite;
+    }
 }
 
