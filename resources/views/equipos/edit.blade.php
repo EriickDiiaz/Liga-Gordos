@@ -2,6 +2,17 @@
 
 @section('content')
 <div class="container">
+    
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <h1 class="mb-3 text-center">Editar Equipo: {{ $equipo->nombre }}</h1>
 
     <div class="row justify-content-center">
