@@ -90,7 +90,7 @@ class JugadorController extends Controller
             'nombre.string' => 'El nombre del jugador debe ser una cadena de texto.',
             'nombre.max' => 'El nombre del jugador no puede tener más de 255 caracteres.',
             'cedula.required' => 'La cédula del jugador es obligatoria.',
-            'cedula.integer' => 'La cédula debe ser un número.',
+            'cedula.integer' => 'La cédula solo puede contener números.',
             'cedula.unique' => 'La cédula ya está registrada para otro jugador.',
             'fecha_nacimiento.required' => 'La fecha de nacimiento es obligatoria.',
             'fecha_nacimiento.date' => 'La fecha de nacimiento debe ser una fecha válida.',
