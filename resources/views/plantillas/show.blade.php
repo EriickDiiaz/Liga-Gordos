@@ -215,9 +215,11 @@
                                         <form action="{{ route('plantillas.agregar', [$torneo->id, $equipo->id]) }}" method="POST" class="d-inline">
                                             @csrf
                                             <input type="hidden" name="jugador_id" value="{{ $jugador->id }}">
+                                            @can('Inscribir Jugadores')
                                             <button type="submit" class="btn btn-sm btn-outline-success" {{ $limiteAlcanzado ? 'disabled' : '' }}>
                                                 <i class="fas fa-user-plus"></i> Agregar
-                                            </button>
+                                            </button>    
+                                            @endcan                                            
                                         </form>
                                     </td>
                                 </tr>
@@ -246,10 +248,10 @@
     $(document).ready(function() {
         $('#jugadoresInscritosTable, #jugadoresDisponiblesTable').DataTable({
             "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+                "url": "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
             },
             "responsive": true,
-            "paging": true,
+            "paging": false,
             "searching": true,
             "info": false,
             "order": [[0, "asc"]]

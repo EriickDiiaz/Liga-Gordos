@@ -47,10 +47,11 @@
                                 <div class="progress mb-3">
                                     <div class="progress-bar" role="progressbar" style="width: {{ $porcentaje }}%;" aria-valuenow="{{ $porcentaje }}" aria-valuemin="0" aria-valuemax="100">{{ round($porcentaje) }}%</div>
                                 </div>
-                                
+                                @can('Inscribir Jugadores')
                                 <a href="{{ route('plantillas.show', [$torneo->id, $equipo->id]) }}" class="btn btn-outline-primary">
                                     <i class="fas fa-users"></i> Gestionar Plantilla
-                                </a>
+                                </a> 
+                                @endcan                                
                             </div>
                             <div class="card-footer" style="background-color: {{ $equipo->color_secundario ?? '#f8f9fa' }}; height: 8px;"></div>
                         </div>
