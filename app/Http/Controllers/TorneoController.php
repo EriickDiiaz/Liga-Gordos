@@ -57,7 +57,7 @@ class TorneoController extends Controller
             $tablasPosiciones[$grupo->id] = $this->calcularTablaPosiciones($grupo);
         }
         
-        return view('torneos.show', compact('torneo', 'tablasPosiciones'));
+        //return view('torneos.show', compact('torneo', 'tablasPosiciones'));
     }
 
     public function edit(Torneo $torneo)

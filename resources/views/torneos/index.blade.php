@@ -19,7 +19,7 @@
         @foreach($torneos as $index => $torneo)
             <div class="accordion-item">
                 <h2 class="accordion-header" id="heading{{ $torneo->id }}">
-                    <button class="accordion-button bg-warning text-white {{ $index === 0 ? '' : 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $torneo->id }}" aria-expanded="{{ $index === 0 ? 'true' : 'false' }}" aria-controls="collapse{{ $torneo->id }}">
+                    <button class="accordion-button bg-warning text-dark {{ $index === 0 ? '' : 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $torneo->id }}" aria-expanded="{{ $index === 0 ? 'true' : 'false' }}" aria-controls="collapse{{ $torneo->id }}">
                         <i class="fa-solid fa-trophy me-2"></i>
                         <strong>{{ $torneo->nombre }}</strong>
                         <div class="ms-auto me-3">
@@ -40,6 +40,11 @@
                             </div>
                             <div class="col-md-6">
                                 <h5>Acciones</h5>
+                                @can('Inscribir Jugadores')
+                                <a href="{{ route('plantillas.index', $torneo->id) }}" class="btn btn-outline-success m-1">
+                                    <i class="fas fa-user-plus"></i> Inscribir Jugadores
+                                </a>  
+                                @endcan                                
                                 @can('Editar Torneos')
                                 <a href="{{ route('torneos.edit', $torneo) }}" class="btn btn-outline-primary m-1">
                                     <i class="fas fa-edit"></i> Editar
