@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app') 
 
 @section('content')
 <div class="container">
@@ -18,7 +18,6 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Foto</th>
                     <th>Nombre</th>
                     <th class="cedula-column">Cédula</th> {{-- Siempre presente en el DOM --}}
                     <th>Edad</th>
@@ -32,19 +31,22 @@
                     <tr>
                         <td>{{ $jugador->dorsal }}</td>
                         <td>
-                            <img class="img-thumbnail" src="{{ asset($jugador->foto) }}" alt="{{ $jugador->nombre }}" style="width: 50px; height: 50px; object-fit: cover;">
+                            <div class="d-flex align-items-center">
+                                @if($jugador->foto)
+                                    <img src="{{ asset($jugador->foto) }}" alt="{{ $jugador->nombre }}" class="img-fluid me-2" style="max-height: 30px; max-width: 30px; border-radius: 50%;">
+                                @endif
+                                {{ $jugador->nombre }}
+                            </div>
                         </td>
-                        <td>{{ $jugador->nombre }}</td>
-                        <td class="cedula-column">{{ $jugador->cedula }}</td> {{-- Siempre presente en el DOM --}}
+                        <td class="cedula-column">{{ $jugador->cedula }} {{-- Siempre presente en el DOM --}}</td>
                         <td>{{ $jugador->edad }}</td>
                         <td>{{ ucfirst($jugador->tipo) }}</td>
                         <td>{{ $jugador->equipo->nombre }}</td>
-                        <td>
-                            <a href="{{ route('jugador.show', $jugador) }}" class="btn btn-outline-light">
+                        <td><a href="{{ route('jugador.show', $jugador) }}" class="btn btn-sm btn-outline-light">
                                 <i class="fas fa-eye"></i> Ver
                             </a>
                             @can('Editar Jugadores')
-                            <a href="{{ route('jugador.edit', $jugador) }}" class="btn btn-outline-primary">
+                            <a href="{{ route('jugador.edit', $jugador) }}" class="btn btn-sm btn-outline-primary">
                                 <i class="fas fa-edit"></i> Editar
                             </a>
                             @endcan
@@ -52,7 +54,7 @@
                             <form action="{{ route('jugador.destroy', $jugador) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-outline-danger delete-jugador" data-id="{{ $jugador->id }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger delete-jugador" data-id="{{ $jugador->id }}">
                                     <i class="fas fa-trash-alt"></i> Eliminar
                                 </button>
                             </form>
@@ -76,9 +78,9 @@
             "pageLength": 10,
             "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
             "responsive": true,
-            "order": [[2, "asc"]], // Ordenar por la columna Nombre (índice 2)
+            "order": [[1, "asc"]], // Ordenar por la columna Nombre (índice 2)
             "columnDefs": [
-                { "orderable": false, "targets": [1, 7] } // Deshabilitar orden en Foto y Acciones
+                { "orderable": false, "targets": [6] } // Deshabilitar orden en Foto y Acciones
             ]
         });
 
