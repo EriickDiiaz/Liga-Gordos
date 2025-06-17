@@ -74,23 +74,41 @@
     <script>
         $(document).ready(function() {
             const table = $('#jugadoresTable').DataTable({
-                "language": {
-                    "url": "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json"
+            },
+            "pageLength": 10,
+            "lengthMenu": [
+                [10, 25, 50, -1],
+                [10, 25, 50, "Todos"]
+            ],
+            "responsive": {
+                details: {
+                type: 'inline'
+                }
+            },
+            "order": [
+                [1, "asc"]
+            ], // Ordenar por la columna Nombre (índice 1)
+            "columnDefs": [
+                {
+                "orderable": false,
+                "targets": [6]
                 },
-                "pageLength": 10,
-                "lengthMenu": [
-                    [10, 25, 50, -1],
-                    [10, 25, 50, "Todos"]
-                ],
-                "responsive": true,
-                "order": [
-                    [1, "asc"]
-                ], // Ordenar por la columna Nombre (índice 2)
-                "columnDefs": [{
-                        "orderable": false,
-                        "targets": [6]
-                    } // Deshabilitar orden en Foto y Acciones
-                ]
+                // Ocultar columnas en móvil excepto dorsal(0), nombre(1), equipo(5)
+                {
+                "responsivePriority": 1, "targets": 0 // dorsal
+                },
+                {
+                "responsivePriority": 2, "targets": 1 // nombre
+                },
+                {
+                "responsivePriority": 3, "targets": 5 // equipo
+                },
+                {
+                "responsivePriority": 10001, "targets": [2,3,4,6] // cedula, edad, tipo, acciones
+                }
+            ]
             });
 
             // Ocultar la columna "Cédula" si el usuario no tiene permiso
