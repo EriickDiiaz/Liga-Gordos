@@ -61,6 +61,10 @@ class JugadorController extends Controller
         $jugador->fill($request->except('foto'));
 
         if ($request->hasFile('foto')) {
+            // Elimina la foto anterior si no es la predeterminada
+            if ($jugador->foto && $jugador->foto != 'img/default-player.png' && file_exists(public_path($jugador->foto))) {
+                unlink(public_path($jugador->foto));
+            }
             $foto = $request->file('foto');
             $fotoName = time() . '.' . $foto->getClientOriginalExtension();
             $foto->move(public_path('fotos'), $fotoName);
@@ -74,8 +78,8 @@ class JugadorController extends Controller
 
     public function destroy(Jugador $jugador)
     {
-        if ($jugador->foto && $jugador->foto != 'img/default-player.png') {
-            Storage::disk('public')->delete($jugador->foto);
+        if ($jugador->foto && $jugador->foto != 'img/default-player.png' && file_exists(public_path($jugador->foto))) {
+            unlink(public_path($jugador->foto));
         }
         $jugador->delete();
         return redirect()->route('jugador.index')->with('success', 'Jugador eliminado exitosamente.');
