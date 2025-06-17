@@ -103,10 +103,7 @@
                 "responsivePriority": 2, "targets": 1 // nombre
                 },
                 {
-                "responsivePriority": 3, "targets": 5 // equipo
-                },
-                {
-                "responsivePriority": 10001, "targets": [2,3,4,6] // cedula, edad, tipo, acciones
+                "responsivePriority": 10001, "targets": [2,3,4,5,6] // cedula, edad, tipo, acciones
                 }
             ]
             });
