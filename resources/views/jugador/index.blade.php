@@ -11,7 +11,7 @@
     
     <h1 class="mb-4">Jugadores</h1>
     @can('Crear Jugadores')
-    <a href="{{ route('jugador.create') }}" class="btn btn-outline-success mb-3">Crear Nuevo Jugador</a>
+    <a href="{{ route('jugador.create') }}" class="btn btn-sm btn-outline-success mb-3">Crear Nuevo Jugador</a>
     @endcan
     <div class="table-responsive">
         <table id="jugadoresTable" class="table table-striped table-hover">

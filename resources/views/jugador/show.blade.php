@@ -2,48 +2,97 @@
 
 @section('content')
 <div class="container">
+
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <h1 class="mb-4 text-center">{{ $jugador->nombre }}</h1>
     
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header" style="border-color: {{ $jugador->equipo->color_primario }}; background: {{ $jugador->equipo->color_primario }};"></div>
-                <div class="card-body position-relative">
-                    <!-- Team logo as background -->
-                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style="z-index: 0; opacity: 0.3;">
-                        <img src="{{ asset($jugador->equipo->logo) }}" alt="{{ $jugador->equipo->nombre }}" class="img-fluid" style="max-width: 80%; max-height: 80%; object-fit: contain;">
+        <div class="col-md-6 mb-6">
+            <div class="card mb-2">
+                <div class="card-header" style="background-color: {{ $jugador->equipo->color_primario }}; height: 8px;"></div>
+                <div class="card-body">
+
+                    
+                    <div class="text-center mb-3">
+                        <img src="{{ asset($jugador->foto) }}" alt="{{ $jugador->nombre }}" class="img-fluid rounded" style="max-width: 100px; max-height: 100px; ">
+                        <h3 class="mt-2">{{ $jugador->nombre }}</h3>
+                        <h5 class="mt-2">Información del Jugador:</h5>
+                    </div>
+                                        
+                    <div class="text-center mb-2">
+                        <span>Cédula:</span>
+                        <span><strong>{{ $jugador->cedula }}</strong></span>
                     </div>
                     
-                    <!-- Player content -->
-                    <div class="position-relative" style="z-index: 1;">
-                        <div class="text-center mb-4">
-                        <img src="{{ asset($jugador->foto) }}" class="card-img-top mt-3" alt="{{ $jugador->nombre }}" class="img-fluid rounded" style="max-width: 300px;">
-                            <!--@if($jugador->foto)
-                                <img src="{{ asset('storage/' . $jugador->foto) }}" alt="{{ $jugador->nombre }}" class="img-fluid rounded" style="max-height: 300px;">
-                            @else
-                                <img src="{{ asset('img/default-player.png') }}" alt="Default" class="img-fluid rounded" style="max-height: 300px;">
-                            @endif-->
-                        </div>
-                        <h4 class="card-title">Información del Jugador</h4>
-                        <p><strong>Nombre:</strong> {{ $jugador->nombre }}</p>
-                        @can('Ver Cedula')
-                        <p><strong>Cédula:</strong> {{ $jugador->cedula }}</p>
-                        @endcan                        
-                        <p><strong>Fecha de Nacimiento:</strong> {{ $jugador->fecha_nacimiento ? $jugador->fecha_nacimiento->format('d/m/Y') : 'No establecida' }}</p>
-                        <p><strong>Edad:</strong> {{ $jugador->edad }} años</p>
-                        <p><strong>Dorsal:</strong> {{ $jugador->dorsal }}</p>
-                        <p><strong>Tipo:</strong> {{ ucfirst($jugador->tipo) }}</p>
-                        <p><strong>Equipo:</strong> {{ $jugador->equipo->nombre }}</p>
+                    <div class="text-center mb-2">
+                        <span>Fecha de Nacimiento:</span>
+                        <span><strong> {{ $jugador->fecha_nacimiento ? $jugador->fecha_nacimiento->format('d/m/Y') : 'No establecida' }}</strong></span>
+                    </div>
+
+                    <div class="text-center mb-2">
+                        <span>Edad:</span>
+                        <span><strong>{{ $jugador->edad }} años</strong></span>
+                    </div>
+
+                    <div class="text-center mb-2">
+                        <span>Dorsal:</span>
+                        <span><strong>{{ $jugador->dorsal }}</strong></span>
+                    </div>
+
+                    <div class="text-center mb-2">
+                        <span>Tipo:</span>
+                        <span><strong>{{ ucfirst($jugador->tipo) }}</strong></span>
+                    </div>
+
+                </div>
+                <div class="card-footer" style="background-color: {{ $jugador->equipo->color_secundario ?? '#f8f9fa' }}; height: 8px;"></div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-6">
+            <div class="card mb-2">
+                <div class="card-header" style="background-color: {{ $jugador->equipo->color_primario }}; height: 8px;"></div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <img src="{{ asset($jugador->equipo->logo) }}" alt="{{ $jugador->equipo->nombre }}" class="img-fluid" style="max-height: 100px;">
+                        <h3 class="mt-2">{{ $jugador->equipo->nombre }}</h3>
+                        <h5 class="mt-2">Estadisticas Globales:</h5>
+                    </div>
+                    
+                    <div class="text-center mb-2">
+                        <span>Goles:</span>
+                        <span><strong>Proximamente...</strong></span>
+                    </div>
+                    
+                    <div class="text-center mb-2">
+                        <span>Tarjetas Amarillas:</span>
+                        <span><strong>Proximamente...</strong></span>
+                    </div>
+                    
+                    <div class="text-center mb-2">
+                        <span>Tarjetas Rojas:</span>
+                        <span><strong>Proximamente...</strong></span>
                     </div>
                 </div>
-                <div class="card-footer" style="border-color: {{ $jugador->equipo->color_secundario }}; background: {{ $jugador->equipo->color_secundario }};"></div>
+                <div class="card-footer" style="background-color: {{ $jugador->equipo->color_secundario ?? '#f8f9fa' }}; height: 8px;"></div>
             </div>
+        </div>
+    </div>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-8">
             <div class="text-center mt-3">
-                <a href="{{ route('jugador.index') }}" class="btn btn-outline-secondary m-1">
+                <a href="{{ route('jugador.index') }}" class="btn btn-sm btn-outline-secondary m-1">
                     <i class="fas fa-arrow-left"></i> Volver a la lista
                 </a>
                 @can('Editar Jugadores')
-                <a href="{{ route('jugador.edit', $jugador) }}" class="btn btn-outline-primary m-1">
+                <a href="{{ route('jugador.edit', $jugador) }}" class="btn btn-sm btn-outline-primary m-1">
                     <i class="fas fa-edit"></i> Editar
                 </a>
                 @endcan
@@ -51,7 +100,7 @@
                 <form action="{{ route('jugador.destroy', $jugador) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-outline-danger m-1 delete-jugador" data-id="{{ $jugador->id }}">
+                    <button type="submit" class="btn btn-sm btn-outline-danger m-1 delete-jugador" data-id="{{ $jugador->id }}">
                         <i class="fas fa-trash-alt"></i> Eliminar
                     </button>
                 </form>
