@@ -74,8 +74,7 @@ class PartidoController extends Controller
                     ->limit(6)
                     ->get();
                     
-                $partidos = $proximosPartidos->merge($recientesPartidos)
-                    ->sortBy('fecha');
+                $partidos = $proximosPartidos->concat($recientesPartidos);
                 break;
         }
         
