@@ -23,17 +23,23 @@ class JugadorController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $this->validateJugador($request);
+        $this->validateJugador($request);
+
+        $jugador = new Jugador($request->all());
         
         if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('jugadores', 'public');
-            $validatedData['foto'] = $path;
+            $foto = $request->file('foto');
+            $fotoName = time() . '.' . $foto->getClientOriginalExtension();
+            $foto->move(public_path('fotos'), $fotoName);
+            $jugador->foto = 'fotos/' . $fotoName;
         } else {
-            $validatedData['foto'] = 'img/default-player.png';
+            $jugador->foto = 'img/default-player.png';
         }
 
-        Jugador::create($validatedData);
-        return redirect()->route('jugador.index')->with('success', 'Jugador creado exitosamente.');
+        $jugador->save();
+
+        return redirect()->route('jugador.show', $jugador->id)->with('success', 'Jugador creado exitosamente.');
+
     }
 
     public function show(Jugador $jugador)
@@ -50,24 +56,30 @@ class JugadorController extends Controller
 
     public function update(Request $request, Jugador $jugador)
     {
-        $validatedData = $this->validateJugador($request, $jugador->id);
-        
+        $this->validateJugador($request, $jugador->id);
+
+        $jugador->fill($request->except('foto'));
+
         if ($request->hasFile('foto')) {
-            if ($jugador->foto && $jugador->foto != 'img/default-player.png') {
-                Storage::disk('public')->delete($jugador->foto);
+            // Elimina la foto anterior si no es la predeterminada
+            if ($jugador->foto && $jugador->foto != 'img/default-player.png' && file_exists(public_path($jugador->foto))) {
+                unlink(public_path($jugador->foto));
             }
-            $path = $request->file('foto')->store('jugadores', 'public');
-            $validatedData['foto'] = $path;
+            $foto = $request->file('foto');
+            $fotoName = time() . '.' . $foto->getClientOriginalExtension();
+            $foto->move(public_path('fotos'), $fotoName);
+            $jugador->foto = 'fotos/' . $fotoName;
         }
 
-        $jugador->update($validatedData);
-        return redirect()->route('jugador.index')->with('success', 'Jugador actualizado exitosamente.');
+        $jugador->save();
+
+        return redirect()->route('jugador.show', $jugador->id)->with('success', 'Jugador actualizado exitosamente.');
     }
 
     public function destroy(Jugador $jugador)
     {
-        if ($jugador->foto && $jugador->foto != 'img/default-player.png') {
-            Storage::disk('public')->delete($jugador->foto);
+        if ($jugador->foto && $jugador->foto != 'img/default-player.png' && file_exists(public_path($jugador->foto))) {
+            unlink(public_path($jugador->foto));
         }
         $jugador->delete();
         return redirect()->route('jugador.index')->with('success', 'Jugador eliminado exitosamente.');
@@ -82,7 +94,7 @@ class JugadorController extends Controller
             'dorsal' => 'required|integer|min:0|max:999',
             'tipo' => 'required|in:habilidoso,brazalete,portero',
             'equipo_id' => 'required|exists:equipos,id',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
         ];
 
         $messages = [
@@ -104,7 +116,7 @@ class JugadorController extends Controller
             'equipo_id.exists' => 'El equipo seleccionado no existe.',
             'foto.image' => 'La foto debe ser una imagen.',
             'foto.mimes' => 'La foto debe ser un archivo de tipo: jpeg, png, jpg, gif.',
-            'foto.max' => 'La foto no puede exceder los 2 MB.',
+            'foto.max' => 'La foto no puede exceder los 10 MB.',
         ];
 
         return $request->validate($rules, $messages);
