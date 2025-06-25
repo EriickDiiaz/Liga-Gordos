@@ -78,7 +78,8 @@
                                         <th>#</th>
                                         <th>Nombre</th>
                                         <th>Tipo</th>
-                                        <th>Estadísticas</th>
+                                        <th>Edad</th>
+                                        <!--<th>Estadísticas</th>-->
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
@@ -95,6 +96,8 @@
                                                 </div>
                                             </td>
                                             <td>{{ ucfirst($jugador->tipo) }}</td>
+                                            <td>{{ $jugador->edad }} años</td>
+                                            <!--
                                             <td>
                                                 @php
                                                     $stats = $jugador->torneos->where('id', $torneo->id)->first()->pivot;
@@ -109,7 +112,7 @@
                                                     @endif
                                                 </button>
                                                 
-                                                <!-- Modal de Estadísticas -->
+                                                
                                                 <div class="modal fade" id="estadisticasModal{{ $jugador->id }}" tabindex="-1" aria-labelledby="estadisticasModalLabel{{ $jugador->id }}" aria-hidden="true">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
@@ -148,7 +151,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </td>
+                                            </td>-->
                                             <td>
                                                 <form action="{{ route('plantillas.quitar', [$torneo->id, $equipo->id, $jugador->id]) }}" method="POST" class="d-inline">
                                                     @csrf
