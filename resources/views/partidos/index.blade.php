@@ -2,16 +2,126 @@
 
 @section('content')
 <div class="container">
-    <h1 class="mb-3">Partidos</h1> 
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Partidos</h1>
+        @can('Crear Partidos')
+        <a href="{{ route('partidos.create') }}" class="btn btn-outline-success">
+            <i class="fas fa-plus"></i> Crear Nuevo Partido
+        </a>
+        @endcan
+    </div>
 
-    <div class="row mb-3">
-        <div class="col-md-6">
-            @can('Crear Partidos')
-            <a href="{{ route('partidos.create') }}" class="btn btn-outline-success">
-                <i class="fas fa-plus"></i> Crear Nuevo Partido
-            </a>
-            @endcan
+    <!-- Estadísticas rápidas -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card border-primary text-white">
+                <div class="card-body text-center">
+                    <h3>{{ $totalPartidos }}</h3>
+                    <p class="mb-0">Total Partidos</p>
+                </div>
+            </div>
         </div>
+        <div class="col-md-3">
+            <div class="card border-success text-white">
+                <div class="card-body text-center">
+                    <h3>{{ $partidosHoy }}</h3>
+                    <p class="mb-0">Hoy</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-info text-white">
+                <div class="card-body text-center">
+                    <h3>{{ $proximosPartidos }}</h3>
+                    <p class="mb-0">Próximos</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-secondary text-white">
+                <div class="card-body text-center">
+                    <h3>{{ $partidosFinalizados }}</h3>
+                    <p class="mb-0">Finalizados</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-filter"></i> Filtros
+            </h5>
+        </div>
+        <div class="card-body">
+            <form method="GET" action="{{ route('partidos.index') }}" id="filtro-form">
+                <div class="row">
+                    <!-- Filtros rápidos -->
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Vista rápida:</label>
+                        <div class="btn-group" role="group">
+                            <input type="radio" class="btn-check" name="filtro" id="destacados" value="destacados" {{ $filtro == 'destacados' ? 'checked' : '' }}>
+                            <label class="btn btn-outline-primary" for="destacados">
+                                <i class="fas fa-star"></i> Destacados
+                            </label>
+
+                            <input type="radio" class="btn-check" name="filtro" id="proximos" value="proximos" {{ $filtro == 'proximos' ? 'checked' : '' }}>
+                            <label class="btn btn-outline-success" for="proximos">
+                                <i class="fas fa-calendar-plus"></i> Próximos
+                            </label>
+
+                            <input type="radio" class="btn-check" name="filtro" id="recientes" value="recientes" {{ $filtro == 'recientes' ? 'checked' : '' }}>
+                            <label class="btn btn-outline-info" for="recientes">
+                                <i class="fas fa-history"></i> Recientes
+                            </label>
+
+                            <input type="radio" class="btn-check" name="filtro" id="todos" value="todos" {{ $filtro == 'todos' ? 'checked' : '' }}>
+                            <label class="btn btn-outline-secondary" for="todos">
+                                <i class="fas fa-list"></i> Todos
+                            </label>
+
+                            <input type="radio" class="btn-check" name="filtro" id="fecha" value="fecha" {{ $filtro == 'fecha' ? 'checked' : '' }}>
+                            <label class="btn btn-outline-warning" for="fecha">
+                                <i class="fas fa-calendar"></i> Por Fecha
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Filtros por fecha -->
+                    <div class="col-md-12" id="filtros-fecha" style="{{ $filtro == 'fecha' ? '' : 'display: none;' }}">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="fecha_especifica" class="form-label">Fecha específica:</label>
+                                <input type="date" class="form-control" name="fecha_especifica" id="fecha_especifica" value="{{ $fechaEspecifica }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="fecha_inicio" class="form-label">Desde:</label>
+                                <input type="date" class="form-control" name="fecha_inicio" id="fecha_inicio" value="{{ $fechaInicio }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="fecha_fin" class="form-label">Hasta:</label>
+                                <input type="date" class="form-control" name="fecha_fin" id="fecha_fin" value="{{ $fechaFin }}">
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search"></i> Filtrar
+                                </button>
+                                <a href="{{ route('partidos.index') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times"></i> Limpiar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Barra de búsqueda -->
+    <div class="row mb-3">
         <div class="col-md-6">
             <div class="input-group">
                 <span class="input-group-text">
@@ -20,12 +130,50 @@
                 <input type="text" id="search-input" class="form-control" placeholder="Buscar partidos...">
             </div>
         </div>
+        <div class="col-md-6 text-end">
+            <span class="badge bg-light text-dark fs-6">
+                Mostrando {{ $partidos->count() }} partidos
+                @if($filtro == 'destacados')
+                    (Próximos y Recientes)
+                @elseif($filtro == 'proximos')
+                    (Próximos)
+                @elseif($filtro == 'recientes')
+                    (Recientes)
+                @elseif($filtro == 'fecha')
+                    @if($fechaEspecifica)
+                        ({{ \Carbon\Carbon::parse($fechaEspecifica)->format('d/m/Y') }})
+                    @elseif($fechaInicio && $fechaFin)
+                        ({{ \Carbon\Carbon::parse($fechaInicio)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($fechaFin)->format('d/m/Y') }})
+                    @endif
+                @endif
+            </span>
+        </div>
     </div>
 
+    <!-- Contenedor de partidos -->
     <div id="partidos-container" class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-        @foreach($partidos as $partido)
+        @forelse($partidos as $partido)
             <div class="col partido-item">
-                <div class="card h-100 text-center">
+                <div class="card h-100 text-center {{ $partido->fecha->isFuture() ? 'border-success' : ($partido->fecha->isToday() ? 'border-warning' : 'border-secondary') }}">
+                    <!-- Indicador de tiempo -->
+                    <div class="card-header p-1">
+                        @if($partido->fecha->isToday())
+                            <span class="badge bg-warning text-dark">
+                                <i class="fas fa-clock"></i> HOY
+                            </span>
+                        @elseif($partido->fecha->isFuture())
+                            <span class="badge bg-success">
+                                <i class="fas fa-calendar-plus"></i> 
+                                {{ $partido->fecha->diffForHumans() }}
+                            </span>
+                        @else
+                            <span class="badge bg-secondary">
+                                <i class="fas fa-history"></i> 
+                                {{ $partido->fecha->diffForHumans() }}
+                            </span>
+                        @endif
+                    </div>
+
                     <div class="card-body p-2">
                         @if($partido->esAmistoso())
                             <h5 class="card-title">Partido Amistoso</h5>
@@ -40,6 +188,7 @@
                                 @endif
                             </p>
                         @endif
+                        
                         <div class="d-flex my-2">
                             <div class="col-4">
                                 <img src="{{ asset($partido->equipoLocal->logo) }}" alt="{{ $partido->equipoLocal->nombre }}" class="img-fluid" style="max-height: 60px;">
@@ -55,11 +204,13 @@
                                 <h4>{{ $partido->goles_visitante ?? 0 }}</h4>
                             </div>
                         </div>
+                        
                         <span class="badge bg-{{ $partido->estado == 'programado' ? 'primary' : ($partido->estado == 'en_curso' ? 'success' : 'secondary') }}">
                             {{ ucfirst($partido->estado) }}
                         </span>
                         <p class="mt-2 mb-0 small">{{ $partido->fecha->format('d/m/Y h:i A') }}</p>
                     </div>
+                    
                     <div class="card-footer p-2">
                         <a href="{{ route('partidos.show', $partido) }}" class="btn btn-outline-light btn-sm m-1">
                             <i class="fas fa-eye"></i> Ver
@@ -81,12 +232,25 @@
                     </div>
                 </div>
             </div>
-        @endforeach
+        @empty
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle fa-2x mb-3"></i>
+                    <h4>No se encontraron partidos</h4>
+                    <p>No hay partidos que coincidan con los filtros seleccionados.</p>
+                    @if($filtro == 'fecha')
+                        <a href="{{ route('partidos.index') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left"></i> Ver todos los partidos
+                        </a>
+                    @endif
+                </div>
+            </div>
+        @endforelse
     </div>
     
-    <!-- Mensaje de No Resultados -->
+    <!-- Mensaje de No Resultados de búsqueda -->
     <div id="no-results" class="alert alert-info mt-3 d-none">
-        ¡Uy! No se encontraron partidos.
+        <i class="fas fa-search"></i> No se encontraron partidos que coincidan con la búsqueda.
     </div>
 </div>
 
@@ -144,9 +308,40 @@
                 });
             });
         });
+
+        // Manejo de filtros
+        const filtroRadios = document.querySelectorAll('input[name="filtro"]');
+        const filtrosFecha = document.getElementById('filtros-fecha');
+        
+        filtroRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'fecha') {
+                    filtrosFecha.style.display = 'block';
+                } else {
+                    filtrosFecha.style.display = 'none';
+                    // Auto-submit para filtros rápidos
+                    document.getElementById('filtro-form').submit();
+                }
+            });
+        });
+
+        // Limpiar fechas cuando se cambia de filtro por fecha
+        const fechaInputs = document.querySelectorAll('#fecha_especifica, #fecha_inicio, #fecha_fin');
+        fechaInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                // Si se selecciona fecha específica, limpiar rango
+                if (this.id === 'fecha_especifica' && this.value) {
+                    document.getElementById('fecha_inicio').value = '';
+                    document.getElementById('fecha_fin').value = '';
+                }
+                // Si se selecciona rango, limpiar fecha específica
+                if ((this.id === 'fecha_inicio' || this.id === 'fecha_fin') && this.value) {
+                    document.getElementById('fecha_especifica').value = '';
+                }
+            });
+        });
     });
 </script>
 @endpush
 
 @endsection
-
