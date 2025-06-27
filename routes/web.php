@@ -7,6 +7,7 @@ use App\Http\Controllers\JugadorTorneoController;
 use App\Http\Controllers\NoticiaController;
 use App\Http\Controllers\TorneoController;
 use App\Http\Controllers\PartidoController;
+use App\Http\Controllers\PartidoImageController;
 use App\Http\Controllers\PatrocinadorController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
@@ -97,6 +98,10 @@ Route::get('/partidos/debug-equipos-torneo/{torneo}', [PartidoController::class,
 
 // Rutas de recursos principales
 Route::resource('partidos', PartidoController::class);
+
+// Rutas para imágenes de partidos
+    Route::get('/partidos/{partido}/imagen', [PartidoImageController::class, 'generarImagen'])->name('partidos.imagen');
+    Route::get('/partidos/{partido}/imagen/preview', [PartidoImageController::class, 'mostrarImagen'])->name('partidos.imagen.preview');
 /*
 |--------------------------------------------------------------------------
 | Rutas de Administración de Usuarios.
@@ -128,4 +133,7 @@ Route::resource('noticias', NoticiaController::class);
 */
 Route::resource('roles', RoleController::class);
 Route::resource('permissions', PermissionController::class)->except(['index', 'show']);
+
+// Rutas públicas para imágenes de partidos (para compartir)
+Route::get('/partidos/{partido}/share-image', [PartidoImageController::class, 'mostrarImagen'])->name('partidos.share.image');
 

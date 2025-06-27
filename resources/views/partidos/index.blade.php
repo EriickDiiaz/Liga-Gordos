@@ -212,23 +212,60 @@
                     </div>
                     
                     <div class="card-footer p-2">
-                        <a href="{{ route('partidos.show', $partido) }}" class="btn btn-outline-light btn-sm m-1">
-                            <i class="fas fa-eye"></i> Ver
-                        </a>
-                        @can('Editar Partidos')
-                        <a href="{{ route('partidos.edit', $partido) }}" class="btn btn-outline-primary btn-sm m-1">
-                            <i class="fas fa-edit"></i> Editar
-                        </a>
-                        @endcan
-                        @can('Borrar Partidos')
-                        <form action="{{ route('partidos.destroy', $partido) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-outline-danger btn-sm m-1 delete-partido" data-id="{{ $partido->id }}">
-                                <i class="fas fa-trash-alt"></i> Eliminar
+                        <div class="d-flex flex-wrap justify-content-center gap-1 mb-2">
+                            <a href="{{ route('partidos.show', $partido) }}" class="btn btn-outline-light btn-sm">
+                                <i class="fas fa-eye"></i> Ver
+                            </a>
+                            @can('Editar Partidos')
+                            <a href="{{ route('partidos.edit', $partido) }}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            @endcan
+                            @can('Borrar Partidos')
+                            <form action="{{ route('partidos.destroy', $partido) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-outline-danger btn-sm delete-partido" data-id="{{ $partido->id }}">
+                                    <i class="fas fa-trash-alt"></i> Eliminar
+                                </button>
+                            </form>
+                            @endcan
+                        </div>
+                        
+                        <!-- Botón de compartir con dropdown - Posicionamiento absoluto -->
+                        <div class="dropdown position-relative">
+                            <button class="btn btn-outline-info btn-sm dropdown-toggle w-100" type="button" id="dropdownCompartir{{ $partido->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-share-alt"></i> Compartir
                             </button>
-                        </form>
-                        @endcan
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownCompartir{{ $partido->id }}" style="z-index: 1050;">
+                                <li>
+                                    <a class="dropdown-item" href="#" onclick="abrirModalCompartir({{ $partido->id }}); return false;">
+                                        <i class="fas fa-eye"></i> Vista Previa
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#" onclick="copiarEnlace({{ $partido->id }}); return false;">
+                                        <i class="fas fa-link"></i> Copiar Enlace
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="#" onclick="compartirWhatsApp({{ $partido->id }}); return false;">
+                                        <i class="fab fa-whatsapp"></i> WhatsApp
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#" onclick="compartirFacebook({{ $partido->id }}); return false;">
+                                        <i class="fab fa-facebook"></i> Facebook
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#" onclick="compartirTwitter({{ $partido->id }}); return false;">
+                                        <i class="fab fa-twitter"></i> Twitter
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -254,9 +291,89 @@
     </div>
 </div>
 
+<!-- Modal para compartir partido -->
+<div class="modal fade" id="modalCompartir" tabindex="-1" aria-labelledby="modalCompartirLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCompartirLabel">Compartir Partido</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="contenidoModal">
+                    <div class="text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-3">Preparando contenido para compartir...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="btnDescargar" style="display: none;">
+                    <i class="fas fa-download"></i> Descargar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
 <script>
+    // Variable global para el partido actual
+    let partidoActual = null;
+
     document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 Iniciando aplicación de partidos');
+        
+        // Verificar que Bootstrap esté cargado
+        if (typeof bootstrap === 'undefined') {
+            console.error('❌ Bootstrap no está cargado correctamente');
+        } else {
+            console.log('✅ Bootstrap cargado correctamente');
+        }
+        
+        // Verificar dropdowns específicamente
+        const dropdowns = document.querySelectorAll('[data-bs-toggle="dropdown"]');
+        console.log(`🔍 Encontrados ${dropdowns.length} dropdowns`);
+        
+        // Inicializar dropdowns manualmente
+        dropdowns.forEach((dropdown, index) => {
+            console.log(`🔧 Inicializando dropdown ${index + 1}:`, dropdown.id);
+            
+            // Crear instancia de Bootstrap Dropdown
+            const bsDropdown = new bootstrap.Dropdown(dropdown);
+            
+            // Agregar event listeners para debug
+            dropdown.addEventListener('click', function(e) {
+                console.log('🖱️ Click en dropdown:', this.id);
+                console.log('🔍 Elemento:', this);
+                console.log('📊 Bootstrap Dropdown instancia:', bsDropdown);
+                
+                // Forzar toggle si no funciona automáticamente
+                setTimeout(() => {
+                    if (!this.getAttribute('aria-expanded') || this.getAttribute('aria-expanded') === 'false') {
+                        console.log('🔄 Forzando apertura del dropdown');
+                        bsDropdown.toggle();
+                    }
+                }, 100);
+            });
+            
+            // Event listeners para estados del dropdown
+            dropdown.addEventListener('show.bs.dropdown', function () {
+                console.log('📂 Dropdown abriendo:', this.id);
+            });
+            
+            dropdown.addEventListener('shown.bs.dropdown', function () {
+                console.log('✅ Dropdown abierto:', this.id);
+            });
+            
+            dropdown.addEventListener('hide.bs.dropdown', function () {
+                console.log('📁 Dropdown cerrando:', this.id);
+            });
+        });
+        
         // Funcionalidad de búsqueda
         const searchInput = document.getElementById('search-input');
         const partidosContainer = document.getElementById('partidos-container');
@@ -340,7 +457,146 @@
                 }
             });
         });
+
+        console.log('✅ Aplicación inicializada correctamente');
     });
+
+    // Funciones para compartir
+    function abrirModalCompartir(partidoId) {
+        console.log('📱 Abriendo modal para compartir partido:', partidoId);
+        
+        partidoActual = partidoId;
+        
+        // Verificar que el modal existe
+        const modalElement = document.getElementById('modalCompartir');
+        if (!modalElement) {
+            console.error('❌ Modal no encontrado');
+            return;
+        }
+        
+        // Mostrar el modal
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+        
+        // Resetear contenido del modal
+        document.getElementById('contenidoModal').innerHTML = `
+            <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="mt-3">Preparando contenido para compartir...</p>
+            </div>
+        `;
+        
+        // Ocultar botón de descarga
+        document.getElementById('btnDescargar').style.display = 'none';
+        
+        // Simular carga (por ahora solo mostramos un mensaje)
+        setTimeout(() => {
+            document.getElementById('contenidoModal').innerHTML = `
+                <div class="text-center">
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle fa-2x mb-2"></i>
+                        <h5>¡Modal funcionando!</h5>
+                        <p class="mb-0">El modal se abre correctamente para el partido ID: <strong>${partidoId}</strong></p>
+                    </div>
+                    <div class="mt-3">
+                        <p class="text-muted">Aquí se mostrará la vista previa de la imagen cuando esté lista.</p>
+                    </div>
+                </div>
+            `;
+            
+            // Mostrar botón de descarga
+            document.getElementById('btnDescargar').style.display = 'inline-block';
+        }, 1500);
+    }
+
+    function copiarEnlace(partidoId) {
+        console.log('🔗 Copiando enlace del partido:', partidoId);
+        
+        const enlace = `${window.location.origin}/partidos/${partidoId}`;
+        
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(enlace).then(() => {
+                console.log('✅ Enlace copiado al portapapeles');
+                Swal.fire({
+                    title: '¡Enlace copiado!',
+                    text: 'El enlace del partido ha sido copiado al portapapeles',
+                    icon: 'success',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }).catch(err => {
+                console.error('❌ Error al copiar:', err);
+                mostrarEnlaceManual(enlace);
+            });
+        } else {
+            mostrarEnlaceManual(enlace);
+        }
+    }
+
+    function mostrarEnlaceManual(enlace) {
+        Swal.fire({
+            title: 'Copiar enlace',
+            html: `
+                <p>Copia este enlace manualmente:</p>
+                <input type="text" class="form-control" value="${enlace}" readonly onclick="this.select()">
+            `,
+            icon: 'info',
+            confirmButtonText: 'Cerrar'
+        });
+    }
+
+    function compartirWhatsApp(partidoId) {
+        console.log('💬 Compartiendo en WhatsApp partido:', partidoId);
+        
+        const enlace = `${window.location.origin}/partidos/${partidoId}`;
+        const texto = encodeURIComponent('¡Mira este partido! ');
+        const urlWhatsApp = `https://wa.me/?text=${texto}${encodeURIComponent(enlace)}`;
+        
+        window.open(urlWhatsApp, '_blank');
+    }
+
+    function compartirFacebook(partidoId) {
+        console.log('📘 Compartiendo en Facebook partido:', partidoId);
+        
+        const enlace = `${window.location.origin}/partidos/${partidoId}`;
+        const urlFacebook = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(enlace)}`;
+        
+        window.open(urlFacebook, '_blank', 'width=600,height=400');
+    }
+
+    function compartirTwitter(partidoId) {
+        console.log('🐦 Compartiendo en Twitter partido:', partidoId);
+        
+        const enlace = `${window.location.origin}/partidos/${partidoId}`;
+        const texto = encodeURIComponent('¡Mira este partido! ');
+        const urlTwitter = `https://twitter.com/intent/tweet?text=${texto}&url=${encodeURIComponent(enlace)}`;
+        
+        window.open(urlTwitter, '_blank', 'width=600,height=400');
+    }
+
+    // Event listener para cuando se cierre el modal
+    document.getElementById('modalCompartir').addEventListener('hidden.bs.modal', function () {
+        console.log('🔒 Modal cerrado');
+        partidoActual = null;
+    });
+
+    // Función de debug para probar dropdowns manualmente
+    function testDropdown() {
+        console.log('🧪 Probando dropdown manualmente');
+        const firstDropdown = document.querySelector('[data-bs-toggle="dropdown"]');
+        if (firstDropdown) {
+            console.log('🎯 Primer dropdown encontrado:', firstDropdown);
+            const dropdown = new bootstrap.Dropdown(firstDropdown);
+            dropdown.toggle();
+        } else {
+            console.error('❌ No se encontró ningún dropdown');
+        }
+    }
+
+    // Hacer la función disponible globalmente para debug
+    window.testDropdown = testDropdown;
 </script>
 @endpush
 
