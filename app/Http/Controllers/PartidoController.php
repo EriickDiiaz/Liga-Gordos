@@ -8,6 +8,7 @@ use App\Models\Equipo;
 use App\Models\Grupo;
 use App\Models\AccionPartido;
 use App\Models\Jugador;
+use App\Models\Patrocinador;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -27,6 +28,7 @@ class PartidoController extends Controller
         $fechaInicio = $request->get('fecha_inicio');
         $fechaFin = $request->get('fecha_fin');
         $fechaEspecifica = $request->get('fecha_especifica');
+        $patrocinadores = Patrocinador::all();
         
         $query = Partido::with(['torneo', 'grupo', 'equipoLocal', 'equipoVisitante']);
         
@@ -93,7 +95,8 @@ class PartidoController extends Controller
             'totalPartidos',
             'partidosHoy',
             'proximosPartidos',
-            'partidosFinalizados'
+            'partidosFinalizados',
+            'patrocinadores'
         ));
     }
 
