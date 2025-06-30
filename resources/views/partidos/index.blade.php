@@ -284,7 +284,7 @@
                                 <div class="text-center mt-4">
                                     <span class="small" style="color:#bbb;">Patrocinan:</span><br>
                                     @foreach ($patrocinadores as $patrocinador)
-                                        <img src="{{ asset($patrocinador->logo) }}" alt="{{ $patrocinador->nombre }}" style="height:40px; margin: 0 5px;">     
+                                        <img src="{{ asset($patrocinador->logo) }}" alt="{{ $patrocinador->nombre }}" style="height:60px; margin: 0 5px;">     
                                     @endforeach
                                 </div>
                             </div>
