@@ -212,11 +212,11 @@
                     </div>
                     
                     <div class="card-footer p-2">
-                        <a href="{{ route('partidos.show', $partido) }}" class="btn btn-outline-light btn-sm m-1">
+                        <a href="{{ route('partidos.show', $partido) }}" class="btn btn-outline-light m-1">
                             <i class="fas fa-eye"></i>
                         </a>
                         @can('Editar Partidos')
-                        <a href="{{ route('partidos.edit', $partido) }}" class="btn btn-outline-primary btn-sm m-1">
+                        <a href="{{ route('partidos.edit', $partido) }}" class="btn btn-outline-primary m-1">
                             <i class="fas fa-edit"></i>
                         </a>
                         @endcan
@@ -224,12 +224,12 @@
                         <form action="{{ route('partidos.destroy', $partido) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-outline-danger btn-sm m-1 delete-partido" data-id="{{ $partido->id }}">
+                            <button type="submit" class="btn btn-outline-danger m-1 delete-partido" data-id="{{ $partido->id }}">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </form>
                         @endcan
-                        <button class="btn btn-sm btn-outline-light m-1" onclick="generarImagenPartido({{ $partido->id }})">
+                        <button class="btn btn-outline-light m-1" onclick="generarImagenPartido({{ $partido->id }})">
                             <i class="fa-solid fa-share-nodes"></i>
                         </button>
 
@@ -284,8 +284,7 @@
                                 <div class="text-center mt-4">
                                     <span class="small" style="color:#bbb;">Patrocinan:</span><br>
                                     @foreach ($patrocinadores as $patrocinador)
-                                        <img src="{{ asset($patrocinador->logo) }}" alt="{{ $patrocinador->nombre }}" style="height:40px; margin: 0 5px;">
-                                        
+                                        <img src="{{ asset($patrocinador->logo) }}" alt="{{ $patrocinador->nombre }}" style="height:40px; margin: 0 5px;">     
                                     @endforeach
                                 </div>
                             </div>
@@ -302,9 +301,13 @@
                                 <div class="modal-body text-center">
                                     <div id="contenedorImagenVistaPrevia"></div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <a id="descargarImagenBtn" class="btn btn-primary" download="partido.png">Descargar</a>
+                                <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        <i class="fa-solid fa-delete-left"></i> Cerrar
+                                    </button>
+                                    <a id="descargarImagenBtn" class="btn btn-outline-primary" download="partido.png">
+                                        <i class="fa-solid fa-download"></i> Descargar
+                                    </a>
                                 </div>
                                 </div>
                             </div>
