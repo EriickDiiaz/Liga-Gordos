@@ -74,7 +74,7 @@
                         <label class="form-label">Vista rápida:</label>
                         <div class="btn-group d-flex flex-wrap w-100" role="group">
                             <input type="radio" class="btn-check" name="filtro" id="destacados" value="destacados" {{ $filtro == 'destacados' ? 'checked' : '' }}>
-                            <label class="btn btn-outline-primary bm-2" for="destacados">
+                            <label class="btn btn-outline-primary" for="destacados">
                                 <i class="fas fa-star"></i> Destacados
                             </label>
 
