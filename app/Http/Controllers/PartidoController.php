@@ -267,7 +267,8 @@ class PartidoController extends Controller
     public function show(Partido $partido)
     {
         $partido->load(['torneo', 'grupo', 'equipoLocal', 'equipoVisitante', 'acciones.jugador', 'partidoRelacionado']);
-        return view('partidos.show', compact('partido'));
+        $patrocinadores = Patrocinador::all();
+        return view('partidos.show', compact('partido', 'patrocinadores'));
     }
 
     public function edit(Partido $partido)

@@ -220,7 +220,13 @@
                         <span class="badge bg-{{ $partido->estado == 'programado' ? 'primary' : ($partido->estado == 'en_curso' ? 'success' : 'secondary') }}">
                             {{ ucfirst($partido->estado) }}
                         </span>
-                        <p class="mt-2 mb-0 small">{{ $partido->fecha->format('d/m/Y h:i A') }}</p>
+                        
+                        <p class="mt-2 mb-0 small">
+                            <i class="fa-solid fa-calendar-days me-2"></i>{{ $partido->fecha->format('d/m/Y h:i A') }}
+                        </p>
+                        <p class="mt-1 mb-0 small">
+                            <i class="fa-solid fa-location-dot me-2"></i>Cancha Techada de Charallave
+                        </p>
                     </div>
                     
                     <div class="card-footer p-2">
@@ -291,7 +297,7 @@
                                 </div>
                                 <div class="text-center">
                                     <i class="fa-solid fa-location-dot me-2 fa-lg"></i>
-                                    <span class="fs-5">Cancha Techada</span>
+                                    <span class="fs-5">Cancha Techada de Charallave</span>
                                 </div>
                                 <div class="text-center mt-4">
                                     <span class="small" style="color:#bbb;">Patrocinan:</span><br>
