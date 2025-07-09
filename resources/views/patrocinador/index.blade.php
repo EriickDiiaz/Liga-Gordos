@@ -31,7 +31,7 @@
     </div>
     
     <div id="patrocinadores-container" class="row row-cols-1 row-cols-md-4 g-4">
-        @foreach($patrocinadores->sortBy('nombre') as $patrocinador)
+        @foreach($patrocinadores as $patrocinador)
             <div class="col patrocinador-item">
                 <div class="card h-100">
                     <img src="{{ asset($patrocinador->logo) }}" class="card-img-top mt-2" alt="{{ $patrocinador->nombre }}" style="height: 150px; object-fit: contain;">

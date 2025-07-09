@@ -279,7 +279,7 @@
                                 </div>
                                 <div class="text-center">
                                     <i class="fa-solid fa-location-dot me-2 fa-lg"></i>
-                                    <span class="fs-5">Cancha Techada</span>
+                                    <span class="fs-5">Cancha Techada de Charallave</span>
                                 </div>
                                 <div class="text-center mt-4">
                                     <span class="small" style="color:#bbb;">Patrocinan:</span><br>

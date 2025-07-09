@@ -36,8 +36,8 @@ class PatrocinadorController extends Controller
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
             $logoName = time() . '.' . $logo->getClientOriginalExtension();
-            $logo->move(public_path('logos'), $logoName);
-            $patrocinador->logo = 'logos/' . $logoName;
+            $logo->move(public_path('patrocinadores'), $logoName);
+            $patrocinador->logo = 'patrocinadores/' . $logoName;
         } else {
             $patrocinador->logo = 'img/default-team.png';
         }
@@ -82,8 +82,8 @@ class PatrocinadorController extends Controller
             
             $logo = $request->file('logo');
             $logoName = time() . '.' . $logo->getClientOriginalExtension();
-            $logo->move(public_path('logos'), $logoName);
-            $patrocinador->logo = 'logos/' . $logoName;
+            $logo->move(public_path('patrocinadores'), $logoName);
+            $patrocinador->logo = 'patrocinadores/' . $logoName;
         }
         
         $patrocinador->save();
