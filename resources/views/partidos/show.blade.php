@@ -1,5 +1,17 @@
 @extends('layouts.app')
 
+@push('styles')
+<style>
+    #contenedorImagenVistaPrevia canvas {
+        max-width: 100%;
+        height: auto !important;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="container">
     <h1 class="mb-3 text-center">Detalles del Partido</h1>
@@ -57,8 +69,93 @@
                     @endif
                 @endcan
             </div>
-            <h5 class="mt-3">{{ $partido->fecha->format('d/m/Y h:i A') }}</h5>
+            <h5 class="mt-3"><i class="fa-solid fa-calendar-days me-2"></i>{{ $partido->fecha->format('d/m/Y h:i A') }}</h5>
+            <h5><i class="fa-solid fa-location-dot me-2"></i>Cancha Techada de Charallave</h5>
             <p><strong>Tipo:</strong> {{ ucfirst($partido->tipo) }}</p>
+
+            <button class="btn btn-outline-light m-1" onclick="generarImagenPartido({{ $partido->id }})">
+                <i class="fa-solid fa-share-nodes me-2"></i>Compartir
+            </button>
+
+            <!-- DIV Oculto con la informacion que se mostrará en la imagen -->
+            <div id="partido-share-{{ $partido->id }}" style="visibility:hidden;position:fixed;left:-9999px;top:0;">
+                <div class="mx-auto p-4 bg-dark text-white rounded-4 shadow-lg" style="width:600px; font-family: 'Segoe UI', Arial, sans-serif;">
+                    <div class="text-center mb-4">
+                        <img src="{{ asset('img/liga-gordos-logo.png') }}" alt="Liga Logo" style="height:100px;">
+                    </div>
+                    <h3 class="text-center mb-2">
+                        @if($partido->esAmistoso())
+                            Partido Amistoso
+                        @else
+                            {{ $partido->torneo->nombre }}
+                        @endif
+                    </h3>
+                    <p class="text-center mb-4">
+                        @if($partido->esLiga())
+                            {{ $partido->fase }} - {{ $partido->grupo->nombre ?? 'Sin grupo' }}
+                        @elseif($partido->esEliminatoria())
+                            {{ $partido->fase }} - {{ $partido->esIda() ? 'IDA' : 'VUELTA' }}
+                        @endif
+                    </p>
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="flex-fill text-center">
+                            <img src="{{ asset($partido->equipoLocal->logo) }}" alt="{{ $partido->equipoLocal->nombre }}" style="max-height:90px;">
+                            <div class="fw-bold mt-2">{{ $partido->equipoLocal->nombre }}</div>
+                            <div class="fs-1 mt-2">{{ $partido->goles_local ?? 0 }}</div>
+                        </div>
+                        <div class="flex-shrink-0 text-center" style="width:80px;">
+                            <span class="fs-2 fw-bold">VS</span>
+                        </div>
+                        <div class="flex-fill text-center">
+                            <img src="{{ asset($partido->equipoVisitante->logo) }}" alt="{{ $partido->equipoVisitante->nombre }}" style="max-height:90px;">
+                            <div class="fw-bold mt-2">{{ $partido->equipoVisitante->nombre }}</div>
+                            <div class="fs-1 mt-2">{{ $partido->goles_visitante ?? 0 }}</div>
+                        </div>
+                    </div>
+                    <div class="text-center mb-3">
+                        <span class="badge bg-{{ $partido->estado == 'programado' ? 'primary' : ($partido->estado == 'en_curso' ? 'success' : 'secondary') }}">
+                            {{ ucfirst($partido->estado) }}
+                        </span>
+                    </div>
+                    <div class="text-center">
+                        <i class="fa-solid fa-calendar-days me-2 fa-lg"></i>
+                        <span class="fs-5">{{ $partido->fecha->format('d/m/Y h:i A') }}</span>
+                    </div>
+                    <div class="text-center">
+                        <i class="fa-solid fa-location-dot me-2 fa-lg"></i>
+                        <span class="fs-5">Cancha Techada de Charallave</span>
+                    </div>
+                    <div class="text-center mt-4">
+                        <span class="small" style="color:#bbb;">Patrocinan:</span><br>
+                        @foreach ($patrocinadores as $patrocinador)
+                            <img src="{{ asset($patrocinador->logo) }}" alt="{{ $patrocinador->nombre }}" style="height:60px; margin: 0 5px;">     
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal de vista previa de imagen -->
+            <div class="modal fade" id="modalVistaPrevia" tabindex="-1" aria-labelledby="modalVistaPreviaLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content bg-dark text-white">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalVistaPreviaLabel">Vista previa de la imagen</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div id="contenedorImagenVistaPrevia"></div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <i class="fa-solid fa-delete-left"></i> Cerrar
+                        </button>
+                        <a id="descargarImagenBtn" class="btn btn-outline-primary" download="partido.png">
+                            <i class="fa-solid fa-download"></i> Descargar
+                        </a>
+                    </div>
+                    </div>
+                </div>
+            </div>
             
             @if($partido->esEliminatoria() && $partido->partidoRelacionado)
                 <div class="mt-4 p-3 border border-warning-subtle rounded">
@@ -204,7 +301,43 @@
 @endsection
 
 @push('scripts')
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
+    // Script para generar y descargar/compartir la imagen
+    function generarImagenPartido(partidoId) {
+        const elemento = document.getElementById('partido-share-' + partidoId);
+
+        // Guardar estilos originales
+        const originalStyle = elemento.getAttribute('style') || '';
+
+        // Hacer visible fuera de pantalla
+        elemento.setAttribute('style', originalStyle + ';visibility:visible;position:fixed;left:-9999px;top:0;display:block;z-index:9999;');
+
+        html2canvas(elemento, {
+            backgroundColor: null,
+            scale: 2,
+            useCORS: true
+        }).then(canvas => {
+            // Restaurar estilos originales
+            elemento.setAttribute('style', originalStyle);
+
+            // Mostrar la imagen en el modal
+            const contenedor = document.getElementById('contenedorImagenVistaPrevia');
+            contenedor.innerHTML = '';
+            contenedor.appendChild(canvas);
+
+            // Configurar el botón de descarga
+            const link = document.getElementById('descargarImagenBtn');
+            link.href = canvas.toDataURL('image/png');
+            link.download = 'partido_' + partidoId + '.png';
+
+            // Mostrar el modal (Bootstrap 5)
+            const modal = new bootstrap.Modal(document.getElementById('modalVistaPrevia'));
+            modal.show();
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const deleteButtons = document.querySelectorAll('.delete-accion');
         deleteButtons.forEach(button => {

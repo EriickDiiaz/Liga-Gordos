@@ -1,5 +1,17 @@
 @extends('layouts.app')
 
+@push('styles')
+<style>
+    #contenedorImagenVistaPrevia canvas {
+        max-width: 100%;
+        height: auto !important;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -13,7 +25,7 @@
 
     <!-- Estadísticas rápidas -->
     <div class="row mb-4">
-        <div class="col-md-3">
+        <div class="col-md-3 mb-2">
             <div class="card border-primary text-white">
                 <div class="card-body text-center">
                     <h3>{{ $totalPartidos }}</h3>
@@ -21,7 +33,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 mb-2">
             <div class="card border-success text-white">
                 <div class="card-body text-center">
                     <h3>{{ $partidosHoy }}</h3>
@@ -29,7 +41,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 mb-2">
             <div class="card border-info text-white">
                 <div class="card-body text-center">
                     <h3>{{ $proximosPartidos }}</h3>
@@ -37,7 +49,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 mb-2">
             <div class="card border-secondary text-white">
                 <div class="card-body text-center">
                     <h3>{{ $partidosFinalizados }}</h3>
@@ -60,7 +72,7 @@
                     <!-- Filtros rápidos -->
                     <div class="col-md-12 mb-3">
                         <label class="form-label">Vista rápida:</label>
-                        <div class="btn-group" role="group">
+                        <div class="btn-group d-flex flex-wrap w-100" role="group">
                             <input type="radio" class="btn-check" name="filtro" id="destacados" value="destacados" {{ $filtro == 'destacados' ? 'checked' : '' }}>
                             <label class="btn btn-outline-primary" for="destacados">
                                 <i class="fas fa-star"></i> Destacados
@@ -208,7 +220,13 @@
                         <span class="badge bg-{{ $partido->estado == 'programado' ? 'primary' : ($partido->estado == 'en_curso' ? 'success' : 'secondary') }}">
                             {{ ucfirst($partido->estado) }}
                         </span>
-                        <p class="mt-2 mb-0 small">{{ $partido->fecha->format('d/m/Y h:i A') }}</p>
+                        
+                        <p class="mt-2 mb-0 small">
+                            <i class="fa-solid fa-calendar-days me-2"></i>{{ $partido->fecha->format('d/m/Y h:i A') }}
+                        </p>
+                        <p class="mt-1 mb-0 small">
+                            <i class="fa-solid fa-location-dot me-2"></i>Cancha Techada de Charallave
+                        </p>
                     </div>
                     
                     <div class="card-footer p-2">
