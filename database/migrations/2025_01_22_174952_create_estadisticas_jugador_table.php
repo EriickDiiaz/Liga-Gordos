@@ -12,9 +12,11 @@ class CreateEstadisticasJugadorTable extends Migration
             $table->id();
             $table->foreignId('partido_id')->constrained()->onDelete('cascade');
             $table->foreignId('jugador_id')->constrained('jugadores')->onDelete('cascade');
+            $table->foreignId('torneo_id')->constrained('torneos')->onDelete('cascade');
             $table->integer('goles')->default(0);
             $table->integer('tarjetas_amarillas')->default(0);
-            $table->boolean('tarjeta_roja')->default(false);
+            $table->integer('tarjetas_rojas')->default(0);
+            $table->integer('porterias_imbatidas')->default(0);
             $table->timestamps();
         });
     }

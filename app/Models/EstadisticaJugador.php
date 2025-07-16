@@ -11,7 +11,12 @@ class EstadisticaJugador extends Model
 
     protected $table = 'estadisticas_jugador';
 
-    protected $fillable = ['partido_id', 'jugador_id', 'goles', 'tarjetas_amarillas', 'tarjeta_roja'];
+    protected $fillable = ['partido_id', 'jugador_id','torneo_id', 'goles', 'tarjetas_amarillas', 'tarjetas_rojas','porterias_imbatidas'];
+
+    public function torneo()
+    {
+        return $this->belongsTo(Torneo::class);
+    }
 
     public function partido()
     {

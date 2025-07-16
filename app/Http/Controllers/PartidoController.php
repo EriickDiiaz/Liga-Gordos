@@ -7,6 +7,7 @@ use App\Models\Torneo;
 use App\Models\Equipo;
 use App\Models\Grupo;
 use App\Models\AccionPartido;
+use App\Models\EstadisticaJugador;
 use App\Models\Jugador;
 use App\Models\Patrocinador;
 use Illuminate\Http\Request;
@@ -351,15 +352,18 @@ class PartidoController extends Controller
     {
         $validatedData = $request->validate([
             'jugador_id' => 'required|exists:jugadores,id',
-            'tipo_accion' => 'required|in:gol,tarjeta_amarilla,tarjeta_roja',
+            'tipo_accion' => 'required|in:gol,tarjeta_amarilla,tarjeta_roja,porteria_imbatida',
         ]);
 
         $accion = new AccionPartido($validatedData);
         $partido->acciones()->save($accion);
 
-        // Actualizar conteo de goles si la acción es un gol
+        // Actualizar estadísticas de jugador por torneo
+        $this->estadisticaJugador($partido, $validatedData['jugador_id'], $validatedData['tipo_accion']);
+
+        // ...actualización de goles...
         if ($validatedData['tipo_accion'] === 'gol') {
-            $jugador = Jugador::findOrFail($validatedData['jugador_id']);
+            $jugador = \App\Models\Jugador::findOrFail($validatedData['jugador_id']);
             if ($jugador->equipo_id === $partido->equipo_local_id) {
                 $partido->goles_local = ($partido->goles_local ?? 0) + 1;
             } elseif ($jugador->equipo_id === $partido->equipo_visitante_id) {
@@ -369,6 +373,7 @@ class PartidoController extends Controller
         }
 
         return redirect()->route('partidos.show', $partido)->with('success', 'Acción registrada exitosamente.');
+    
     }
 
     /**
@@ -387,8 +392,74 @@ class PartidoController extends Controller
             $partido->save();
         }
 
+        // Eliminar la estadística correspondiente del jugador para este partido y torneo
+        $estadistica = EstadisticaJugador::where('partido_id', $partido->id)
+            ->where('jugador_id', $accion->jugador_id)
+            ->where('torneo_id', $partido->torneo_id)
+            ->first();
+
+        if ($estadistica) {
+            switch ($accion->tipo_accion) {
+                case 'gol':
+                    $estadistica->goles = max(0, $estadistica->goles - 1);
+                    break;
+                case 'tarjeta_amarilla':
+                    $estadistica->tarjetas_amarillas = max(0, $estadistica->tarjetas_amarillas - 1);
+                    break;
+                case 'tarjeta_roja':
+                    $estadistica->tarjetas_rojas = max(0, $estadistica->tarjetas_rojas - 1);
+                    break;
+                case 'porteria_imbatida':
+                    $estadistica->porterias_imbatidas = max(0, $estadistica->porterias_imbatidas - 1);
+                    break;
+            }
+
+            // Si todas las estadísticas quedan en 0, elimina el registro
+            if (
+                $estadistica->goles == 0 &&
+                $estadistica->tarjetas_amarillas == 0 &&
+                $estadistica->tarjetas_rojas == 0 &&
+                $estadistica->porterias_imbatidas == 0
+            ) {
+                $estadistica->delete();
+            } else {
+                $estadistica->save();
+            }
+        }
+
         $accion->delete();
         return redirect()->route('partidos.show', $partido)->with('success', 'Acción eliminada exitosamente.');
+    }
+
+    /**
+     * Actualiza o crea la estadística de un jugador para un torneo y partido.
+     */
+    private function estadisticaJugador($partido, $jugador_id, $tipo_accion)
+    {
+        $torneo_id = $partido->torneo_id;
+        $estadistica = EstadisticaJugador::firstOrCreate(
+            [
+                'partido_id' => $partido->id,
+                'jugador_id' => $jugador_id,
+                'torneo_id' => $torneo_id,
+            ]
+        );
+
+        switch ($tipo_accion) {
+            case 'gol':
+                $estadistica->goles += 1;
+                break;
+            case 'tarjeta_amarilla':
+                $estadistica->tarjetas_amarillas += 1;
+                break;
+            case 'tarjeta_roja':
+                $estadistica->tarjetas_rojas += 1;
+                break;
+            case 'porteria_imbatida':
+                $estadistica->porterias_imbatidas += 1;
+                break;
+        }
+        $estadistica->save();
     }
 
     /**
