@@ -75,19 +75,26 @@
                         </div>
 
                         <div class="text-center mb-2">
-                            <span>Goles:</span>
-                            <span><strong>Proximamente...</strong></span>
+                            <span>Total de Goles:</span>
+                            <span><strong>{{ $totalGoles }}</strong></span>
                         </div>
 
                         <div class="text-center mb-2">
                             <span>Tarjetas Amarillas:</span>
-                            <span><strong>Proximamente...</strong></span>
+                            <span><strong>{{ $totalAmarillas }}</strong></span>
                         </div>
 
                         <div class="text-center mb-2">
                             <span>Tarjetas Rojas:</span>
-                            <span><strong>Proximamente...</strong></span>
+                            <span><strong>{{ $totalRojas }}</strong></span>
                         </div>
+
+                        @if($jugador->tipo === 'portero')
+                            <div class="text-center mb-2">
+                                <span>Porterías Imbatidas:</span>
+                                <span><strong>{{ $totalPorteriasImbatidas }}</strong></span>
+                            </div>
+                        @endif
                     </div>
                     <div class="card-footer"
                         style="background-color: {{ $jugador->equipo->color_secundario ?? '#f8f9fa' }}; height: 8px;">

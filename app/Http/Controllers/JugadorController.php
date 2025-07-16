@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Jugador;
 use App\Models\Equipo;
+use App\Models\EstadisticaJugador;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -45,7 +46,22 @@ class JugadorController extends Controller
     public function show(Jugador $jugador)
     {
         $jugador->load('equipo');
-        return view('jugador.show', compact('jugador'));
+
+        // Suma global de estadísticas
+        $estadisticas = EstadisticaJugador::where('jugador_id', $jugador->id);
+
+        $totalGoles = (clone $estadisticas)->sum('goles');
+        $totalAmarillas = (clone $estadisticas)->sum('tarjetas_amarillas');
+        $totalRojas = (clone $estadisticas)->sum('tarjetas_rojas');
+        $totalPorteriasImbatidas = (clone $estadisticas)->sum('porterias_imbatidas');
+
+        return view('jugador.show', compact(
+            'jugador',
+            'totalGoles',
+            'totalAmarillas',
+            'totalRojas',
+            'totalPorteriasImbatidas'
+        ));
     }
 
     public function edit(Jugador $jugador)
