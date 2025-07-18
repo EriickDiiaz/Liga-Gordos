@@ -237,11 +237,14 @@
                     <td>{{ $accion->jugador->equipo->nombre }}</td>
                     <td>
                         @if($accion->tipo_accion == 'gol')
-                            <i class="fas fa-futbol fa-2x text-light"></i>
+                            <i class="fas fa-futbol fa-xl text-light"></i>
                         @elseif($accion->tipo_accion == 'tarjeta_amarilla')
-                            <i class="fa-solid fa-mobile-button fa-2x text-warning"></i>
+                            <i class="fas fa-solid fa-mobile-button fa-xl text-warning"></i>
                         @elseif($accion->tipo_accion == 'tarjeta_roja')
-                            <i class="fa-solid fa-mobile-button fa-2x text-danger"></i>
+                            <i class="fas fa-solid fa-mobile-button fa-xl text-danger"></i>
+                        @elseif($accion->tipo_accion == 'porteria_imbatida')
+                            <i class="fas fa-solid fa-hand-sparkles fa-xl text-light"></i>
+                        @elseif($accion->tipo_accion == 'tarjeta_roja')
                         @endif
                     </td>
                     <td>
@@ -278,6 +281,7 @@
                         <option value="gol">Gol</option>
                         <option value="tarjeta_amarilla">Tarjeta Amarilla</option>
                         <option value="tarjeta_roja">Tarjeta Roja</option>
+                        <option value="porteria_imbatida">Portería Imbatida</option>
                     </select>
                 </div>
                 <div class="text-center">

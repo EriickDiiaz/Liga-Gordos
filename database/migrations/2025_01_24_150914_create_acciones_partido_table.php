@@ -12,7 +12,7 @@ class CreateAccionesPartidoTable extends Migration
             $table->id();
             $table->foreignId('partido_id')->constrained()->onDelete('cascade');
             $table->foreignId('jugador_id')->constrained('jugadores')->onDelete('cascade');
-            $table->enum('tipo_accion', ['gol', 'tarjeta_amarilla', 'tarjeta_roja']);
+            $table->enum('tipo_accion', ['gol', 'tarjeta_amarilla', 'tarjeta_roja', 'porteria_imbatida']);
             $table->timestamps();
         });
     }
