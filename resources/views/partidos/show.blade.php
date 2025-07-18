@@ -244,7 +244,6 @@
                             <i class="fas fa-solid fa-mobile-button fa-xl text-danger"></i>
                         @elseif($accion->tipo_accion == 'porteria_imbatida')
                             <i class="fas fa-solid fa-hand-sparkles fa-xl text-light"></i>
-                        @elseif($accion->tipo_accion == 'tarjeta_roja')
                         @endif
                     </td>
                     <td>
@@ -265,13 +264,13 @@
                 @csrf
                 <div class="mb-3">
                     <label for="jugador_id" class="form-label">Jugador</label>
-                    <select name="jugador_id" id="jugador_id" class="form-control" required>
+                    <select name="jugador_id" id="jugador_id" class="form-select" required>
                         <option value="">Seleccione un jugador</option>
-                        @foreach($partido->equipoLocal->jugadores as $jugador)
-                            <option value="{{ $jugador->id }}">{{ $jugador->nombre }} ({{ $partido->equipoLocal->nombre }})</option>
-                        @endforeach
-                        @foreach($partido->equipoVisitante->jugadores as $jugador)
-                            <option value="{{ $jugador->id }}">{{ $jugador->nombre }} ({{ $partido->equipoVisitante->nombre }})</option>
+                        @foreach($jugadoresInscritos as $jugador)
+                            <option value="{{ $jugador->id }}">
+                                {{ $jugador->dorsal }} - {{ $jugador->nombre }} ({{ $jugador->equipo->nombre }})
+                                @if($jugador->tipo === 'portero') 🧤 @endif
+                            </option>
                         @endforeach
                     </select>
                 </div>

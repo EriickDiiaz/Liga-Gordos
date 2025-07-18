@@ -268,8 +268,14 @@ class PartidoController extends Controller
     public function show(Partido $partido)
     {
         $partido->load(['torneo', 'grupo', 'equipoLocal', 'equipoVisitante', 'acciones.jugador', 'partidoRelacionado']);
+
+        // Obtener jugadores inscritos en el torneo
+        $jugadoresInscritos = Jugador::whereHas('torneos', function($q) use ($partido) {
+            $q->where('torneo_id', $partido->torneo_id);
+        })->with('equipo')->get();
+
         $patrocinadores = Patrocinador::all();
-        return view('partidos.show', compact('partido', 'patrocinadores'));
+        return view('partidos.show', compact('partido', 'patrocinadores', 'jugadoresInscritos'));
     }
 
     public function edit(Partido $partido)
@@ -355,25 +361,45 @@ class PartidoController extends Controller
             'tipo_accion' => 'required|in:gol,tarjeta_amarilla,tarjeta_roja,porteria_imbatida',
         ]);
 
+        // Registrar la acción
         $accion = new AccionPartido($validatedData);
         $partido->acciones()->save($accion);
 
-        // Actualizar estadísticas de jugador por torneo
-        $this->estadisticaJugador($partido, $validatedData['jugador_id'], $validatedData['tipo_accion']);
+        // Actualizar o crear la estadística del jugador para este partido y torneo
+        $torneo_id = $partido->torneo_id;
+        $estadistica = EstadisticaJugador::firstOrCreate(
+            [
+                'partido_id' => $partido->id,
+                'jugador_id' => $validatedData['jugador_id'],
+                'torneo_id' => $torneo_id,
+            ]
+        );
 
-        // ...actualización de goles...
-        if ($validatedData['tipo_accion'] === 'gol') {
-            $jugador = \App\Models\Jugador::findOrFail($validatedData['jugador_id']);
-            if ($jugador->equipo_id === $partido->equipo_local_id) {
-                $partido->goles_local = ($partido->goles_local ?? 0) + 1;
-            } elseif ($jugador->equipo_id === $partido->equipo_visitante_id) {
-                $partido->goles_visitante = ($partido->goles_visitante ?? 0) + 1;
-            }
-            $partido->save();
+        switch ($validatedData['tipo_accion']) {
+            case 'gol':
+                $estadistica->goles += 1;
+                // Actualizar goles del partido
+                $jugador = \App\Models\Jugador::findOrFail($validatedData['jugador_id']);
+                if ($jugador->equipo_id === $partido->equipo_local_id) {
+                    $partido->goles_local = ($partido->goles_local ?? 0) + 1;
+                } elseif ($jugador->equipo_id === $partido->equipo_visitante_id) {
+                    $partido->goles_visitante = ($partido->goles_visitante ?? 0) + 1;
+                }
+                $partido->save();
+                break;
+            case 'tarjeta_amarilla':
+                $estadistica->tarjetas_amarillas += 1;
+                break;
+            case 'tarjeta_roja':
+                $estadistica->tarjetas_rojas += 1;
+                break;
+            case 'porteria_imbatida':
+                $estadistica->porterias_imbatidas += 1;
+                break;
         }
+        $estadistica->save();
 
         return redirect()->route('partidos.show', $partido)->with('success', 'Acción registrada exitosamente.');
-    
     }
 
     /**
@@ -434,6 +460,7 @@ class PartidoController extends Controller
     /**
      * Actualiza o crea la estadística de un jugador para un torneo y partido.
      */
+    /** 
     private function estadisticaJugador($partido, $jugador_id, $tipo_accion)
     {
         $torneo_id = $partido->torneo_id;
@@ -460,7 +487,7 @@ class PartidoController extends Controller
                 break;
         }
         $estadistica->save();
-    }
+    }*/
 
     /**
      * Cambia el estado de un partido a 'en_curso'
@@ -581,4 +608,6 @@ class PartidoController extends Controller
             ]);
         }
     }
+
+
 }
