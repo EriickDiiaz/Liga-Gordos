@@ -1,26 +1,58 @@
+{{-- filepath: c:\xampp\htdocs\liga-gordos\resources\views\torneos\show.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
 <div class="container">
-    <h1 class="mb-3">{{ $torneo->nombre }}</h1>
-    
-    <div class="card mb-3">
+
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    <h1><i class="fa-solid fa-trophy me-2"></i>{{ $torneo->nombre }}</h1>
+
+    {{-- Detalles del torneo --}}
+    <div class="card mt-4">
         <div class="card-body">
             <h5 class="card-title">Detalles del Torneo</h5>
             <p><strong>Tipo:</strong> {{ ucfirst($torneo->tipo) }}</p>
             <p><strong>Fecha de Inicio:</strong> {{ $torneo->fecha_inicio->format('d/m/Y') }}</p>
             <p><strong>Estado:</strong> {{ ucfirst($torneo->estado) }}</p>
             <p><strong>Equipos participantes:</strong> {{ $torneo->equipos->count() }}</p>
-        </div>
+            
+            @can('Inscribir Jugadores')
+            <h5>Acciones</h5>
+            <a href="{{ route('plantillas.index', $torneo->id) }}" class="btn btn-outline-success m-1">
+                <i class="fas fa-user-plus"></i> Inscribir Jugadores
+            </a>  
+            @endcan                                
+            @can('Editar Torneos')
+            <a href="{{ route('torneos.edit', $torneo) }}" class="btn btn-outline-primary m-1">
+                <i class="fas fa-edit"></i> Editar
+            </a>
+            @endcan
+            @can('Borrar Torneos')
+            <form action="{{ route('torneos.destroy', $torneo) }}" method="POST" class="d-inline">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-outline-danger delete-torneo m-1" data-id="{{ $torneo->id }}">
+                    <i class="fas fa-trash-alt"></i> Eliminar
+                </button>
+            </form>
+            @endcan
+        </div>                                
     </div>
 
-    <h2 class="mb-3">Tablas de Posiciones</h2>
+    {{-- Tablas de posiciones por grupo --}}
+    <h2 class="mt-4"><i class="fa-solid fa-list-ul me-2"></i>Tablas de Posiciones</h2>
     @foreach($torneo->grupos as $grupo)
-        <h3>{{ $grupo->nombre }}</h3>
-        <table class="table table-striped">
+        <h4>{{ $grupo->nombre }}</h4>
+        <table class="table table-striped table-hover table-sm">
             <thead>
                 <tr>
-                    <th>Posición</th>
+                    <th>Pos</th>
                     <th>Equipo</th>
                     <th>PJ</th>
                     <th>PG</th>
@@ -54,9 +86,100 @@
         </table>
     @endforeach
 
-    <h2 class="mt-3 text-center">Partidos</h2>
-    <a href="{{ route('partidos.create', $torneo) }}" class="btn btn-outline-success mb-3">Crear Nuevo Partido</a>
-    <table class="table" id="partidosTable">
+    {{-- Estadísticas individuales --}}
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h3><i class="fas fa-futbol me-2"></i>Máximos Goleadores</h3>
+            <table class="table table-striped table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th>Jugador</th>
+                        <th>Equipo</th>
+                        <th>Goles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($goleadores as $goleador)
+                        <tr>
+                            <td>{{ $goleador->jugador->nombre }}</td>
+                            <td>{{ $goleador->jugador->equipo->nombre }}</td>
+                            <td>{{ $goleador->goles }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h3><i class="fas fa-solid fa-hand-sparkles me-2"></i>Porterías Imbatidas</h3>
+            <table class="table table-striped table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th>Portero</th>
+                        <th>Equipo</th>
+                        <th>Imbatidas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($porteriasImbatidas as $portero)
+                        <tr>
+                            <td>{{ $portero->jugador->nombre }}</td>
+                            <td>{{ $portero->jugador->equipo->nombre }}</td>
+                            <td>{{ $portero->porterias_imbatidas }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h3><i class="fas fa-solid fa-mobile-button text-warning me-2"></i>Tarjetas Amarillas</h3>
+            <table class="table table-striped table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th>Jugador</th>
+                        <th>Equipo</th>
+                        <th>Amarillas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($amarillas as $jugador)
+                        <tr>
+                            <td>{{ $jugador->jugador->nombre }}</td>
+                            <td>{{ $jugador->jugador->equipo->nombre }}</td>
+                            <td>{{ $jugador->tarjetas_amarillas }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h3><i class="fas fa-solid fa-mobile-button text-danger me-2"></i>Tarjetas Rojas</h3>
+            <table class="table table-striped table-hover table-sm">
+                <thead>
+                    <tr>
+                        <th>Jugador</th>
+                        <th>Equipo</th>
+                        <th>Rojas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($rojas as $jugador)
+                        <tr>
+                            <td>{{ $jugador->jugador->nombre }}</td>
+                            <td>{{ $jugador->jugador->equipo->nombre }}</td>
+                            <td>{{ $jugador->tarjetas_rojas }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+ 
+
+    {{-- Próximos partidos --}}
+    <h2 class="mt-4"><i class="fa-solid fa-arrows-up-to-line me-2"></i>Próximos Partidos</h2>
+    <table class="table table-hover table-striped table-sm" id="partidosTable">
         <thead>
             <tr>
                 <th>Local</th>
@@ -90,25 +213,31 @@
                     </td>
                     <td>{{ ucfirst($partido->estado) }}</td>
                     <td>
-                        <a href="{{ route('partidos.edit', $partido) }}" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-edit"></i> Editar
-                        </a>
-                        <form action="{{ route('partidos.destroy', $partido) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-outline-danger btn-sm">
-                                <i class="fas fa-trash-alt"></i> Eliminar
-                            </button>
-                        </form>
+                        @can('Editar Partidos')
+                            <a href="{{ route('partidos.edit', $partido) }}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                        @endcan
+                        @can('Borrar Partidos')
+                            <form action="{{ route('partidos.destroy', $partido) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    <i class="fas fa-trash-alt"></i> Eliminar
+                                </button>
+                            </form>
+                        @endcan                        
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 
-    <div class="row mt-4"> 
+    {{-- Gestión de grupos y equipos --}}
+    <div class="row mt-4">
         <div class="col-md-6">
-            <h2 class="text-center">Grupos</h2>
+            <h2 class="text-center"><i class="fa-solid fa-users-rectangle me-2"></i>Grupos</h2>
+            @can('Editar Torneos')
             <form action="{{ route('torneos.addGroup', $torneo) }}" method="POST" class="mb-3">
                 @csrf
                 <div class="input-group">
@@ -116,6 +245,7 @@
                     <button type="submit" class="btn btn-outline-primary">Agregar Grupo</button>
                 </div>
             </form>
+            @endcan
             <div class="row row-cols-1 row-cols-md-2 g-4">
                 @foreach($torneo->grupos as $grupo)
                     <div class="col">
@@ -129,6 +259,7 @@
                                                 <img src="{{ asset($equipo->logo) }}" alt="{{ $equipo->nombre }}" class="img-fluid me-2" style="max-height: 30px; max-width: 30px;">
                                                 {{ $equipo->nombre }}
                                             </div>
+                                            @can('Editar Torneos')
                                             <form action="{{ route('torneos.removeEquipo', [$torneo, $equipo]) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
@@ -136,6 +267,7 @@
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                             </form>
+                                            @endcan
                                         </li>
                                     @endforeach
                                 </ul>
@@ -145,29 +277,31 @@
                 @endforeach
             </div>
         </div>
-        <div class="col-md-6">
-            <h2 class="text-center">Agregar Equipo a Grupo</h2>
-            <form action="{{ route('torneos.addEquipo', $torneo) }}" method="POST" class="mb-3">
-                @csrf
-                <div class="mb-3">
-                    <label for="equipo_id" class="form-label">Equipo</label>
-                    <select name="equipo_id" id="equipo_id" class="form-select" required>
-                        @foreach(App\Models\Equipo::all() as $equipo)
-                            <option value="{{ $equipo->id }}">{{ $equipo->nombre }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="grupo_id" class="form-label">Grupo</label>
-                    <select name="grupo_id" id="grupo_id" class="form-select" required>
-                        @foreach($torneo->grupos as $grupo)
-                            <option value="{{ $grupo->id }}">{{ $grupo->nombre }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-outline-primary">Agregar Equipo al Grupo</button>
-            </form>
-        </div>
+        @can('Editar Torneos')
+            <div class="col-md-6">
+                <h2 class="text-center"><i class="fa-solid fa-user-plus me-2"></i>Agregar Equipo a Grupo</h2>
+                <form action="{{ route('torneos.addEquipo', $torneo) }}" method="POST" class="mb-3">
+                    @csrf
+                    <div class="mb-3">
+                        <label for="equipo_id" class="form-label">Equipo</label>
+                        <select name="equipo_id" id="equipo_id" class="form-select" required>
+                            @foreach(App\Models\Equipo::all() as $equipo)
+                                <option value="{{ $equipo->id }}">{{ $equipo->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="grupo_id" class="form-label">Grupo</label>
+                        <select name="grupo_id" id="grupo_id" class="form-select" required>
+                            @foreach($torneo->grupos as $grupo)
+                                <option value="{{ $grupo->id }}">{{ $grupo->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary">Agregar Equipo al Grupo</button>
+                </form>
+            </div>
+        @endcan 
     </div>
 </div>
 @endsection
@@ -185,4 +319,3 @@
     });
 </script>
 @endpush
-
