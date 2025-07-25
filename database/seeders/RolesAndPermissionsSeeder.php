@@ -59,7 +59,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'Crear Equipos', 'Editar Equipos', 'Borrar Equipos',
             'Crear Jugadores', 'Editar Jugadores', 'Borrar Jugadores', 'Inscribir Jugadores', 'Ver Cedula',
             'Crear Torneos', 'Editar Torneos', 'Borrar Torneos',
-            'Crear Partidos', 'Editar Partidos', 'Registrar Acciones', 'Gestionar Estadisticas', 'Borrar Partidos'
+            'Crear Partidos', 'Editar Partidos', 'Registrar Acciones', 'Gestionar Estadisticas', 'Borrar Partidos',
+            'Gestionar Noticias', 'Crear Noticias', 'Editar Noticias', 'Borrar Noticias',
         ]);
 
         $mesaTecnicaRole = Role::create(['name' => 'Mesa Técnica']);
