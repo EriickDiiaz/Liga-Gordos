@@ -1,15 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
 
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
+<!-- Mensajes y alertas -->
+@if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
 
+<div class="container">   
+    <!-- Titulo -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="fa-solid fa-trophy me-2"></i>Torneos</h1>
         @can('Crear Torneos')
@@ -18,7 +20,8 @@
         </a>
         @endcan
     </div>
-
+    
+    <!-- Contenido -->
     <div class="row">
         @forelse($torneos as $torneo)
             <div class="col-md-4 mb-4">

@@ -1,20 +1,26 @@
 @extends('layouts.app')
-
+@section('title', 'Crear Equipo')
 @section('content')
-<div class="container">
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul class="mb-0">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+<!-- Mensajes y alertas -->
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
-    <h1 class="mb-3 text-center">Crear Nuevo Equipo</h1>
+<div class="container">    
 
+    <!-- Titulo -->
+    <div>
+        <h1 class="mb-3 text-center"><i class="fa-solid fa-shield me-2"></i>Crear Nuevo Equipo</h1>
+    </div>
+
+    <!-- Contenido -->
     <div class="row justify-content-center">
         <div class="col-md-8">
             <form action="{{ route('equipos.store') }}" method="POST" enctype="multipart/form-data">
@@ -63,11 +69,13 @@
                     </select>
                 </div>
                 <div class="text-center mt-3">
-                    <a href="{{ route('equipos.index') }}" class="btn btn-outline-secondary m-1">
-                        <i class="fas fa-arrow-left"></i> Volver a la lista
+                    <a href="{{ route('equipos.index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Volver a la lista
                     </a>
                     @can('Crear Equipos')
-                    <button type="submit" class="btn btn-outline-success m-1">Crear Equipo</button>
+                    <button type="submit" class="btn btn-outline-success">
+                        <i class="fas fa-plus me-2"></i>Crear Nuevo Equipo
+                    </button>
                     @endcan
                 </div>        
             </form>

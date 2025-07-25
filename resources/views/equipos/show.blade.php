@@ -1,8 +1,21 @@
 @extends('layouts.app')
-
+@section('title', $equipo->nombre)
 @section('content')
+
+<!-- Mensajes y alertas -->
+@if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
 <div class="container">
-    <h1 class="mb-3">{{ $equipo->nombre }}</h1>
+
+    <!-- Titulo -->
+    <div>
+        <h1 class="mb-3 text-center"><i class="fa-solid fa-shield me-2"></i>{{ $equipo->nombre }}</h1>
+    </div>
     
     <div class="card">
         <div class="card-header" style="border-color: {{ $equipo->color_primario }}; background: {{ $equipo->color_primario }};"></div>
@@ -107,11 +120,11 @@
         <div class="card-footer" style="border-color: {{ $equipo->color_secundario }}; background: {{ $equipo->color_secundario }};"></div>
     </div>
     <div class="text-center mt-3">
-        <a href="{{ route('equipos.index') }}" class="btn btn-outline-secondary m-1">
+        <a href="{{ route('equipos.index') }}" class="btn btn-outline-secondary">
             <i class="fas fa-arrow-left"></i> Volver a la lista
         </a>
         @can('Editar Equipos') 
-        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary m-1">
+        <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary">
             <i class="fas fa-edit"></i> Editar
         </a>
         @endcan

@@ -1,25 +1,29 @@
 @extends('layouts.app')
-
+@section('title', 'Equipos')
 @section('content')
+
+<!-- Mensajes y alertas -->
+@if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
 <div class="container">
+
+    <!-- Titulo -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fa-solid fa-shield me-2"></i>Equipos</h1>
+        @can('Crear Equipos')
+        <a href="{{ route('equipos.create') }}" class="btn btn-outline-success">
+            <i class="fas fa-plus"></i> Crear Nuevo Equipo
+        </a>
+        @endcan
+    </div>
     
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-    
-    <h1 class="mb-3">Equipos</h1>
-    
+    <!-- Contenido -->
     <div class="row mb-3">
-        <div class="col-md-6">
-            @can('Crear Equipos')
-            <a href="{{ route('equipos.create') }}" class="btn btn-outline-success">
-                <i class="fas fa-plus"></i> Crear Nuevo Equipo
-            </a>
-            @endcan
-        </div>
         <div class="col-md-6">
             <div class="input-group">
                 <span class="input-group-text">
@@ -52,12 +56,12 @@
                         <p class="mb-1 small">Jugadores con Brazalete: {{ $equipo->jugadores->where('tipo', 'brazalete')->count() }}</p>
                         <p class="mb-1 small">Total de Jugadores: {{ $equipo->jugadores->count() }}</p>
                         <div class="text-center mt-2">
-                            <a href="{{ route('equipos.show', $equipo) }}" class="btn btn-outline-light btn-sm m-1">
+                            <a href="{{ route('equipos.show', $equipo) }}" class="btn btn-outline-light btn-sm">
                                 <i class="fas fa-eye"></i> Ver
                             </a>
                             @auth
                                 @can('Editar Equipos')
-                                    <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary btn-sm m-1">
+                                    <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary btn-sm">
                                         <i class="fas fa-edit"></i> Editar
                                     </a>
                                 @endcan
@@ -65,7 +69,7 @@
                                     <form action="{{ route('equipos.destroy', $equipo) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm m-1 delete-equipo" data-id="{{ $equipo->id }}">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm delete-equipo" data-id="{{ $equipo->id }}">
                                             <i class="fas fa-trash-alt"></i> Eliminar
                                         </button>
                                     </form>
