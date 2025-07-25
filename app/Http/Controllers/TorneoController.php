@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Torneo;
 use App\Models\Equipo;
+use App\Models\EstadisticaJugador;
 use App\Models\Grupo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -51,13 +52,65 @@ class TorneoController extends Controller
     public function show(Torneo $torneo)
     {
         $torneo->load('grupos.equipos', 'equipos', 'partidos');
-        
+
         $tablasPosiciones = [];
         foreach ($torneo->grupos as $grupo) {
             $tablasPosiciones[$grupo->id] = $this->calcularTablaPosiciones($grupo);
         }
-        
-        //return view('torneos.show', compact('torneo', 'tablasPosiciones'));
+
+        // Máximos goleadores
+        $goleadores = EstadisticaJugador::with('jugador.equipo')
+            ->selectRaw('jugador_id, SUM(goles) as goles')
+            ->where('torneo_id', $torneo->id)
+            ->groupBy('jugador_id')
+            ->having('goles', '>', 0)
+            ->orderByDesc('goles')
+            ->take(10)
+            ->get();
+
+        // Tarjetas amarillas
+        $amarillas = EstadisticaJugador::with('jugador.equipo')
+            ->selectRaw('jugador_id, SUM(tarjetas_amarillas) as tarjetas_amarillas')
+            ->where('torneo_id', $torneo->id)
+            ->groupBy('jugador_id')
+            ->having('tarjetas_amarillas', '>', 0)
+            ->orderByDesc('tarjetas_amarillas')
+            ->take(10)
+            ->get();
+
+        // Tarjetas rojas
+        $rojas = EstadisticaJugador::with('jugador.equipo')
+            ->selectRaw('jugador_id, SUM(tarjetas_rojas) as tarjetas_rojas')
+            ->where('torneo_id', $torneo->id)
+            ->groupBy('jugador_id')
+            ->having('tarjetas_rojas', '>', 0)
+            ->orderByDesc('tarjetas_rojas')
+            ->take(10)
+            ->get();
+
+        // Porterías imbatidas (solo porteros)
+        $porteriasImbatidas = EstadisticaJugador::with(['jugador' => function($q) {
+                $q->where('tipo', 'portero');
+            }, 'jugador.equipo'])
+            ->selectRaw('jugador_id, SUM(porterias_imbatidas) as porterias_imbatidas')
+            ->where('torneo_id', $torneo->id)
+            ->groupBy('jugador_id')
+            ->having('porterias_imbatidas', '>', 0)
+            ->orderByDesc('porterias_imbatidas')
+            ->take(10)
+            ->get()
+            ->filter(function($item) {
+                return $item->jugador !== null; // Solo porteros válidos
+            });
+
+        return view('torneos.show', compact(
+            'torneo',
+            'tablasPosiciones',
+            'goleadores',
+            'amarillas',
+            'rojas',
+            'porteriasImbatidas'
+        ));
     }
 
     public function edit(Torneo $torneo)

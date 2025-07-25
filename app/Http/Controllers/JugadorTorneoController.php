@@ -106,16 +106,16 @@ class JugadorTorneoController extends Controller
     {
         $torneo = Torneo::findOrFail($torneoId);
         $jugador = Jugador::findOrFail($jugadorId);
-        
+
         try {
-            // En lugar de eliminar, marcamos como inactivo
+            // Eliminar el registro de la tabla jugador_torneo
             JugadorTorneo::where('jugador_id', $jugadorId)
-                         ->where('torneo_id', $torneoId)
-                         ->update(['activo' => false]);
-            
+                        ->where('torneo_id', $torneoId)
+                        ->where('equipo_id', $equipoId)
+                        ->delete();
+
             return redirect()->route('plantillas.show', [$torneoId, $equipoId])
                 ->with('success', 'Jugador removido de la plantilla del torneo.');
-                
         } catch (\Exception $e) {
             return back()->with('error', 'Error al quitar el jugador: ' . $e->getMessage());
         }
