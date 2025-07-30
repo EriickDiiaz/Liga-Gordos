@@ -36,8 +36,8 @@
     
     <div id="equipos-container" class="row row-cols-1 row-cols-md-4 g-4">
         @foreach($equipos->sortBy('nombre') as $equipo)
-            <div class="col equipo-item">
-                <div class="card h-100">
+            <div class="col equipo-item"> 
+                <div class="card h-100 shadow-sm">
                     <img src="{{ asset($equipo->logo) }}" class="card-img-top mt-2" alt="{{ $equipo->nombre }}" style="height: 150px; object-fit: contain;">
                     <div class="card-body">
                         <h5 class="card-title">{{ $equipo->nombre }}
@@ -55,27 +55,27 @@
                         <p class="mb-1 small">Jugadores Habilidosos: {{ $equipo->jugadores->where('tipo', 'habilidoso')->count() }}</p>
                         <p class="mb-1 small">Jugadores con Brazalete: {{ $equipo->jugadores->where('tipo', 'brazalete')->count() }}</p>
                         <p class="mb-1 small">Total de Jugadores: {{ $equipo->jugadores->count() }}</p>
-                        <div class="text-center mt-2">
-                            <a href="{{ route('equipos.show', $equipo) }}" class="btn btn-outline-light btn-sm">
-                                <i class="fas fa-eye"></i> Ver
-                            </a>
-                            @auth
-                                @can('Editar Equipos')
-                                    <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary btn-sm">
-                                        <i class="fas fa-edit"></i> Editar
-                                    </a>
-                                @endcan
-                                @can('Borrar Equipos')
-                                    <form action="{{ route('equipos.destroy', $equipo) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm delete-equipo" data-id="{{ $equipo->id }}">
-                                            <i class="fas fa-trash-alt"></i> Eliminar
-                                        </button>
-                                    </form>
-                                @endcan
-                            @endauth                            
-                        </div>
+                    </div> 
+                    <div class="card-footer border-warning text-center">
+                        <a href="{{ route('equipos.show', $equipo) }}" class="btn btn-outline-light btn-sm">
+                            <i class="fas fa-eye"></i> Ver
+                        </a>
+                        @auth
+                            @can('Editar Equipos')
+                                <a href="{{ route('equipos.edit', $equipo) }}" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                            @endcan
+                            @can('Borrar Equipos')
+                                <form action="{{ route('equipos.destroy', $equipo) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-outline-danger btn-sm delete-equipo" data-id="{{ $equipo->id }}">
+                                        <i class="fas fa-trash-alt"></i> Eliminar
+                                    </button>
+                                </form>
+                            @endcan
+                        @endauth
                     </div>
                 </div>
             </div>

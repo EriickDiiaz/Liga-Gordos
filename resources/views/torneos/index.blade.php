@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+@section('title', 'Torneos')
 @section('content')
 
 <!-- Mensajes y alertas -->
@@ -26,13 +26,9 @@
         @forelse($torneos as $torneo)
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm">
-                    <div class="card-header bg-warning text-dark text-center">
-                        <h4 class="card-title mb-2 text-center">
-                            <i class="fa-solid fa-trophy me-2"></i>
-                            {{ $torneo->nombre }}
-                        </h4>
-                    </div>
-                    <div class="card-body">
+                    <div class="card-body text-center">
+                        <i class="fa-solid fa-trophy fa-2x"></i>
+                        <h4>{{ $torneo->nombre }}</h4>
                         <p class="mb-1"><strong>Tipo:</strong> {{ ucfirst($torneo->tipo) }}</p>
                         <p class="mb-1"><strong>Estado:</strong> <span class="badge bg-primary">{{ ucfirst($torneo->estado) }}</span></p>
                         <p class="mb-1"><strong>Equipos:</strong> {{ $torneo->equipos->count() }}</p>

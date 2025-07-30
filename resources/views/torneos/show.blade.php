@@ -1,18 +1,23 @@
-{{-- filepath: c:\xampp\htdocs\liga-gordos\resources\views\torneos\show.blade.php --}}
 @extends('layouts.app')
-
+@section('title', $torneo->nombre)
 @section('content')
+
+<!-- Mensajes y alertas -->
+@if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
 <div class="container">
 
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
+    <!-- Titulo -->
+    <div>
+        <h1 class="mb-3 text-center"><i class="fa-solid fa-trophy me-2"></i>{{ $torneo->nombre }}</h1>
+    </div>
 
-    <h1><i class="fa-solid fa-trophy me-2"></i>{{ $torneo->nombre }}</h1>
-
+    <!-- Contenido -->
     {{-- Detalles del torneo --}}
     <div class="card mt-4">
         <div class="card-body">

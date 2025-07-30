@@ -116,7 +116,8 @@ class TorneoController extends Controller
     public function edit(Torneo $torneo)
     {
         $torneo->load('grupos.equipos');
-        return view('torneos.edit', compact('torneo'));
+        $equipos = Equipo::all();
+        return view('torneos.edit', compact('torneo', 'equipos'));
     }
 
     public function update(Request $request, Torneo $torneo)
