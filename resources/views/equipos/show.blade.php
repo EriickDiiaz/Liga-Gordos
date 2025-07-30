@@ -17,6 +17,7 @@
         <h1 class="mb-3 text-center"><i class="fa-solid fa-shield me-2"></i>{{ $equipo->nombre }}</h1>
     </div>
     
+    <!-- Contenido -->
     <div class="card">
         <div class="card-header" style="border-color: {{ $equipo->color_primario }}; background: {{ $equipo->color_primario }};"></div>
         <div class="card-body">
@@ -119,8 +120,9 @@
         </div>
         <div class="card-footer" style="border-color: {{ $equipo->color_secundario }}; background: {{ $equipo->color_secundario }};"></div>
     </div>
+
     <div class="text-center mt-3">
-        <a href="{{ route('equipos.index') }}" class="btn btn-outline-secondary">
+        <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">
             <i class="fas fa-arrow-left"></i> Volver a la lista
         </a>
         @can('Editar Equipos') 
@@ -128,12 +130,40 @@
             <i class="fas fa-edit"></i> Editar
         </a>
         @endcan
+        @can('Borrar Equipos')
+            <form action="{{ route('equipos.destroy', $equipo) }}" method="POST" class="d-inline">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-outline-danger delete-equipo" data-id="{{ $equipo->id }}">
+                    <i class="fas fa-trash-alt"></i> Eliminar
+                </button>
+            </form>
+        @endcan
     </div>
 </div>
 @endsection
 
 @push('scripts')
 <script>
+    $('.delete-equipo').click(function(e) {
+        e.preventDefault();
+        const jugadorId = $(this).data('id');
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "No podrás revertir esta acción!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $(this).closest('form').submit();
+            }
+        });
+    });
+
     $(document).ready(function() {
         const table = $('#playersTable').DataTable({
             "language": {

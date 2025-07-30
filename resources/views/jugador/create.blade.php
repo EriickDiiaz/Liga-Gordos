@@ -1,20 +1,26 @@
 @extends('layouts.app')
-
+@section('title', 'Crear Jugador')
 @section('content')
+
+<!-- Mensajes y alertas -->
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
     <div class="container">
 
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+    <!-- Titulo -->
+    <div>
+        <h1 class="mb-3 text-center"><i class="fa-solid fa-user me-2"></i>Crear Nuevo Jugador</h1>
+    </div>
 
-        <h1 class="mb-3 text-center">Crear Nuevo Jugador</h1>
-
+    <!-- Contenido -->
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <form action="{{ route('jugador.store') }}" method="POST" enctype="multipart/form-data">
@@ -62,11 +68,13 @@
                         <input type="file" class="form-control" id="foto" name="foto">
                     </div>
                     <div class="text-center mt-3">
-                        <a href="{{ route('jugador.index') }}" class="btn btn-outline-secondary m-1">
+                        <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">
                             <i class="fas fa-arrow-left"></i> Volver a la lista
                         </a>
                         @can('Crear Jugadores')
-                            <button type="submit" class="btn btn-outline-success m-1">Crear Jugador</button>
+                            <button type="submit" class="btn btn-outline-success">
+                                <i class="fas fa-plus me-2"></i>Crear Jugador
+                            </button>
                         @endcan
                     </div>
                 </form>

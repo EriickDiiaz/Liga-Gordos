@@ -69,7 +69,7 @@
                     </select>
                 </div>
                 <div class="text-center mt-3">
-                    <a href="{{ route('equipos.index') }}" class="btn btn-outline-secondary">
+                    <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left me-2"></i>Volver a la lista
                     </a>
                     @can('Crear Equipos')

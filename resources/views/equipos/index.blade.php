@@ -17,7 +17,7 @@
         <h1><i class="fa-solid fa-shield me-2"></i>Equipos</h1>
         @can('Crear Equipos')
         <a href="{{ route('equipos.create') }}" class="btn btn-outline-success">
-            <i class="fas fa-plus"></i> Crear Nuevo Equipo
+            <i class="fas fa-plus me-2"></i>Crear Nuevo Equipo
         </a>
         @endcan
     </div>
